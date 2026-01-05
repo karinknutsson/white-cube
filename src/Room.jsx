@@ -5,7 +5,7 @@ import * as THREE from "three";
 const wallMaterial = new THREE.MeshStandardMaterial({ color: "#ffffff" });
 
 export default function Room() {
-  const { scene } = useGLTF("./models/basic-space.glb");
+  const { scene } = useGLTF("./models/basic-space-32.glb");
 
   useEffect(() => {
     scene.traverse((child) => {
@@ -17,8 +17,8 @@ export default function Room() {
   }, []);
 
   return (
-    <>
+    <group rotation={[0, -Math.PI * 0.5, 0]}>
       <primitive object={scene} />
-    </>
+    </group>
   );
 }

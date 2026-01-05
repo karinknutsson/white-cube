@@ -9,10 +9,10 @@ export default function Experience() {
 
       <Lights />
 
-      {/* <mesh>
+      <mesh>
         <boxGeometry args={[0.1, 0.1, 0.1]} />
         <meshNormalMaterial />
-      </mesh> */}
+      </mesh>
       <Room />
     </>
   );
