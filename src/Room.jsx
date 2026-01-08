@@ -19,17 +19,10 @@ export default function Room() {
       max: 1,
       step: 0.01,
     },
-    metalness: {
-      value: 0.2,
-      min: 0,
-      max: 1,
-      step: 0.01,
-    },
   });
 
   roomMaterial.color = new THREE.Color(color);
   roomMaterial.roughness = roughness;
-  roomMaterial.metalness = metalness;
 
   useEffect(() => {
     scene.traverse((child) => {
@@ -55,7 +48,7 @@ export default function Room() {
 
       {/* Metallic sphere for testing */}
       <mesh position={[0, 1, 1]}>
-        <octahedronGeometry args={[1, 50]} />
+        <octahedronGeometry args={[0.5, 50]} />
         <meshStandardMaterial color="grey" roughness={0} metalness={1} />
       </mesh>
     </>
