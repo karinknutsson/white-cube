@@ -6,6 +6,7 @@ import { PointerLockControls } from "@react-three/drei";
 
 export default function Player() {
   const { camera } = useThree();
+  console.log(camera);
   const body = useRef();
 
   const controlsRef = useRef();
@@ -18,6 +19,21 @@ export default function Player() {
   });
 
   useEffect(() => {
+    const bodyPosition = body.current.translation();
+
+    const cameraPosition = new THREE.Vector3();
+    cameraPosition.copy(bodyPosition);
+    cameraPosition.z -= 0.2;
+    cameraPosition.y += 0.7;
+
+    const cameraTarget = new THREE.Vector3();
+    cameraTarget.copy(bodyPosition);
+    cameraTarget.z -= 2;
+    cameraTarget.y -= 0.7;
+
+    camera.position.copy(cameraPosition);
+    camera.lookAt(cameraTarget);
+
     const handleKeyDown = (e) => {
       switch (e.code) {
         case "ArrowUp":
@@ -68,8 +84,8 @@ export default function Player() {
     };
   }, []);
 
-  useFrame((state, delta) => {
-    const speed = 5;
+  useFrame((_, delta) => {
+    const speed = 2;
     velocity.current.set(0, 0, 0);
 
     if (move.current.forward) velocity.current.z -= speed * delta;
