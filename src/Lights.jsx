@@ -7,14 +7,29 @@ export default function Lights() {
   const spotLight2 = useRef();
   const target2 = useRef();
 
-  const { spotIntensity } = useControls({
-    spotIntensity: {
-      value: 30,
-      min: 0,
-      max: 100,
-      step: 1,
-    },
-  });
+  const { ambientIntensity, sunIntensity, spotIntensity } = useControls(
+    "lights",
+    {
+      ambientIntensity: {
+        value: 1,
+        min: 0,
+        max: 10,
+        step: 0.1,
+      },
+      sunIntensity: {
+        value: 1,
+        min: 0,
+        max: 10,
+        step: 0.1,
+      },
+      spotIntensity: {
+        value: 30,
+        min: 0,
+        max: 100,
+        step: 1,
+      },
+    }
+  );
 
   useEffect(() => {
     if (spotLight1.current && target1.current) {
@@ -28,7 +43,9 @@ export default function Lights() {
 
   return (
     <>
-      <directionalLight position={[0, 4, 10]} intensity={1} />
+      <ambientLight intensity={ambientIntensity} />
+
+      <directionalLight position={[0, 4, 10]} intensity={sunIntensity} />
 
       <spotLight
         ref={spotLight1}
@@ -56,8 +73,6 @@ export default function Lights() {
       />
 
       <object3D ref={target2} position={[0, 1.8, 0]} />
-
-      <ambientLight intensity={1} />
     </>
   );
 }

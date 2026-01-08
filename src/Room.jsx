@@ -9,7 +9,7 @@ const roomMaterial = new THREE.MeshStandardMaterial({ color: "#ffffff" });
 export default function Room() {
   const { scene } = useGLTF("./models/basic-space-32.glb");
 
-  const { color, roughness, metalness } = useControls({
+  const { color, roughness, metalness } = useControls("material", {
     color: {
       value: "#ffffff",
     },
