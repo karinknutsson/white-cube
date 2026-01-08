@@ -14,7 +14,7 @@ export default function Room() {
       value: "#ffffff",
     },
     roughness: {
-      value: 0.4,
+      value: 1,
       min: 0,
       max: 1,
       step: 0.01,

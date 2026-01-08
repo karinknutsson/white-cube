@@ -11,13 +11,13 @@ export default function Lights() {
     "lights",
     {
       ambientIntensity: {
-        value: 1,
+        value: 0.3,
         min: 0,
         max: 10,
         step: 0.1,
       },
       sunIntensity: {
-        value: 1,
+        value: 0.1,
         min: 0,
         max: 10,
         step: 0.1,
