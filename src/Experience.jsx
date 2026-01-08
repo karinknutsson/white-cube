@@ -3,6 +3,7 @@ import Lights from "./Lights.jsx";
 import Room from "./Room.jsx";
 import { useControls } from "leva";
 import { Perf } from "r3f-perf";
+import { Physics } from "@react-three/rapier";
 
 export default function Experience() {
   const { perfVisible } = useControls({ perfVisible: false });
@@ -19,7 +20,9 @@ export default function Experience() {
         <boxGeometry args={[0.1, 0.1, 0.1]} />
         <meshNormalMaterial />
       </mesh> */}
-      <Room />
+      <Physics debug>
+        <Room />
+      </Physics>
     </>
   );
 }
