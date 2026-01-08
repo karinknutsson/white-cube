@@ -4,6 +4,7 @@ import Room from "./Room.jsx";
 import { useControls } from "leva";
 import { Perf } from "r3f-perf";
 import { Physics } from "@react-three/rapier";
+import Player from "./Player.jsx";
 
 export default function Experience() {
   const { perfVisible } = useControls({ perfVisible: false });
@@ -12,7 +13,7 @@ export default function Experience() {
     <>
       {perfVisible && <Perf position="top-left" />}
 
-      <OrbitControls makeDefault />
+      {/* <OrbitControls makeDefault /> */}
 
       <Lights />
 
@@ -22,6 +23,7 @@ export default function Experience() {
       </mesh> */}
       <Physics debug>
         <Room />
+        <Player />
       </Physics>
     </>
   );

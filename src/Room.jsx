@@ -44,14 +44,16 @@ export default function Room() {
               {" "}
               <Environment map={texture} />
               {/* Metallic sphere for testing */}
-              <mesh position={[0, 1, 1]}>
-                <octahedronGeometry args={[0.5, 50]} />
-                <meshStandardMaterial
-                  color="grey"
-                  roughness={0}
-                  metalness={1}
-                />
-              </mesh>
+              <RigidBody type="dynamic" colliders="ball" restitution={1}>
+                <mesh position={[0, 3, 1]}>
+                  <octahedronGeometry args={[0.5, 50]} />
+                  <meshStandardMaterial
+                    color="grey"
+                    roughness={0}
+                    metalness={1}
+                  />
+                </mesh>
+              </RigidBody>
             </>
           );
         }}
