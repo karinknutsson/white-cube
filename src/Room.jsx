@@ -38,19 +38,29 @@ export default function Room() {
     <>
       {/* Environment map */}
       <CubeCamera resolution={256}>
-        {(texture) => <Environment map={texture} />}
+        {(texture) => {
+          return (
+            <>
+              {" "}
+              <Environment map={texture} />
+              {/* Metallic sphere for testing */}
+              <mesh position={[0, 1, 1]}>
+                <octahedronGeometry args={[0.5, 50]} />
+                <meshStandardMaterial
+                  color="grey"
+                  roughness={0}
+                  metalness={1}
+                />
+              </mesh>
+            </>
+          );
+        }}
       </CubeCamera>
 
       {/* Room mesh */}
       <group rotation={[0, -Math.PI * 0.5, 0]}>
         <primitive object={scene} />
       </group>
-
-      {/* Metallic sphere for testing */}
-      <mesh position={[0, 1, 1]}>
-        <octahedronGeometry args={[0.5, 50]} />
-        <meshStandardMaterial color="grey" roughness={0} metalness={1} />
-      </mesh>
     </>
   );
 }
