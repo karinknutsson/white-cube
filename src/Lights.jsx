@@ -1,11 +1,20 @@
-import { Environment } from "@react-three/drei";
 import { useRef, useEffect } from "react";
+import { useControls } from "leva";
 
 export default function Lights() {
   const spotLight1 = useRef();
   const target1 = useRef();
   const spotLight2 = useRef();
   const target2 = useRef();
+
+  const { spotIntensity } = useControls({
+    spotIntensity: {
+      value: 30,
+      min: 0,
+      max: 100,
+      step: 1,
+    },
+  });
 
   useEffect(() => {
     if (spotLight1.current && target1.current) {
@@ -21,30 +30,12 @@ export default function Lights() {
     <>
       <directionalLight position={[0, 4, 10]} intensity={1} />
 
-      {/* <Environment>
-        <mesh
-          position={[0, 2, 0]}
-          scale={[1, 1, 1]}
-          onUpdate={(self) => self.lookAt(0, 0, 0)}
-        >
-          <planeGeometry />
-          <meshBasicMaterial color={[200, 200, 200]} toneMapped={false} />
-        </mesh>
-      </Environment> */}
-
-      {/* <rectAreaLight
-        position={[1, 3.8, 0]}
-        scale={[0.1, 0.001, 0.1]}
-        rotation={[-Math.PI * 0.5, 0, 0]}
-      /> */}
-      {/* <pointLight position={[0, 3.1, 2]} intensity={5} decay={10} /> */}
-
       <spotLight
         ref={spotLight1}
         position={[-2, 3.06, 3]}
         angle={0.6}
         penumbra={1}
-        intensity={100}
+        intensity={spotIntensity}
         castShadow
         color="#ffffee"
         decay={2}
@@ -57,7 +48,7 @@ export default function Lights() {
         position={[0, 3.06, -3]}
         angle={0.6}
         penumbra={1}
-        intensity={100}
+        intensity={spotIntensity}
         castShadow
         color="#ffffee"
         decay={2}
