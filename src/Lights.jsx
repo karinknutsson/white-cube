@@ -50,16 +50,21 @@ export default function Lights() {
         decay={2}
         onUpdate={(self) => self.lookAt(0, 0, 4)}
       />
-      {/* <mesh position={[-2, 3.06, 3]}>
-        <boxGeometry args={[0.1, 0.1, 0.1]} />
-        <meshNormalMaterial />
-      </mesh> */}
-
       <object3D ref={target1} position={[0, 1.2, 0]} />
-      {/* <mesh position={[0, 1.2, 0]}>
-        <boxGeometry args={[0.1, 0.1, 0.1]} />
-        <meshNormalMaterial />
-      </mesh> */}
+
+      <spotLight
+        ref={spotLight2}
+        position={[0, 3.06, -3]}
+        angle={0.6}
+        penumbra={1}
+        intensity={100}
+        castShadow
+        color="#ffffee"
+        decay={2}
+        onUpdate={(self) => self.lookAt(0, 0, 4)}
+      />
+
+      <object3D ref={target2} position={[0, 1.8, 0]} />
 
       <ambientLight intensity={1} />
     </>
