@@ -1,9 +1,9 @@
-import { useGLTF } from "@react-three/drei";
+import { useGLTF, CubeCamera, Environment } from "@react-three/drei";
 import { useEffect } from "react";
 import * as THREE from "three";
 import { useControls } from "leva";
 
-const wallMaterial = new THREE.MeshStandardMaterial({ color: "#ffffff" });
+const roomMaterial = new THREE.MeshStandardMaterial({ color: "#ffffff" });
 
 export default function Room() {
   const { scene } = useGLTF("./models/basic-space-32.glb");
@@ -14,21 +14,30 @@ export default function Room() {
     },
   });
 
-  wallMaterial.color = new THREE.Color(color);
+  roomMaterial.color = new THREE.Color(color);
 
   useEffect(() => {
     scene.traverse((child) => {
       if (child.isMesh) {
         child.castShadow = true;
         child.receiveShadow = true;
-        child.material = wallMaterial;
+        child.material = roomMaterial;
       }
     });
   }, []);
 
   return (
-    <group rotation={[0, -Math.PI * 0.5, 0]}>
-      <primitive object={scene} />
-    </group>
+    <>
+      <CubeCamera resolution={256}>
+        {(texture) => <Environment map={texture} />}
+      </CubeCamera>
+      <group rotation={[0, -Math.PI * 0.5, 0]}>
+        <primitive object={scene} />
+      </group>
+      <mesh position={[0, 1, 1]}>
+        <octahedronGeometry args={[1, 50]} />
+        <meshStandardMaterial color="grey" roughness={0} metalness={1} />
+      </mesh>
+    </>
   );
 }
