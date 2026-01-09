@@ -5,7 +5,7 @@ import { useControls } from "leva";
 import { Perf } from "r3f-perf";
 import { Physics } from "@react-three/rapier";
 import Player from "./Player.jsx";
-import * as data from "./data/exampleData.js";
+import * as data from "./data/exampleArtworks.js";
 import Artwork from "./artwork/Artwork.jsx";
 import { Environment } from "@react-three/drei";
 import * as positionsData from "./data/positions.js";

@@ -5,7 +5,7 @@ export const data = [
     artist: "Vivan Greven",
     title: "Virtu",
     year: "2021",
-    position: { wall: "rightWall", wallPosition: "center" },
+    position: { wall: "rightWall", wallPosition: "right" },
   },
   {
     path: "./works/greven-ex-ii.png",
@@ -21,7 +21,7 @@ export const data = [
     artist: "Vivan Greven",
     title: "Theresa IX",
     year: "2025",
-    position: { wall: "rightWall", wallPosition: "right" },
+    position: { wall: "rightWall", wallPosition: "center" },
   },
   {
     path: "./works/greven-la-di.png",
@@ -29,14 +29,14 @@ export const data = [
     artist: "Vivan Greven",
     title: "La Di",
     year: "2023",
-    position: { wall: "leftWall", wallPosition: "center" },
+    position: { wall: "backWall", wallPosition: "center" },
   },
-
-  // {
-  //   path: "./works/greven-psy-amo.png",
-  //   size: [2.1, 2.99, 0.018],
-  //   artist: "Vivan Greven",
-  //   title: "Psy Amo (1-2)",
-  //   year: "2023",
-  // },
+  {
+    path: "./works/greven-psy-amo.png",
+    size: [2.99, 2.1, 0.018],
+    artist: "Vivan Greven",
+    title: "Psy Amo (1-2)",
+    year: "2023",
+    position: { wall: "leftWall", wallPosition: "right" },
+  },
 ];
