@@ -8,6 +8,7 @@ import Player from "./Player.jsx";
 import * as data from "./data/exampleData.js";
 import Artwork from "./artwork/Artwork.jsx";
 import { Environment } from "@react-three/drei";
+import * as positionsData from "./data/positions.js";
 
 export default function Experience() {
   const { perfVisible } = useControls({ perfVisible: false });
@@ -21,10 +22,10 @@ export default function Experience() {
       <Lights />
 
       {/* Center cube mesh */}
-      {/* <mesh>
+      <mesh>
         <boxGeometry args={[0.1, 0.1, 0.1]} />
         <meshNormalMaterial />
-      </mesh> */}
+      </mesh>
 
       {/* <Physics debug> */}
       <Physics>
@@ -32,10 +33,18 @@ export default function Experience() {
         <Room />
         <Player />
 
-        {data.data.map((work) => {
+        {data.data.map((work, index) => {
+          if (!work.position) return null;
+
           return (
             <Artwork
               key={work.title}
+              position={
+                positionsData.positions[work.position.wall][
+                  work.position.wallPosition
+                ]
+              }
+              rotation={positionsData.positions[work.position.wall].rotation}
               type="canvas"
               path={work.path}
               size={work.size}

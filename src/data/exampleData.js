@@ -1,9 +1,42 @@
 export const data = [
   {
     path: "./works/greven-virtu.png",
-    size: [1.5, 1.9, 0.03],
+    size: [1.5, 1.9, 0.018],
     artist: "Vivan Greven",
     title: "Virtu",
     year: "2021",
+    position: { wall: "rightWall", wallPosition: "center" },
   },
+  {
+    path: "./works/greven-ex-ii.png",
+    size: [0.4, 0.5, 0.018],
+    artist: "Vivan Greven",
+    title: "ex II",
+    year: "2020",
+    position: { wall: "rightWall", wallPosition: "left" },
+  },
+  {
+    path: "./works/greven-theresa-ix.png",
+    size: [0.45, 0.6, 0.018],
+    artist: "Vivan Greven",
+    title: "Theresa IX",
+    year: "2025",
+    position: { wall: "rightWall", wallPosition: "right" },
+  },
+  {
+    path: "./works/greven-la-di.png",
+    size: [4.25, 1.8, 0.018],
+    artist: "Vivan Greven",
+    title: "La Di",
+    year: "2023",
+    position: { wall: "leftWall", wallPosition: "center" },
+  },
+
+  // {
+  //   path: "./works/greven-psy-amo.png",
+  //   size: [2.1, 2.99, 0.018],
+  //   artist: "Vivan Greven",
+  //   title: "Psy Amo (1-2)",
+  //   year: "2023",
+  // },
 ];

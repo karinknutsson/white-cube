@@ -59,7 +59,7 @@ export default function Room() {
               <Environment map={texture} />
               {/* Metallic sphere for testing */}
               {/* <RigidBody type="dynamic" colliders="ball" restitution={1}>
-                <mesh position={[0, 3, 1]}>
+                <mesh position={[0, 3, 3]}>
                   <octahedronGeometry args={[0.5, 50]} />
                   <meshStandardMaterial
                     color="grey"
