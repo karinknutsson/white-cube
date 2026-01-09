@@ -75,13 +75,11 @@ export default function Player() {
     };
   }, []);
 
-  useFrame((_, delta) => {
+  useFrame(() => {
     if (!body.current) return;
 
     const velocity = body.current.linvel();
     const direction = new THREE.Vector3();
-
-    // velocity.set(0, 0, 0);
 
     if (move.current.forward) direction.z -= 1;
     if (move.current.backward) direction.z += 1;
@@ -107,7 +105,7 @@ export default function Player() {
     }
 
     const position = body.current.translation();
-    camera.position.set(position.x, position.y + 0.6, position.z);
+    camera.position.set(position.x, position.y + 0.7, position.z);
   });
 
   return (

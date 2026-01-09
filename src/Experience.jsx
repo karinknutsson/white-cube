@@ -21,7 +21,8 @@ export default function Experience() {
         <boxGeometry args={[0.1, 0.1, 0.1]} />
         <meshNormalMaterial />
       </mesh> */}
-      <Physics debug>
+      {/* <Physics debug> */}
+      <Physics>
         <Room />
         <Player />
       </Physics>
