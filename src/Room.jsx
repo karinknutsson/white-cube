@@ -2,7 +2,7 @@ import { useGLTF, CubeCamera, Environment } from "@react-three/drei";
 import { useEffect } from "react";
 import * as THREE from "three";
 import { useControls } from "leva";
-import { roughness } from "three/tsl";
+import { RigidBody } from "@react-three/rapier";
 
 const roomMaterial = new THREE.MeshStandardMaterial({ color: "#ffffff" });
 
@@ -44,23 +44,27 @@ export default function Room() {
               {" "}
               <Environment map={texture} />
               {/* Metallic sphere for testing */}
-              <mesh position={[0, 1, 1]}>
-                <octahedronGeometry args={[0.5, 50]} />
-                <meshStandardMaterial
-                  color="grey"
-                  roughness={0}
-                  metalness={1}
-                />
-              </mesh>
+              <RigidBody type="dynamic" colliders="ball" restitution={1}>
+                <mesh position={[0, 3, 1]}>
+                  <octahedronGeometry args={[0.5, 50]} />
+                  <meshStandardMaterial
+                    color="grey"
+                    roughness={0}
+                    metalness={1}
+                  />
+                </mesh>
+              </RigidBody>
             </>
           );
         }}
       </CubeCamera>
 
       {/* Room mesh */}
-      <group rotation={[0, -Math.PI * 0.5, 0]}>
-        <primitive object={scene} />
-      </group>
+      <RigidBody type="fixed" colliders="trimesh">
+        <group rotation={[0, -Math.PI * 0.5, 0]}>
+          <primitive object={scene} />
+        </group>
+      </RigidBody>
     </>
   );
 }
