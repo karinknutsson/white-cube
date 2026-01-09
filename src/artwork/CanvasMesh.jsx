@@ -33,7 +33,7 @@ export default function ArtworkMesh({ path, size }) {
   }, []);
 
   return (
-    <group position={[0, 3, 2]}>
+    <>
       {/* Front face */}
       <mesh position={[0, 0, size[2] * 0.5]}>
         <planeGeometry args={[size[0], size[1]]} />
@@ -85,6 +85,6 @@ export default function ArtworkMesh({ path, size }) {
         <planeGeometry args={[size[0], size[2]]} />
         <meshStandardMaterial map={texture} />
       </mesh>
-    </group>
+    </>
   );
 }

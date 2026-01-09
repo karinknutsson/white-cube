@@ -7,6 +7,7 @@ import { Physics } from "@react-three/rapier";
 import Player from "./Player.jsx";
 import * as data from "./data/exampleData.js";
 import Artwork from "./artwork/Artwork.jsx";
+import { Environment } from "@react-three/drei";
 
 export default function Experience() {
   const { perfVisible } = useControls({ perfVisible: false });
@@ -19,12 +20,15 @@ export default function Experience() {
 
       <Lights />
 
+      {/* Center cube mesh */}
       {/* <mesh>
         <boxGeometry args={[0.1, 0.1, 0.1]} />
         <meshNormalMaterial />
       </mesh> */}
+
       {/* <Physics debug> */}
       <Physics>
+        <Environment files="./hdr/qwantani_dusk_2_puresky_1k.hdr" background />
         <Room />
         <Player />
 

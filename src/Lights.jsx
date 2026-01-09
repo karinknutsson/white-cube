@@ -11,7 +11,7 @@ export default function Lights() {
     "lights",
     {
       ambientIntensity: {
-        value: 0.3,
+        value: 0.1,
         min: 0,
         max: 10,
         step: 0.1,
