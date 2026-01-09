@@ -7,7 +7,7 @@ import { RigidBody } from "@react-three/rapier";
 const roomMaterial = new THREE.MeshStandardMaterial({ color: "#ffffff" });
 
 export default function Room() {
-  const { scene } = useGLTF("./models/basic-space-32.glb");
+  const { scene } = useGLTF("./models/basic-space-7x9.glb");
 
   const { color, roughness, metalness } = useControls("material", {
     color: {

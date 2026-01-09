@@ -1,7 +1,7 @@
 export const data = [
   {
     path: "./works/greven-virtu.png",
-    size: [1.5, 1.9, 0.3],
+    size: [1.5, 1.9, 0.03],
     artist: "Vivan Greven",
     title: "Virtu",
     year: "2021",
