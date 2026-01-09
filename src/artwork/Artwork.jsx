@@ -1,10 +1,10 @@
-import ArtworkMesh from "./ArtworkMesh";
+import CanvasMesh from "./CanvasMesh";
 import ArtworkInfoMesh from "./ArtworkInfoMesh";
 
-export default function Artwork({ path, size, title, artist, year }) {
+export default function Artwork({ type, path, size, title, artist, year }) {
   return (
     <>
-      <ArtworkMesh path={path} size={size} />
+      {type === "canvas" && <CanvasMesh path={path} size={size} />}
       <ArtworkInfoMesh title={title} artist={artist} year={year} />
     </>
   );

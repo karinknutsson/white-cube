@@ -32,6 +32,7 @@ export default function Experience() {
           return (
             <Artwork
               key={work.title}
+              type="canvas"
               path={work.path}
               size={work.size}
               artist={work.artist}
