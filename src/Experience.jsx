@@ -5,6 +5,8 @@ import { useControls } from "leva";
 import { Perf } from "r3f-perf";
 import { Physics } from "@react-three/rapier";
 import Player from "./Player.jsx";
+import * as data from "./data/exampleData.js";
+import Artwork from "./artwork/Artwork.jsx";
 
 export default function Experience() {
   const { perfVisible } = useControls({ perfVisible: false });
@@ -25,6 +27,19 @@ export default function Experience() {
       <Physics>
         <Room />
         <Player />
+
+        {data.data.map((work) => {
+          return (
+            <Artwork
+              key={work.title}
+              path={work.path}
+              size={work.size}
+              artist={work.artist}
+              title={work.title}
+              year={work.year}
+            ></Artwork>
+          );
+        })}
       </Physics>
     </>
   );
