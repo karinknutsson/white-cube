@@ -1,4 +1,4 @@
-import { RigidBody, CuboidCollider } from "@react-three/rapier";
+import { RigidBody, CapsuleCollider } from "@react-three/rapier";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
@@ -6,34 +6,18 @@ import { PointerLockControls } from "@react-three/drei";
 
 export default function Player() {
   const { camera } = useThree();
-  console.log(camera);
   const body = useRef();
+  const controls = useRef();
 
-  const controlsRef = useRef();
-  const velocity = useRef(new THREE.Vector3());
   const move = useRef({
     forward: false,
     backward: false,
     left: false,
     right: false,
+    jump: false,
   });
 
   useEffect(() => {
-    const bodyPosition = body.current.translation();
-
-    const cameraPosition = new THREE.Vector3();
-    cameraPosition.copy(bodyPosition);
-    cameraPosition.z -= 0.2;
-    cameraPosition.y += 0.7;
-
-    const cameraTarget = new THREE.Vector3();
-    cameraTarget.copy(bodyPosition);
-    cameraTarget.z -= 2;
-    cameraTarget.y -= 0.7;
-
-    camera.position.copy(cameraPosition);
-    camera.lookAt(cameraTarget);
-
     const handleKeyDown = (e) => {
       switch (e.code) {
         case "ArrowUp":
@@ -51,6 +35,9 @@ export default function Player() {
         case "ArrowRight":
         case "KeyD":
           move.current.right = true;
+          break;
+        case "Space":
+          move.current.jump = true;
           break;
       }
     };
@@ -73,11 +60,15 @@ export default function Player() {
         case "KeyD":
           move.current.right = false;
           break;
+        case "Space":
+          move.current.jump = false;
+          break;
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keyup", handleKeyUp);
+
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
@@ -85,23 +76,52 @@ export default function Player() {
   }, []);
 
   useFrame((_, delta) => {
+    if (!body.current) return;
+
+    const velocity = body.current.linvel();
+    const direction = new THREE.Vector3();
+
+    // velocity.set(0, 0, 0);
+
+    if (move.current.forward) direction.z -= 1;
+    if (move.current.backward) direction.z += 1;
+    if (move.current.left) direction.x -= 1;
+    if (move.current.right) direction.x += 1;
+
+    direction.normalize();
+    direction.applyEuler(camera.rotation);
+
     const speed = 2;
-    velocity.current.set(0, 0, 0);
 
-    if (move.current.forward) velocity.current.z -= speed * delta;
-    if (move.current.backward) velocity.current.z += speed * delta;
-    if (move.current.left) velocity.current.x -= speed * delta;
-    if (move.current.right) velocity.current.x += speed * delta;
+    body.current.setLinvel(
+      {
+        x: direction.x * speed,
+        y: velocity.y,
+        z: direction.z * speed,
+      },
+      true
+    );
 
-    controlsRef.current.moveRight(velocity.current.x);
-    controlsRef.current.moveForward(velocity.current.z);
+    if (move.current.jump && Math.abs(velocity.y) < 0.05) {
+      body.current.setLinvel({ x: velocity.x, y: 4, z: velocity.z }, true);
+    }
+
+    const position = body.current.translation();
+    camera.position.set(position.x, position.y + 0.6, position.z);
   });
 
   return (
     <>
-      <PointerLockControls ref={controlsRef} />
-      <RigidBody ref={body} type="dynamic">
-        <CuboidCollider args={[0.3, 0.8, 0.2]} position={[0, 1, 3.6]} />
+      <PointerLockControls ref={controls} />
+      <RigidBody
+        ref={body}
+        position={[0, 1, 3.6]}
+        type="dynamic"
+        colliders={false}
+        mass={1}
+        enabledRotations={[false, false, false]}
+      >
+        <CapsuleCollider args={[0.5, 0.3]} />
       </RigidBody>
     </>
   );
