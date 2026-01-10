@@ -11,7 +11,9 @@ root.render(
   <>
     <Leva collapsed />
     <Canvas
-      gl={{ toneMapping: THREE.ACESFilmicToneMapping }}
+      gl={{
+        toneMapping: THREE.ACESFilmicToneMapping,
+      }}
       shadows
       camera={{
         fov: 100,

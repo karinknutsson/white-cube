@@ -1,51 +1,97 @@
 import { useRef, useEffect } from "react";
 import { useControls } from "leva";
+import { BakeShadows } from "@react-three/drei";
+import { CameraHelper } from "three";
 
 export default function Lights() {
+  const sunLight = useRef();
+  const sunLightTarget = useRef();
+  const sunLightHelper = useRef();
   const spotLight1 = useRef();
-  const target1 = useRef();
+  const spotLight1Target = useRef();
   const spotLight2 = useRef();
-  const target2 = useRef();
+  const spotLight2Target = useRef();
 
-  const { ambientIntensity, sunIntensity, spotIntensity } = useControls(
-    "lights",
-    {
-      ambientIntensity: {
-        value: 1,
-        min: 0,
-        max: 10,
-        step: 0.1,
-      },
-      sunIntensity: {
-        value: 0.3,
-        min: 0,
-        max: 10,
-        step: 0.1,
-      },
-      spotIntensity: {
-        value: 30,
-        min: 0,
-        max: 100,
-        step: 1,
-      },
-    }
-  );
+  const {
+    ambientIntensity,
+    sunIntensity,
+    spotIntensity,
+    shadowBias,
+    shadowNormalBias,
+  } = useControls("lights", {
+    ambientIntensity: {
+      value: 2,
+      min: 0,
+      max: 10,
+      step: 0.1,
+    },
+    sunIntensity: {
+      value: 1,
+      min: 0,
+      max: 10,
+      step: 0.1,
+    },
+    spotIntensity: {
+      value: 30,
+      min: 0,
+      max: 100,
+      step: 1,
+    },
+    shadowBias: {
+      value: 0.0005,
+      min: -0.01,
+      max: 0.01,
+      step: 0.0001,
+    },
+    shadowNormalBias: {
+      value: 0.005,
+      min: 0,
+      max: 1,
+      step: 0.01,
+    },
+  });
 
   useEffect(() => {
-    if (spotLight1.current && target1.current) {
-      spotLight1.current.target = target1.current;
-    }
+    // if (sunLight.current) {
+    //   sunLightHelper.current = new CameraHelper(sunLight.current.shadow.camera);
+    //   sunLight.current.add(sunLightHelper.current);
+    // }
 
-    if (spotLight2.current && target2.current) {
-      spotLight2.current.target = target2.current;
-    }
+    if (sunLight.current && sunLightTarget.current)
+      sunLight.current.target = sunLightTarget.current;
+
+    if (spotLight1.current && spotLight1Target.current)
+      spotLight1.current.target = spotLight1Target.current;
+
+    if (spotLight2.current && spotLight2Target.current)
+      spotLight2.current.target = spotLight2Target.current;
   }, []);
 
   return (
     <>
+      <BakeShadows />
+
+      {/* <SoftShadows size={10} samples={50} focus={0} /> */}
+
       <ambientLight intensity={ambientIntensity} />
 
-      <directionalLight position={[0, 4, 10]} intensity={sunIntensity} />
+      <directionalLight
+        ref={sunLight}
+        castShadow
+        position={[2, 5, 4]}
+        intensity={sunIntensity}
+        shadow-mapSize-width={2048}
+        shadow-mapSize-height={2048}
+        shadow-camera-near={2}
+        shadow-camera-far={20}
+        shadow-camera-top={10}
+        shadow-camera-right={10}
+        shadow-camera-bottom={-10}
+        shadow-camera-left={-10}
+        shadow-bias={shadowBias}
+        shadow-normalBias={shadowNormalBias}
+      />
+      <object3D ref={sunLightTarget} position={[-0.4, 0.4, 0]} />
 
       <spotLight
         ref={spotLight1}
@@ -57,8 +103,10 @@ export default function Lights() {
         color="#ffffee"
         decay={2}
         onUpdate={(self) => self.lookAt(0, 0, 4)}
+        shadow-mapSize-width={1024}
+        shadow-mapSize-height={1024}
       />
-      <object3D ref={target1} position={[0, 1.2, 0]} />
+      <object3D ref={spotLight1Target} position={[0, 1.2, 0]} />
 
       <spotLight
         ref={spotLight2}
@@ -70,9 +118,11 @@ export default function Lights() {
         color="#ffffee"
         decay={2}
         onUpdate={(self) => self.lookAt(0, 0, 4)}
+        shadow-mapSize-width={1024}
+        shadow-mapSize-height={1024}
       />
 
-      <object3D ref={target2} position={[0, 1.8, 0]} />
+      <object3D ref={spotLight2Target} position={[0, 1.8, 0]} />
     </>
   );
 }
