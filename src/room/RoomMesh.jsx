@@ -5,7 +5,7 @@ const roomMaterial = new THREE.MeshStandardMaterial({ color: "#ffffff" });
 const planeGeometry = new THREE.PlaneGeometry(1, 1);
 const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
 
-export function FloorMesh({ width, depth, position }) {
+export function FloorMesh({ width, depth }) {
   return (
     <RigidBody type="fixed" colliders="trimesh">
       <mesh
@@ -13,6 +13,20 @@ export function FloorMesh({ width, depth, position }) {
         material={roomMaterial}
         rotation={[-Math.PI * 0.5, 0, 0]}
         scale={[width, depth, 1]}
+      ></mesh>
+    </RigidBody>
+  );
+}
+
+export function CeilingMesh({ width, depth, position }) {
+  return (
+    <RigidBody type="fixed" colliders="trimesh">
+      <mesh
+        geometry={planeGeometry}
+        material={roomMaterial}
+        rotation={[Math.PI * 0.5, 0, 0]}
+        scale={[width, depth, 1]}
+        position={position}
       ></mesh>
     </RigidBody>
   );
@@ -63,6 +77,7 @@ export default function RoomMesh({ size, position }) {
   return (
     <group position={position}>
       <FloorMesh width={size[0]} depth={size[2]} />
+      <CeilingMesh width={size[0]} depth={size[2]} position={[0, size[1], 0]} />
       <BackWallMesh width={size[0]} height={size[1]} depth={size[2]} />
       <LeftWallMesh width={size[0]} height={size[1]} depth={size[2]} />
       <RightWallMesh width={size[0]} height={size[1]} depth={size[2]} />
