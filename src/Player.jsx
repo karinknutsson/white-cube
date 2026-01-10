@@ -18,6 +18,8 @@ export default function Player() {
   });
 
   useEffect(() => {
+    if (controls.current) controls.current.pointerSpeed = 0.3;
+
     const handleKeyDown = (e) => {
       switch (e.code) {
         case "ArrowUp":
