@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import * as THREE from "three";
 import { useControls } from "leva";
 import { RigidBody } from "@react-three/rapier";
+import RoomMesh from "./RoomMesh";
 
 const roomMaterial = new THREE.MeshStandardMaterial({ color: "#ffffff" });
 const windowMaterial = new THREE.MeshPhysicalMaterial({
@@ -74,11 +75,13 @@ export default function Room() {
       </CubeCamera>
 
       {/* Room mesh */}
-      <RigidBody type="fixed" colliders="trimesh">
+      <RoomMesh size={[7, 3.2, 9]} position={[0, 0, 0]} />
+
+      {/* <RigidBody type="fixed" colliders="trimesh">
         <group rotation={[0, -Math.PI * 0.5, 0]}>
           <primitive object={roomScene} />
         </group>
-      </RigidBody>
+      </RigidBody> */}
 
       {/* Window mesh */}
       <RigidBody type="fixed" colliders="trimesh">
