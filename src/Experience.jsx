@@ -22,10 +22,10 @@ export default function Experience() {
       <Lights />
 
       {/* Center cube mesh */}
-      <mesh>
+      {/* <mesh>
         <boxGeometry args={[0.1, 0.1, 0.1]} />
         <meshNormalMaterial />
-      </mesh>
+      </mesh> */}
 
       {/* <Physics debug> */}
       <Physics>
