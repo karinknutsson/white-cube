@@ -17,7 +17,7 @@ export default function Experience() {
     <>
       {perfVisible && <Perf position="top-left" />}
 
-      <OrbitControls makeDefault />
+      {/* <OrbitControls makeDefault /> */}
 
       <Lights />
 
@@ -30,8 +30,10 @@ export default function Experience() {
       {/* <Physics debug> */}
       <Physics>
         <Environment files="./hdr/qwantani_dusk_2_puresky_1k.hdr" background />
+
         <RoomScene />
-        {/* <Player /> */}
+
+        <Player />
 
         {data.data.map((work, index) => {
           if (!work.position) return null;
