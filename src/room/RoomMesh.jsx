@@ -73,6 +73,19 @@ export function RightWallMesh({ width, height, depth }) {
   );
 }
 
+export function PartitionMesh({ width, height, depth, position }) {
+  return (
+    <RigidBody type="fixed" colliders="trimesh">
+      <mesh
+        geometry={boxGeometry}
+        material={roomMaterial}
+        scale={[width, height, depth]}
+        position={position}
+      ></mesh>
+    </RigidBody>
+  );
+}
+
 export default function RoomMesh({ size, position }) {
   return (
     <group position={position}>
@@ -81,6 +94,12 @@ export default function RoomMesh({ size, position }) {
       <BackWallMesh width={size[0]} height={size[1]} depth={size[2]} />
       <LeftWallMesh width={size[0]} height={size[1]} depth={size[2]} />
       <RightWallMesh width={size[0]} height={size[1]} depth={size[2]} />
+      <PartitionMesh
+        width={size[0] - 2.6}
+        height={size[1]}
+        depth={0.2}
+        position={[0, size[1] * 0.5, 0]}
+      />
     </group>
   );
 }
