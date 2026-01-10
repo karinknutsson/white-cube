@@ -86,6 +86,19 @@ export function PartitionMesh({ width, height, depth, position }) {
   );
 }
 
+export function WindowSeatMesh({ width, height, depth, position }) {
+  return (
+    <RigidBody type="fixed" colliders="trimesh">
+      <mesh
+        geometry={boxGeometry}
+        material={roomMaterial}
+        scale={[width, height, depth]}
+        position={position}
+      ></mesh>
+    </RigidBody>
+  );
+}
+
 export default function RoomMesh({ size, position }) {
   return (
     <group position={position}>
@@ -99,6 +112,19 @@ export default function RoomMesh({ size, position }) {
         height={size[1]}
         depth={0.2}
         position={[0, size[1] * 0.5, 0]}
+      />
+
+      <WindowSeatMesh
+        width={(size[0] - 1.3) * 0.5}
+        height={0.6}
+        depth={0.6}
+        position={[-(1.3 + size[0]) * 0.25, 0.3, size[2] * 0.5 - 0.3]}
+      />
+      <WindowSeatMesh
+        width={(size[0] - 1.3) * 0.5}
+        height={0.6}
+        depth={0.6}
+        position={[(1.3 + size[0]) * 0.25, 0.3, size[2] * 0.5 - 0.3]}
       />
     </group>
   );
