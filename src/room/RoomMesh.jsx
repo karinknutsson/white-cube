@@ -10,7 +10,6 @@ const windowMaterial = new THREE.MeshPhysicalMaterial({
   color: "#ffffff",
   roughness: 0,
   transmission: 1,
-  thickness: 0.03,
   transparent: true,
 });
 
@@ -140,10 +139,15 @@ export default function RoomMesh({ size, position }) {
   return (
     <group position={position}>
       <FloorMesh width={size[0]} depth={size[2]} />
+
       <CeilingMesh width={size[0]} depth={size[2]} position={[0, size[1], 0]} />
+
       <BackWallMesh width={size[0]} height={size[1]} depth={size[2]} />
+
       <LeftWallMesh width={size[0]} height={size[1]} depth={size[2]} />
+
       <RightWallMesh width={size[0]} height={size[1]} depth={size[2]} />
+
       <PartitionMesh
         width={size[0] - 2.6}
         height={size[1]}
@@ -154,8 +158,8 @@ export default function RoomMesh({ size, position }) {
       <WindowMesh
         width={size[0]}
         height={size[1]}
-        depth={0.03}
-        position={[0, size[1] * 0.5, size[2] * 0.5 - 0.015]}
+        depth={0.02}
+        position={[0, size[1] * 0.5, size[2] * 0.5 + 0.01]}
       />
 
       <WindowSeatMesh
@@ -164,6 +168,7 @@ export default function RoomMesh({ size, position }) {
         depth={0.6}
         position={[-(1.3 + size[0]) * 0.25, 0.3, size[2] * 0.5 - 0.3]}
       />
+
       <WindowSeatMesh
         width={(size[0] - 1.3) * 0.5}
         height={0.6}
