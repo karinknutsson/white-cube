@@ -18,6 +18,8 @@ export default function Player() {
   });
 
   useEffect(() => {
+    if (controls.current) controls.current.pointerSpeed = 0.3;
+
     const handleKeyDown = (e) => {
       switch (e.code) {
         case "ArrowUp":
@@ -89,7 +91,7 @@ export default function Player() {
     direction.normalize();
     direction.applyEuler(camera.rotation);
 
-    const speed = 2;
+    const speed = 1;
 
     body.current.setLinvel(
       {
