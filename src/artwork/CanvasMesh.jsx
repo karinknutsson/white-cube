@@ -12,6 +12,9 @@ export default function ArtworkMesh({ path, size }) {
   const topRef = useRef();
   const bottomRef = useRef();
 
+  let insideGrabArea = false;
+  let grabMode = false;
+
   useEffect(() => {
     const fixSideUV = (mesh, axis) => {
       if (!mesh || !mesh.geometry) return;
@@ -34,12 +37,31 @@ export default function ArtworkMesh({ path, size }) {
     fixSideUV(bottomRef.current, "bottom");
   }, []);
 
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (!insideGrabArea) return;
+
+      if (e.code === "Enter") {
+        console.log("Grabbed the artwork!");
+        grabMode = true;
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
   function onIntersection() {
     gsap.to(".grab-icon-container", { duration: 0.1, opacity: 1 });
+    insideGrabArea = true;
   }
 
   function onIntersectionExit() {
     gsap.to(".grab-icon-container", { duration: 0.1, opacity: 0 });
+    insideGrabArea = false;
   }
 
   return (
