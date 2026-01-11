@@ -2,6 +2,7 @@ import { useLoader } from "@react-three/fiber";
 import { useRef, useEffect } from "react";
 import * as THREE from "three";
 import { RigidBody, CuboidCollider } from "@react-three/rapier";
+import gsap from "gsap";
 
 export default function ArtworkMesh({ path, size }) {
   const texture = useLoader(THREE.TextureLoader, path);
@@ -33,8 +34,12 @@ export default function ArtworkMesh({ path, size }) {
     fixSideUV(bottomRef.current, "bottom");
   }, []);
 
-  function onCollision() {
-    console.log("Artwork collided");
+  function onIntersection() {
+    gsap.to(".grab-icon-container", { duration: 0.1, opacity: 1 });
+  }
+
+  function onIntersectionExit() {
+    gsap.to(".grab-icon-container", { duration: 0.1, opacity: 0 });
   }
 
   return (
@@ -43,11 +48,12 @@ export default function ArtworkMesh({ path, size }) {
       <RigidBody
         type="kinematicPosition"
         colliders={false}
-        onCollisionEnter={onCollision}
+        onIntersectionEnter={onIntersection}
+        onIntersectionExit={onIntersectionExit}
       >
         {/* Colliders */}
         <CuboidCollider args={[size[0] * 0.5, size[1] * 0.5, size[2] * 0.5]} />
-        <CuboidCollider args={[size[0] * 0.5, size[1] * 0.5, 0.4]} sensor />
+        <CuboidCollider args={[size[0] * 0.5, size[1] * 0.5, 0.6]} sensor />
 
         {/* Front face */}
         <mesh position={[0, 0, size[2] * 0.5]}>
