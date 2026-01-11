@@ -1,19 +1,16 @@
-import { useLoader } from "@react-three/fiber";
+import { useLoader, useFrame } from "@react-three/fiber";
 import { useRef, useEffect } from "react";
 import * as THREE from "three";
 import { RigidBody, CuboidCollider } from "@react-three/rapier";
 import gsap from "gsap";
+import useGallery from "../stores/useGallery.js";
 
 export default function ArtworkMesh({ path, size }) {
   const texture = useLoader(THREE.TextureLoader, path);
-
   const leftRef = useRef();
   const rightRef = useRef();
   const topRef = useRef();
   const bottomRef = useRef();
-
-  let insideGrabArea = false;
-  let grabMode = false;
 
   useEffect(() => {
     const fixSideUV = (mesh, axis) => {
@@ -37,98 +34,59 @@ export default function ArtworkMesh({ path, size }) {
     fixSideUV(bottomRef.current, "bottom");
   }, []);
 
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (!insideGrabArea) return;
-
-      if (e.code === "Enter") {
-        console.log("Grabbed the artwork!");
-        grabMode = true;
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, []);
-
-  function onIntersection() {
-    gsap.to(".grab-icon-container", { duration: 0.1, opacity: 1 });
-    insideGrabArea = true;
-  }
-
-  function onIntersectionExit() {
-    gsap.to(".grab-icon-container", { duration: 0.1, opacity: 0 });
-    insideGrabArea = false;
-  }
-
   return (
     <>
-      {/* Body */}
-      <RigidBody
-        type="kinematicPosition"
-        colliders={false}
-        onIntersectionEnter={onIntersection}
-        onIntersectionExit={onIntersectionExit}
+      {/* Front face */}
+      <mesh position={[0, 0, size[2] * 0.5]}>
+        <planeGeometry args={[size[0], size[1]]} />
+        <meshStandardMaterial map={texture} />
+      </mesh>
+
+      {/* Back face */}
+      <mesh position={[0, 0, -size[2] * 0.5]} rotation={[0, Math.PI, 0]}>
+        <planeGeometry args={[size[0], size[1]]} />
+        <meshStandardMaterial color="white" />
+      </mesh>
+
+      {/* Left side */}
+      <mesh
+        ref={leftRef}
+        position={[-size[0] * 0.5, 0, 0]}
+        rotation={[0, -Math.PI * 0.5, 0]}
       >
-        {/* Colliders */}
-        <CuboidCollider args={[size[0] * 0.5, size[1] * 0.5, size[2] * 0.5]} />
-        <CuboidCollider args={[size[0] * 0.5, size[1] * 0.5, 0.6]} sensor />
+        <planeGeometry args={[size[2], size[1]]} />
+        <meshStandardMaterial map={texture} />
+      </mesh>
 
-        {/* Front face */}
-        <mesh position={[0, 0, size[2] * 0.5]}>
-          <planeGeometry args={[size[0], size[1]]} />
-          <meshStandardMaterial map={texture} />
-        </mesh>
+      {/* Right side */}
+      <mesh
+        ref={rightRef}
+        position={[size[0] * 0.5, 0, 0]}
+        rotation={[0, Math.PI * 0.5, 0]}
+      >
+        <planeGeometry args={[size[2], size[1]]} />
+        <meshStandardMaterial map={texture} />
+      </mesh>
 
-        {/* Back face */}
-        <mesh position={[0, 0, -size[2] * 0.5]} rotation={[0, Math.PI, 0]}>
-          <planeGeometry args={[size[0], size[1]]} />
-          <meshStandardMaterial color="white" />
-        </mesh>
+      {/* Top side */}
+      <mesh
+        ref={topRef}
+        position={[0, size[1] * 0.5, 0]}
+        rotation={[-Math.PI * 0.5, 0, 0]}
+      >
+        <planeGeometry args={[size[0], size[2]]} />
+        <meshStandardMaterial map={texture} />
+      </mesh>
 
-        {/* Left side */}
-        <mesh
-          ref={leftRef}
-          position={[-size[0] * 0.5, 0, 0]}
-          rotation={[0, -Math.PI * 0.5, 0]}
-        >
-          <planeGeometry args={[size[2], size[1]]} />
-          <meshStandardMaterial map={texture} />
-        </mesh>
-
-        {/* Right side */}
-        <mesh
-          ref={rightRef}
-          position={[size[0] * 0.5, 0, 0]}
-          rotation={[0, Math.PI * 0.5, 0]}
-        >
-          <planeGeometry args={[size[2], size[1]]} />
-          <meshStandardMaterial map={texture} />
-        </mesh>
-
-        {/* Top side */}
-        <mesh
-          ref={topRef}
-          position={[0, size[1] * 0.5, 0]}
-          rotation={[-Math.PI * 0.5, 0, 0]}
-        >
-          <planeGeometry args={[size[0], size[2]]} />
-          <meshStandardMaterial map={texture} />
-        </mesh>
-
-        {/* Bottom side */}
-        <mesh
-          ref={bottomRef}
-          position={[0, -size[1] * 0.5, 0]}
-          rotation={[Math.PI * 0.5, 0, 0]}
-        >
-          <planeGeometry args={[size[0], size[2]]} />
-          <meshStandardMaterial map={texture} />
-        </mesh>
-      </RigidBody>
+      {/* Bottom side */}
+      <mesh
+        ref={bottomRef}
+        position={[0, -size[1] * 0.5, 0]}
+        rotation={[Math.PI * 0.5, 0, 0]}
+      >
+        <planeGeometry args={[size[0], size[2]]} />
+        <meshStandardMaterial map={texture} />
+      </mesh>
     </>
   );
 }

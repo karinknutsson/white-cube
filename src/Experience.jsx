@@ -35,7 +35,7 @@ export default function Experience() {
 
         <Player />
 
-        {data.data.map((work, index) => {
+        {data.data.map((work) => {
           if (!work.position) return null;
 
           return (

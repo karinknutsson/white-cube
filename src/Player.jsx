@@ -3,11 +3,13 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { PointerLockControls } from "@react-three/drei";
+import useGallery from "./stores/useGallery.js";
 
 export default function Player() {
   const { camera } = useThree();
-  const body = useRef();
-  const controls = useRef();
+  const bodyRef = useRef();
+  const colliderRef = useRef();
+  const controlsRef = useRef();
 
   const move = useRef({
     forward: false,
@@ -18,7 +20,11 @@ export default function Player() {
   });
 
   useEffect(() => {
-    if (controls.current) controls.current.pointerSpeed = 0.3;
+    useGallery.getState().setPlayerRef({ playerRef: colliderRef });
+  }, []);
+
+  useEffect(() => {
+    if (controlsRef.current) controlsRef.current.pointerSpeed = 0.3;
 
     const handleKeyDown = (e) => {
       switch (e.code) {
@@ -78,9 +84,9 @@ export default function Player() {
   }, []);
 
   useFrame(() => {
-    if (!body.current) return;
+    if (!bodyRef.current) return;
 
-    const velocity = body.current.linvel();
+    const velocity = bodyRef.current.linvel();
     const direction = new THREE.Vector3();
 
     if (move.current.forward) direction.z -= 1;
@@ -93,7 +99,7 @@ export default function Player() {
 
     const speed = 1;
 
-    body.current.setLinvel(
+    bodyRef.current.setLinvel(
       {
         x: direction.x * speed,
         y: velocity.y,
@@ -103,25 +109,25 @@ export default function Player() {
     );
 
     if (move.current.jump && Math.abs(velocity.y) < 0.05) {
-      body.current.setLinvel({ x: velocity.x, y: 4, z: velocity.z }, true);
+      bodyRef.current.setLinvel({ x: velocity.x, y: 4, z: velocity.z }, true);
     }
 
-    const position = body.current.translation();
+    const position = bodyRef.current.translation();
     camera.position.set(position.x, position.y + 0.7, position.z);
   });
 
   return (
     <>
-      <PointerLockControls ref={controls} />
+      <PointerLockControls ref={controlsRef} />
       <RigidBody
-        ref={body}
+        ref={bodyRef}
         position={[0, 1, 3.6]}
         type="dynamic"
         colliders={false}
         mass={1}
         enabledRotations={[false, false, false]}
       >
-        <CapsuleCollider args={[0.5, 0.3]} />
+        <CapsuleCollider ref={colliderRef} args={[0.5, 0.3]} />
       </RigidBody>
     </>
   );
