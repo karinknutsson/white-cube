@@ -33,12 +33,21 @@ export default function ArtworkMesh({ path, size }) {
     fixSideUV(bottomRef.current, "bottom");
   }, []);
 
+  function onCollision() {
+    console.log("Artwork collided");
+  }
+
   return (
     <>
-      {/* Rigid Body */}
-      <RigidBody type="kinematicPosition" colliders={false}>
-        {/* Collider */}
-        <CuboidCollider args={[size[0] * 0.5, size[1] * 0.5, 0.3]} />
+      {/* Body */}
+      <RigidBody
+        type="kinematicPosition"
+        colliders={false}
+        onCollisionEnter={onCollision}
+      >
+        {/* Colliders */}
+        <CuboidCollider args={[size[0] * 0.5, size[1] * 0.5, size[2] * 0.5]} />
+        <CuboidCollider args={[size[0] * 0.5, size[1] * 0.5, 0.4]} sensor />
 
         {/* Front face */}
         <mesh position={[0, 0, size[2] * 0.5]}>
