@@ -1,4 +1,4 @@
-import { RigidBody, CuboidCollider } from "@react-three/rapier";
+import { RigidBody } from "@react-three/rapier";
 import * as THREE from "three";
 import { useControls } from "leva";
 
@@ -58,13 +58,6 @@ export function BackWallMesh({ width, height, depth }) {
           castShadow
           receiveShadow
         ></mesh>
-      </RigidBody>
-      <RigidBody
-        type="fixed"
-        colliders={false}
-        position={[0, height * 0.5, -depth * 0.5 + 0.4]}
-      >
-        <CuboidCollider args={[width * 0.5 - 0.1, height * 0.5 - 0.1, 0.3]} />
       </RigidBody>
     </>
   );
