@@ -6,7 +6,7 @@ const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
 
 const roomMaterial = new THREE.MeshStandardMaterial({
   color: "#ffffff",
-  wireframe: true,
+  // wireframe: true,
 });
 const windowMaterial = new THREE.MeshPhysicalMaterial({
   color: "#ffffff",

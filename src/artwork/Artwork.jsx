@@ -40,6 +40,10 @@ export default function Artwork({
   function handleGrab() {
     setGrabMode(true);
     onIntersectionExit();
+
+    const image = document.getElementById("grabbed-image");
+    image.src = path;
+    gsap.to("#grabbed-artwork-container", { duration: 0.5, opacity: 0.5 });
   }
 
   function onIntersection() {
