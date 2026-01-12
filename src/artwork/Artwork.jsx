@@ -20,27 +20,8 @@ export default function Artwork({
 }) {
   const artworkRef = useRef();
   let insideGrabArea = false;
-  const grabOffset = useRef(new THREE.Vector3());
 
   const [grabMode, setGrabMode] = useState(false);
-
-  function handleGrab() {
-    const playerRef = useGallery.getState().playerRef.playerRef;
-
-    if (!playerRef.current || !artworkRef.current) return;
-
-    const playerPosition = playerRef.current.translation();
-    const artworkPosition = artworkRef.current.translation();
-
-    grabOffset.current.set(
-      artworkPosition.x - (playerPosition.x + 0.5),
-      artworkPosition.y - playerPosition.y,
-      artworkPosition.z - (playerPosition.z + 0.5)
-    );
-
-    setGrabMode(true);
-    onIntersectionExit();
-  }
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -56,36 +37,10 @@ export default function Artwork({
     };
   }, []);
 
-  useFrame((state) => {
-    const playerRef = useGallery.getState().playerRef.playerRef;
-
-    if (!grabMode || !playerRef.current || !artworkRef.current) return;
-
-    const playerPosition = playerRef.current.translation();
-    const rotatedOffset = grabOffset.current.clone();
-
-    rotatedOffset.applyAxisAngle(
-      new THREE.Vector3(0, 1, 0),
-      state.camera.rotation.y
-    );
-
-    const targetPosition = new THREE.Vector3(
-      playerPosition.x + rotatedOffset.x,
-      playerPosition.y + rotatedOffset.y,
-      playerPosition.z + rotatedOffset.z
-    );
-
-    artworkRef.current.setNextKinematicTranslation(
-      new THREE.Vector3(targetPosition.x, targetPosition.y, targetPosition.z)
-    );
-
-    const cameraRotation = state.camera.rotation;
-    artworkRef.current.setNextKinematicRotation(
-      new THREE.Quaternion().setFromEuler(
-        new THREE.Euler(0, cameraRotation.y, 0)
-      )
-    );
-  });
+  function handleGrab() {
+    setGrabMode(true);
+    onIntersectionExit();
+  }
 
   function onIntersection() {
     if (grabMode) return;
@@ -101,23 +56,27 @@ export default function Artwork({
 
   return (
     <>
-      {/* Body */}
-      <RigidBody
-        position={position}
-        rotation={rotation}
-        ref={artworkRef}
-        type="kinematicPosition"
-        colliders={false}
-        onIntersectionEnter={onIntersection}
-        onIntersectionExit={onIntersectionExit}
-      >
-        {/* Colliders */}
-        <CuboidCollider args={[size[0] * 0.5, size[1] * 0.5, size[2] * 0.5]} />
-        <CuboidCollider args={[size[0] * 0.5, size[1] * 0.5, 0.6]} sensor />
+      {!grabMode && (
+        <RigidBody
+          position={position}
+          rotation={rotation}
+          ref={artworkRef}
+          type="kinematicPosition"
+          colliders={false}
+          onIntersectionEnter={onIntersection}
+          onIntersectionExit={onIntersectionExit}
+        >
+          {/* Colliders */}
+          <CuboidCollider
+            args={[size[0] * 0.5, size[1] * 0.5, size[2] * 0.5]}
+          />
+          <CuboidCollider args={[size[0] * 0.5, size[1] * 0.5, 0.6]} sensor />
 
-        {type === "canvas" && <CanvasMesh path={path} size={size} />}
-        <ArtworkInfoMesh title={title} artist={artist} year={year} />
-      </RigidBody>
+          {/* Meshes */}
+          {type === "canvas" && <CanvasMesh path={path} size={size} />}
+          <ArtworkInfoMesh title={title} artist={artist} year={year} />
+        </RigidBody>
+      )}
     </>
   );
 }
