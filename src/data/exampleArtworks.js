@@ -37,6 +37,6 @@ export const data = [
     artist: "Vivan Greven",
     title: "Psy Amo (1-2)",
     year: "2023",
-    position: { wall: "leftWall", wallPosition: "right" },
+    position: { wall: "leftWall", wallPosition: "left" },
   },
 ];

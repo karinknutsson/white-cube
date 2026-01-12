@@ -33,12 +33,11 @@ export default function Artwork({
     const artworkPosition = artworkRef.current.translation();
 
     grabOffset.current.set(
-      artworkPosition.x - playerPosition.x,
+      artworkPosition.x - playerPosition.x + 0.3,
       artworkPosition.y - playerPosition.y,
-      artworkPosition.z - playerPosition.z
+      artworkPosition.z - playerPosition.z + 0.3
     );
 
-    console.log("Grabbed the artwork!");
     setGrabMode(true);
     onIntersectionExit();
   }
@@ -57,7 +56,7 @@ export default function Artwork({
     };
   }, []);
 
-  useFrame(() => {
+  useFrame((state) => {
     const playerRef = useGallery.getState().playerRef.playerRef;
 
     if (!grabMode || !playerRef.current || !artworkRef.current) return;
@@ -73,19 +72,6 @@ export default function Artwork({
     artworkRef.current.setNextKinematicTranslation(
       new THREE.Vector3(targetPosition.x, targetPosition.y, targetPosition.z)
     );
-
-    const quaternion = new THREE.Quaternion().setFromRotationMatrix(
-      new THREE.Matrix4().lookAt(
-        targetPosition,
-        playerPosition,
-        new THREE.Vector3(0, 1, 0)
-      )
-    );
-    const correction = new THREE.Quaternion().setFromEuler(
-      new THREE.Euler(0, Math.PI, 0)
-    );
-    quaternion.multiply(correction);
-    artworkRef.current.setNextKinematicRotation(quaternion);
   });
 
   function onIntersection() {
