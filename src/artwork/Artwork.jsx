@@ -24,16 +24,16 @@ export default function Artwork({
   const [grabMode, setGrabMode] = useState(false);
 
   useEffect(() => {
-    const handleKeyDown = (e) => {
+    const handleMouseDown = (e) => {
       if (!insideGrabArea) return;
 
-      if (e.code === "Enter") handleGrab();
+      handleGrab();
     };
 
-    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("mousedown", handleMouseDown);
 
     return () => {
-      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("mousedown", handleMouseDown);
     };
   }, []);
 

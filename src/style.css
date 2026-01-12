@@ -16,11 +16,11 @@ body,
 
 .grab-icon-container {
   position: absolute;
-  bottom: 20px;
+  bottom: 100px;
   left: 50%;
   transform: translateX(-50%);
-  width: 256px;
-  height: 256px;
+  width: 160px;
+  height: 160px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -42,7 +42,6 @@ body,
 }
 
 .grab-icon-text {
-  margin-top: 16px;
   width: 60%;
   text-align: center;
 }
