@@ -33,9 +33,9 @@ export default function Artwork({
     const artworkPosition = artworkRef.current.translation();
 
     grabOffset.current.set(
-      artworkPosition.x - (playerPosition.x + 0.3),
+      artworkPosition.x - (playerPosition.x + 0.5),
       artworkPosition.y - playerPosition.y,
-      artworkPosition.z - (playerPosition.z + 0.3)
+      artworkPosition.z - (playerPosition.z + 0.5)
     );
 
     setGrabMode(true);
@@ -62,15 +62,28 @@ export default function Artwork({
     if (!grabMode || !playerRef.current || !artworkRef.current) return;
 
     const playerPosition = playerRef.current.translation();
+    const rotatedOffset = grabOffset.current.clone();
+
+    rotatedOffset.applyAxisAngle(
+      new THREE.Vector3(0, 1, 0),
+      state.camera.rotation.y
+    );
 
     const targetPosition = new THREE.Vector3(
-      playerPosition.x + grabOffset.current.x,
-      playerPosition.y + grabOffset.current.y,
-      playerPosition.z + grabOffset.current.z
+      playerPosition.x + rotatedOffset.x,
+      playerPosition.y + rotatedOffset.y,
+      playerPosition.z + rotatedOffset.z
     );
 
     artworkRef.current.setNextKinematicTranslation(
       new THREE.Vector3(targetPosition.x, targetPosition.y, targetPosition.z)
+    );
+
+    const cameraRotation = state.camera.rotation;
+    artworkRef.current.setNextKinematicRotation(
+      new THREE.Quaternion().setFromEuler(
+        new THREE.Euler(0, cameraRotation.y, 0)
+      )
     );
   });
 
