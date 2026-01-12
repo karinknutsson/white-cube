@@ -33,9 +33,9 @@ export default function Artwork({
     const artworkPosition = artworkRef.current.translation();
 
     grabOffset.current.set(
-      artworkPosition.x - playerPosition.x + 0.3,
+      artworkPosition.x - (playerPosition.x + 0.3),
       artworkPosition.y - playerPosition.y,
-      artworkPosition.z - playerPosition.z + 0.3
+      artworkPosition.z - (playerPosition.z + 0.3)
     );
 
     setGrabMode(true);
