@@ -43,7 +43,7 @@ export default function Artwork({
 
     const image = document.getElementById("grabbed-image");
     image.src = path;
-    gsap.to("#grabbed-artwork-container", { duration: 0.5, opacity: 0.5 });
+    gsap.to("#grabbed-artwork-container", { duration: 0.5, opacity: 0.6 });
   }
 
   function onIntersection() {
