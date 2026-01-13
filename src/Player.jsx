@@ -3,7 +3,6 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { PointerLockControls } from "@react-three/drei";
-import useGallery from "./stores/useGallery.js";
 
 export default function Player() {
   const { camera } = useThree();
@@ -17,12 +16,6 @@ export default function Player() {
     right: false,
     jump: false,
   });
-
-  useEffect(() => {
-    if (!bodyRef.current) return;
-
-    useGallery.getState().setPlayerRef({ playerRef: bodyRef });
-  }, [bodyRef.current]);
 
   useEffect(() => {
     if (controlsRef.current) controlsRef.current.pointerSpeed = 0.3;

@@ -26,19 +26,6 @@ export default create(
           };
         });
       },
-
-      /**
-       * Player
-       */
-      playerRef: null,
-
-      setPlayerRef: (p) => {
-        set((_) => {
-          return {
-            playerRef: p,
-          };
-        });
-      },
     };
   })
 );
