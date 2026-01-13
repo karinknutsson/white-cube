@@ -50,15 +50,26 @@ export function CeilingMesh({ width, depth, position }) {
   );
 }
 
-export function BackWallMesh({ width, height, depth }) {
+export function BackWallMesh({ width, height, depth, onIntersection }) {
   return (
     <>
-      <RigidBody type="fixed">
+      <RigidBody
+        type="fixed"
+        colliders={false}
+        position={[0, height * 0.5, -depth * 0.5 + 0.05]}
+      >
+        <CuboidCollider
+          args={[width * 0.5, height * 0.5, wallThickness * 0.5]}
+        />
+        <CuboidCollider
+          args={[width * 0.5, height * 0.5, 0.5]}
+          sensor
+          onIntersectionEnter={onIntersection}
+        />
         <mesh
           geometry={boxGeometry}
           material={roomMaterial}
           scale={[width, height, wallThickness]}
-          position={[0, height * 0.5, -depth * 0.5 + 0.05]}
           castShadow
           receiveShadow
         ></mesh>
@@ -182,7 +193,12 @@ export default function RoomMeshes({ size, position }) {
 
       <CeilingMesh width={size[0]} depth={size[2]} position={[0, size[1], 0]} />
 
-      <BackWallMesh width={size[0]} height={size[1]} depth={size[2]} />
+      <BackWallMesh
+        width={size[0]}
+        height={size[1]}
+        depth={size[2]}
+        onIntersection={onIntersection}
+      />
 
       <LeftWallMesh
         width={size[0]}
@@ -191,13 +207,19 @@ export default function RoomMeshes({ size, position }) {
         onIntersection={onIntersection}
       />
 
-      <RightWallMesh width={size[0]} height={size[1]} depth={size[2]} />
+      <RightWallMesh
+        width={size[0]}
+        height={size[1]}
+        depth={size[2]}
+        onIntersection={onIntersection}
+      />
 
       <PartitionMesh
         width={size[0] - 2.6}
         height={size[1]}
         depth={0.2}
         position={[0, size[1] * 0.5, 0]}
+        onIntersection={onIntersection}
       />
 
       <WindowSeatMesh
