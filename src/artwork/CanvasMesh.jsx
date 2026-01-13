@@ -1,10 +1,12 @@
-import { useLoader } from "@react-three/fiber";
+import { useLoader, useFrame } from "@react-three/fiber";
 import { useRef, useEffect } from "react";
 import * as THREE from "three";
+import { RigidBody, CuboidCollider } from "@react-three/rapier";
+import gsap from "gsap";
+import useGallery from "../stores/useGallery.js";
 
 export default function ArtworkMesh({ path, size }) {
   const texture = useLoader(THREE.TextureLoader, path);
-
   const leftRef = useRef();
   const rightRef = useRef();
   const topRef = useRef();

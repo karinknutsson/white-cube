@@ -6,6 +6,7 @@ const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
 
 const roomMaterial = new THREE.MeshStandardMaterial({
   color: "#ffffff",
+  // wireframe: true,
 });
 const windowMaterial = new THREE.MeshPhysicalMaterial({
   color: "#ffffff",
@@ -48,16 +49,18 @@ export function CeilingMesh({ width, depth, position }) {
 
 export function BackWallMesh({ width, height, depth }) {
   return (
-    <RigidBody type="fixed" colliders="trimesh">
-      <mesh
-        geometry={boxGeometry}
-        material={roomMaterial}
-        scale={[width, height, 0.1]}
-        position={[0, height * 0.5, -depth * 0.5]}
-        castShadow
-        receiveShadow
-      ></mesh>
-    </RigidBody>
+    <>
+      <RigidBody type="fixed">
+        <mesh
+          geometry={boxGeometry}
+          material={roomMaterial}
+          scale={[width, height, 0.1]}
+          position={[0, height * 0.5, -depth * 0.5 + 0.05]}
+          castShadow
+          receiveShadow
+        ></mesh>
+      </RigidBody>
+    </>
   );
 }
 
@@ -164,12 +167,12 @@ export default function RoomMesh({ size, position }) {
 
       <RightWallMesh width={size[0]} height={size[1]} depth={size[2]} />
 
-      <PartitionMesh
+      {/* <PartitionMesh
         width={size[0] - 2.6}
         height={size[1]}
         depth={0.2}
         position={[0, size[1] * 0.5, 0]}
-      />
+      /> */}
 
       <WindowSeatMesh
         width={(size[0] - 1.3) * 0.5}

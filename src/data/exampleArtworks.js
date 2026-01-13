@@ -1,5 +1,6 @@
-export const data = [
+export const works = [
   {
+    id: "0",
     path: "./works/greven-virtu.png",
     size: [1.5, 1.9, 0.018],
     artist: "Vivan Greven",
@@ -8,6 +9,7 @@ export const data = [
     position: { wall: "rightWall", wallPosition: "right" },
   },
   {
+    id: "1",
     path: "./works/greven-ex-ii.png",
     size: [0.4, 0.5, 0.018],
     artist: "Vivan Greven",
@@ -16,6 +18,7 @@ export const data = [
     position: { wall: "rightWall", wallPosition: "left" },
   },
   {
+    id: "2",
     path: "./works/greven-theresa-ix.png",
     size: [0.45, 0.6, 0.018],
     artist: "Vivan Greven",
@@ -24,6 +27,7 @@ export const data = [
     position: { wall: "rightWall", wallPosition: "center" },
   },
   {
+    id: "3",
     path: "./works/greven-la-di.png",
     size: [4.25, 1.8, 0.018],
     artist: "Vivan Greven",
@@ -32,11 +36,12 @@ export const data = [
     position: { wall: "backWall", wallPosition: "center" },
   },
   {
+    id: "4",
     path: "./works/greven-psy-amo.png",
     size: [2.99, 2.1, 0.018],
     artist: "Vivan Greven",
     title: "Psy Amo (1-2)",
     year: "2023",
-    position: { wall: "leftWall", wallPosition: "right" },
+    position: { wall: "leftWall", wallPosition: "left" },
   },
 ];

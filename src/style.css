@@ -1,3 +1,6 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=block");
+@import url("https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=block");
+
 html,
 body,
 #root {
@@ -7,4 +10,57 @@ body,
   width: 100%;
   height: 100%;
   background: black;
+  margin: 0;
+  padding: 0;
+}
+
+.grab-icon-container {
+  position: absolute;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 160px;
+  height: 160px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+  color: white;
+  font-family: "Rubik", Arial, sans-serif;
+  font-size: 24px;
+  font-weight: 400;
+  opacity: 0;
+  z-index: 1000;
+}
+
+.grab-icon {
+  filter: invert(1);
+  width: 128px;
+  height: 128px;
+}
+
+.grab-icon-text {
+  width: 60%;
+  text-align: center;
+}
+
+#grabbed-artwork-container {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  opacity: 0;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 0;
+  left: 0;
+}
+
+#grabbed-image {
+  max-width: 50vw;
+  max-height: 70vh;
+  object-fit: contain;
 }
