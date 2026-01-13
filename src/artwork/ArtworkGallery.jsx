@@ -11,6 +11,7 @@ export default function ArtworkGallery() {
   const setGrabbedWorkId = useGallery((state) => state.setGrabbedWorkId);
 
   function handleGrab() {
+    gsap.to(".grab-icon-container", { duration: 0.1, opacity: 0 });
     setGrabbedWorkId(grabAreaId.current);
     const image = document.getElementById("grabbed-image");
     const work = artworkData.works.filter((w) => w.id === grabAreaId.current);
@@ -50,6 +51,7 @@ export default function ArtworkGallery() {
         return (
           <Artwork
             key={work.id}
+            id={work.id}
             position={
               positionsData.positions[work.position.wall][
                 work.position.wallPosition

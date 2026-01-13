@@ -10,7 +10,6 @@ export default create(
       grabbedWorkId: null,
 
       setGrabbedWorkId: (value) => {
-        console.log("grabbed work id set to " + value);
         set((_) => {
           return {
             grabbedWorkId: value,
