@@ -25,8 +25,8 @@ export default function Experience() {
         <meshNormalMaterial />
       </mesh> */}
 
-      <Physics debug>
-        {/* <Physics> */}
+      {/* <Physics debug> */}
+      <Physics>
         <Environment files="./hdr/qwantani_dusk_2_puresky_1k.hdr" background />
 
         <TheRoom />

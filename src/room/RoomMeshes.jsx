@@ -170,6 +170,8 @@ export default function RoomMeshes({ size, position }) {
   const { camera } = useThree();
 
   function onIntersection() {
+    const grabbedWorkId = useGallery.getState().grabbedWorkId;
+    if (grabbedWorkId === null) return;
     console.log(camera.position);
     console.log(camera.rotation);
   }
