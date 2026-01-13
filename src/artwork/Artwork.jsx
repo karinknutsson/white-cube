@@ -21,7 +21,7 @@ export default function Artwork({
   const artworkRef = useRef();
   let insideGrabArea = false;
 
-  const [grabMode, setGrabMode] = useState(false);
+  const [isGrabbed, setIsGrabbed] = useState(false);
 
   useEffect(() => {
     const handleMouseDown = (e) => {
@@ -38,7 +38,7 @@ export default function Artwork({
   }, []);
 
   function handleGrab() {
-    setGrabMode(true);
+    setIsGrabbed(true);
     onIntersectionExit();
 
     const image = document.getElementById("grabbed-image");
@@ -47,7 +47,7 @@ export default function Artwork({
   }
 
   function onIntersection() {
-    if (grabMode) return;
+    if (isGrabbed) return;
 
     gsap.to(".grab-icon-container", { duration: 0.1, opacity: 1 });
     insideGrabArea = true;
@@ -60,7 +60,7 @@ export default function Artwork({
 
   return (
     <>
-      {!grabMode && (
+      {!isGrabbed && (
         <RigidBody
           position={position}
           rotation={rotation}

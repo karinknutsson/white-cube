@@ -6,6 +6,19 @@ export default create(
   subscribeWithSelector((set) => {
     return {
       /**
+       * Artwork
+       */
+      grabMode: false,
+
+      setGrabMode: (value) => {
+        set((_) => {
+          return {
+            grabMode: value,
+          };
+        });
+      },
+
+      /**
        * Player
        */
       playerRef: null,
