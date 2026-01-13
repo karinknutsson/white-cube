@@ -1,12 +1,13 @@
-import { RigidBody } from "@react-three/rapier";
+import { RigidBody, CuboidCollider } from "@react-three/rapier";
 import * as THREE from "three";
 import { useControls } from "leva";
 
 const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
+const wallThickness = wallThickness;
 
 const roomMaterial = new THREE.MeshStandardMaterial({
   color: "#ffffff",
-  // wireframe: true,
+  wireframe: true,
 });
 const windowMaterial = new THREE.MeshPhysicalMaterial({
   color: "#ffffff",
@@ -17,6 +18,10 @@ const windowMaterial = new THREE.MeshPhysicalMaterial({
   ior: 1.5,
 });
 
+function onIntersection(e) {
+  console.log(e.rigidBodyObject.position);
+}
+
 export function FloorMesh({ width, depth }) {
   return (
     <RigidBody type="fixed" colliders="trimesh">
@@ -24,7 +29,7 @@ export function FloorMesh({ width, depth }) {
         geometry={boxGeometry}
         material={roomMaterial}
         rotation={[-Math.PI * 0.5, 0, 0]}
-        scale={[width + 0.1, depth, 0.1]}
+        scale={[width + wallThickness, depth, wallThickness]}
         receiveShadow
       ></mesh>
     </RigidBody>
@@ -38,7 +43,7 @@ export function CeilingMesh({ width, depth, position }) {
         geometry={boxGeometry}
         material={roomMaterial}
         rotation={[Math.PI * 0.5, 0, 0]}
-        scale={[width + 0.1, depth, 0.1]}
+        scale={[width + wallThickness, depth, wallThickness]}
         position={position}
         castShadow
         receiveShadow
@@ -54,7 +59,7 @@ export function BackWallMesh({ width, height, depth }) {
         <mesh
           geometry={boxGeometry}
           material={roomMaterial}
-          scale={[width, height, 0.1]}
+          scale={[width, height, wallThickness]}
           position={[0, height * 0.5, -depth * 0.5 + 0.05]}
           castShadow
           receiveShadow
@@ -66,13 +71,22 @@ export function BackWallMesh({ width, height, depth }) {
 
 export function LeftWallMesh({ width, height, depth }) {
   return (
-    <RigidBody type="fixed" colliders="trimesh">
+    <RigidBody
+      type="fixed"
+      colliders={false}
+      position={[-width * 0.5, height * 0.5, 0]}
+      rotation={[0, Math.PI * 0.5, 0]}
+    >
+      <CuboidCollider args={[depth * 0.5, height * 0.5, wallThickness * 0.5]} />
+      <CuboidCollider
+        args={[depth * 0.5, height * 0.5, 0.5]}
+        sensor
+        onIntersectionEnter={(e) => onIntersection(e)}
+      />
       <mesh
         geometry={boxGeometry}
         material={roomMaterial}
-        scale={[depth, height, 0.1]}
-        rotation={[0, Math.PI * 0.5, 0]}
-        position={[-width * 0.5, height * 0.5, 0]}
+        scale={[depth, height, wallThickness]}
         castShadow
         receiveShadow
       ></mesh>
@@ -86,7 +100,7 @@ export function RightWallMesh({ width, height, depth }) {
       <mesh
         geometry={boxGeometry}
         material={roomMaterial}
-        scale={[depth, height, 0.1]}
+        scale={[depth, height, wallThickness]}
         rotation={[0, -Math.PI * 0.5, 0]}
         position={[width * 0.5, height * 0.5, 0]}
         castShadow
@@ -139,7 +153,7 @@ export function WindowMesh({ width, height, depth, position }) {
   );
 }
 
-export default function RoomMesh({ size, position }) {
+export default function RoomMeshes({ size, position }) {
   const { color, roughness } = useControls("material", {
     color: {
       value: "#ffffff",
@@ -167,12 +181,12 @@ export default function RoomMesh({ size, position }) {
 
       <RightWallMesh width={size[0]} height={size[1]} depth={size[2]} />
 
-      {/* <PartitionMesh
+      <PartitionMesh
         width={size[0] - 2.6}
         height={size[1]}
         depth={0.2}
         position={[0, size[1] * 0.5, 0]}
-      /> */}
+      />
 
       <WindowSeatMesh
         width={(size[0] - 1.3) * 0.5}
@@ -189,8 +203,8 @@ export default function RoomMesh({ size, position }) {
       />
 
       <WindowMesh
-        width={size[0] + 0.1}
-        height={size[1] + 0.1}
+        width={size[0] + wallThickness}
+        height={size[1] + wallThickness}
         depth={0.02}
         position={[0, size[1] * 0.5, size[2] * 0.5 + 0.01]}
       />

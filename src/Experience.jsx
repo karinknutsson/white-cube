@@ -1,6 +1,6 @@
 import { OrbitControls } from "@react-three/drei";
 import Lights from "./Lights.jsx";
-import RoomScene from "./room/RoomScene.jsx";
+import TheRoom from "./room/TheRoom.jsx";
 import { useControls } from "leva";
 import { Perf } from "r3f-perf";
 import { Physics } from "@react-three/rapier";
@@ -29,7 +29,7 @@ export default function Experience() {
         {/* <Physics> */}
         <Environment files="./hdr/qwantani_dusk_2_puresky_1k.hdr" background />
 
-        <RoomScene />
+        <TheRoom />
 
         <ArtworkGallery />
 
