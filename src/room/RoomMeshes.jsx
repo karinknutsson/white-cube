@@ -9,7 +9,7 @@ const wallThickness = 0.1;
 
 const roomMaterial = new THREE.MeshStandardMaterial({
   color: "#ffffff",
-  wireframe: true,
+  // wireframe: true,
 });
 const windowMaterial = new THREE.MeshPhysicalMaterial({
   color: "#ffffff",

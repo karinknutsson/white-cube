@@ -39,7 +39,7 @@ export default function ArtworkGallery() {
 
   function handleLeaveGrabArea() {
     grabAreaId.current = null;
-    window.removeEventListener("mousedown", handleMouseDown);
+    window.removeEventListener("mousedown", handleMouseDownGrabArea);
     gsap.to(".grab-icon-container", { duration: 0.1, opacity: 0 });
   }
 
