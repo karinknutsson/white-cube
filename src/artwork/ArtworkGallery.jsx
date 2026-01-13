@@ -1,55 +1,55 @@
-import { useEffect } from "react";
+import { useRef, useState } from "react";
 import useGallery from "../stores/useGallery.js";
-import * as data from "./data/exampleArtworks.js";
-import Artwork from "./artwork/Artwork.jsx";
-import * as positionsData from "./data/positions.js";
+import * as artworkData from "../data/exampleArtworks.js";
+import Artwork from "./Artwork.jsx";
+import * as positionsData from "../data/positions.js";
+import gsap from "gsap";
 
 export default function ArtworkGallery() {
-  const grabbedWorkIndex = useGallery((state) => state.grabbedWorkIndex);
-  const setGrabbedWorkIndex = useGallery((state) => state.setGrabbedWorkIndex);
+  const grabAreaId = useRef(null);
+  const grabbedWorkId = useGallery((state) => state.grabbedWorkId);
+  const setGrabbedWorkId = useGallery((state) => state.setGrabbedWorkId);
 
-  useEffect(() => {
-    const handleMouseDown = () => {
-      if (!useGallery.getState().grabMode && !insideGrabArea.current) return;
-
-      if (!isGrabbed) {
-        handleGrab();
-      } else {
-        handleDrop();
-      }
-    };
-
-    window.addEventListener("mousedown", handleMouseDown);
-
-    return () => {
-      window.removeEventListener("mousedown", handleMouseDown);
-    };
-  }, []);
+  function handleGrab() {
+    setGrabbedWorkId(grabAreaId.current);
+    const image = document.getElementById("grabbed-image");
+    const work = artworkData.works.filter((w) => w.id === grabAreaId.current);
+    image.src = work[0].path ?? "";
+    gsap.to("#grabbed-artwork-container", { duration: 0.5, opacity: 0.6 });
+  }
 
   function handleDrop() {
     gsap.to("#grabbed-artwork-container", { duration: 0.5, opacity: 0 });
-    setGrabMode(false);
-    // setIsGrabbed(false);
   }
 
-  function handleGrab() {
-    onIntersectionExit();
-    setGrabMode(true);
-    // setIsGrabbed(true);
+  function handleMouseDown() {
+    if (!grabbedWorkId) {
+      handleGrab();
+    } else {
+      handleDrop();
+    }
+  }
 
-    const image = document.getElementById("grabbed-image");
-    image.src = path;
-    gsap.to("#grabbed-artwork-container", { duration: 0.5, opacity: 0.6 });
+  function handleEnterGrabArea(id) {
+    grabAreaId.current = id;
+    window.addEventListener("mousedown", handleMouseDown);
+    gsap.to(".grab-icon-container", { duration: 0.1, opacity: 1 });
+  }
+
+  function handleLeaveGrabArea() {
+    grabAreaId.current = null;
+    window.removeEventListener("mousedown", handleMouseDown);
+    gsap.to(".grab-icon-container", { duration: 0.1, opacity: 0 });
   }
 
   return (
     <>
-      {data.data.map((work) => {
+      {artworkData.works.map((work) => {
         if (!work.position) return null;
 
         return (
           <Artwork
-            key={work.title}
+            key={work.id}
             position={
               positionsData.positions[work.position.wall][
                 work.position.wallPosition
@@ -62,6 +62,8 @@ export default function ArtworkGallery() {
             artist={work.artist}
             title={work.title}
             year={work.year}
+            onEnterGrabArea={() => handleEnterGrabArea(work.id)}
+            onLeaveGrabArea={() => handleLeaveGrabArea()}
           ></Artwork>
         );
       })}

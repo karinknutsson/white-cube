@@ -17,13 +17,17 @@ export default function Artwork({
   title,
   artist,
   year,
+  onEnterGrabArea,
+  onLeaveGrabArea,
 }) {
   const artworkRef = useRef();
-  const insideGrabArea = useRef(false);
+  const grabbedWorkIndex = useGallery((state) => state.grabbedWorkIndex);
 
-  const [isGrabbed, setIsGrabbed] = useState(false);
-  const grabMode = useGallery((state) => state.grabMode);
-  const setGrabMode = useGallery((state) => state.setGrabMode);
+  // const [insideGrabArea, setInsideGrabArea] = useRef(false);
+
+  // const [isGrabbed, setIsGrabbed] = useState(false);
+  // const grabMode = useGallery((state) => state.grabMode);
+  // const setGrabMode = useGallery((state) => state.setGrabMode);
 
   // useEffect(() => {
   //   const handleMouseDown = () => {
@@ -60,42 +64,37 @@ export default function Artwork({
   // }
 
   function onIntersection() {
-    if (grabMode || isGrabbed) return;
+    // if (grabMode || isGrabbed) return;
 
-    gsap.to(".grab-icon-container", { duration: 0.1, opacity: 1 });
-    insideGrabArea.current = true;
+    onEnterGrabArea?.();
   }
 
   function onIntersectionExit() {
-    if (grabMode || isGrabbed) return;
+    // if (grabMode || isGrabbed) return;
 
-    gsap.to(".grab-icon-container", { duration: 0.1, opacity: 0 });
-    insideGrabArea.current = false;
+    onLeaveGrabArea?.();
   }
 
   return (
     <>
-      {!isGrabbed && (
-        <RigidBody
-          position={position}
-          rotation={rotation}
-          ref={artworkRef}
-          type="kinematicPosition"
-          colliders={false}
-          onIntersectionEnter={onIntersection}
-          onIntersectionExit={onIntersectionExit}
-        >
-          {/* Colliders */}
-          <CuboidCollider
-            args={[size[0] * 0.5, size[1] * 0.5, size[2] * 0.5]}
-          />
-          <CuboidCollider args={[size[0] * 0.5, size[1] * 0.5, 0.6]} sensor />
+      <RigidBody
+        position={position}
+        rotation={rotation}
+        ref={artworkRef}
+        type="kinematicPosition"
+        colliders={false}
+        onIntersectionEnter={onIntersection}
+        onIntersectionExit={onIntersectionExit}
+      >
+        {/* Colliders */}
+        <CuboidCollider args={[size[0] * 0.5, size[1] * 0.5, size[2] * 0.5]} />
+        <CuboidCollider args={[size[0] * 0.5, size[1] * 0.5, 0.6]} sensor />
 
-          {/* Meshes */}
-          {type === "canvas" && <CanvasMesh path={path} size={size} />}
-          <ArtworkInfoMesh title={title} artist={artist} year={year} />
-        </RigidBody>
-      )}
+        {/* Meshes */}
+        {type === "canvas" && <CanvasMesh path={path} size={size} />}
+        <ArtworkInfoMesh title={title} artist={artist} year={year} />
+      </RigidBody>
+      )
     </>
   );
 }

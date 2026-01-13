@@ -7,12 +7,13 @@ export default create(
       /**
        * Artwork
        */
-      grabbedWorkIndex: null,
+      grabbedWorkId: null,
 
-      setGrabbedWorkIndex: (value) => {
+      setGrabbedWorkId: (value) => {
+        console.log("grabbed work id set to " + value);
         set((_) => {
           return {
-            grabbedWorkIndex: value,
+            grabbedWorkId: value,
           };
         });
       },
