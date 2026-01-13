@@ -8,7 +8,6 @@ import useGallery from "./stores/useGallery.js";
 export default function Player() {
   const { camera } = useThree();
   const bodyRef = useRef();
-  const colliderRef = useRef();
   const controlsRef = useRef();
 
   const move = useRef({
@@ -20,8 +19,10 @@ export default function Player() {
   });
 
   useEffect(() => {
-    useGallery.getState().setPlayerRef({ playerRef: colliderRef });
-  }, []);
+    if (!bodyRef.current) return;
+
+    useGallery.getState().setPlayerRef({ playerRef: bodyRef });
+  }, [bodyRef.current]);
 
   useEffect(() => {
     if (controlsRef.current) controlsRef.current.pointerSpeed = 0.3;
@@ -127,7 +128,7 @@ export default function Player() {
         mass={1}
         enabledRotations={[false, false, false]}
       >
-        <CapsuleCollider ref={colliderRef} args={[0.5, 0.3]} />
+        <CapsuleCollider args={[0.5, 0.3]} />
         <CapsuleCollider args={[0.5, 0.6]} sensor />
       </RigidBody>
     </>

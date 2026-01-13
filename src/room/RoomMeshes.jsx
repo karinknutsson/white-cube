@@ -1,9 +1,11 @@
 import { RigidBody, CuboidCollider } from "@react-three/rapier";
 import * as THREE from "three";
 import { useControls } from "leva";
+import useGallery from "../stores/useGallery";
+import { useThree } from "@react-three/fiber";
 
 const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
-const wallThickness = wallThickness;
+const wallThickness = 0.1;
 
 const roomMaterial = new THREE.MeshStandardMaterial({
   color: "#ffffff",
@@ -17,10 +19,6 @@ const windowMaterial = new THREE.MeshPhysicalMaterial({
   thickness: 0.02,
   ior: 1.5,
 });
-
-function onIntersection(e) {
-  console.log(e.rigidBodyObject.position);
-}
 
 export function FloorMesh({ width, depth }) {
   return (
@@ -69,7 +67,7 @@ export function BackWallMesh({ width, height, depth }) {
   );
 }
 
-export function LeftWallMesh({ width, height, depth }) {
+export function LeftWallMesh({ width, height, depth, onIntersection }) {
   return (
     <RigidBody
       type="fixed"
@@ -81,7 +79,7 @@ export function LeftWallMesh({ width, height, depth }) {
       <CuboidCollider
         args={[depth * 0.5, height * 0.5, 0.5]}
         sensor
-        onIntersectionEnter={(e) => onIntersection(e)}
+        onIntersectionEnter={onIntersection}
       />
       <mesh
         geometry={boxGeometry}
@@ -169,6 +167,13 @@ export default function RoomMeshes({ size, position }) {
   roomMaterial.color = new THREE.Color(color);
   roomMaterial.roughness = roughness;
 
+  const { camera } = useThree();
+
+  function onIntersection() {
+    console.log(camera.position);
+    console.log(camera.rotation);
+  }
+
   return (
     <group position={position}>
       <FloorMesh width={size[0]} depth={size[2]} />
@@ -177,7 +182,12 @@ export default function RoomMeshes({ size, position }) {
 
       <BackWallMesh width={size[0]} height={size[1]} depth={size[2]} />
 
-      <LeftWallMesh width={size[0]} height={size[1]} depth={size[2]} />
+      <LeftWallMesh
+        width={size[0]}
+        height={size[1]}
+        depth={size[2]}
+        onIntersection={onIntersection}
+      />
 
       <RightWallMesh width={size[0]} height={size[1]} depth={size[2]} />
 
