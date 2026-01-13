@@ -128,14 +128,25 @@ export function RightWallMesh({ width, height, depth, onIntersection }) {
   );
 }
 
-export function PartitionMesh({ width, height, depth, position }) {
+export function PartitionMesh({
+  width,
+  height,
+  depth,
+  position,
+  onIntersection,
+}) {
   return (
-    <RigidBody type="fixed" colliders="trimesh">
+    <RigidBody type="fixed" colliders={false} position={position}>
+      <CuboidCollider args={[width * 0.5, height * 0.5, depth * 0.5]} />
+      <CuboidCollider
+        args={[width * 0.5, height * 0.5, 0.5]}
+        sensor
+        onIntersectionEnter={onIntersection}
+      />
       <mesh
         geometry={boxGeometry}
         material={roomMaterial}
         scale={[width, height, depth]}
-        position={position}
         castShadow
         receiveShadow
       ></mesh>
