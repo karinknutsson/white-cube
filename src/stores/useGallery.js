@@ -16,16 +16,6 @@ export default create(
           };
         });
       },
-
-      grabMode: false,
-
-      setGrabMode: (value) => {
-        set((_) => {
-          return {
-            grabMode: value,
-          };
-        });
-      },
     };
   })
 );
