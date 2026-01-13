@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import useGallery from "../stores/useGallery.js";
 import * as artworkData from "../data/exampleArtworks.js";
 import Artwork from "./Artwork.jsx";
