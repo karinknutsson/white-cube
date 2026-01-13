@@ -1,12 +1,12 @@
 import CanvasMesh from "./CanvasMesh";
 import ArtworkInfoMesh from "./ArtworkInfoMesh";
 import { RigidBody, CuboidCollider } from "@react-three/rapier";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import useGallery from "../stores/useGallery.js";
 
 export default function Artwork({
   id,
-  position,
+  startPosition,
   rotation,
   type,
   path,
@@ -34,7 +34,7 @@ export default function Artwork({
     <>
       {id !== grabbedWorkId && (
         <RigidBody
-          position={position}
+          position={startPosition}
           rotation={rotation}
           ref={artworkRef}
           type="kinematicPosition"

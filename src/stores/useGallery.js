@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
+import * as THREE from "three";
 
 export default create(
   subscribeWithSelector((set) => {
@@ -9,10 +10,20 @@ export default create(
        */
       grabbedWorkId: null,
 
-      setGrabbedWorkId: (value) => {
+      setGrabbedWorkId: (id) => {
         set((_) => {
           return {
-            grabbedWorkId: value,
+            grabbedWorkId: id,
+          };
+        });
+      },
+
+      dropWallPosition: new THREE.Vector3(0, 0, 0),
+
+      setDropWallPosition: (position) => {
+        set((_) => {
+          return {
+            dropWallPosition: position,
           };
         });
       },
