@@ -103,15 +103,24 @@ export function LeftWallMesh({ width, height, depth, onIntersection }) {
   );
 }
 
-export function RightWallMesh({ width, height, depth }) {
+export function RightWallMesh({ width, height, depth, onIntersection }) {
   return (
-    <RigidBody type="fixed" colliders="trimesh">
+    <RigidBody
+      type="fixed"
+      colliders={false}
+      position={[width * 0.5, height * 0.5, 0]}
+      rotation={[0, -Math.PI * 0.5, 0]}
+    >
+      <CuboidCollider args={[depth * 0.5, height * 0.5, wallThickness * 0.5]} />
+      <CuboidCollider
+        args={[depth * 0.5, height * 0.5, 0.5]}
+        sensor
+        onIntersectionEnter={onIntersection}
+      />
       <mesh
         geometry={boxGeometry}
         material={roomMaterial}
         scale={[depth, height, wallThickness]}
-        rotation={[0, -Math.PI * 0.5, 0]}
-        position={[width * 0.5, height * 0.5, 0]}
         castShadow
         receiveShadow
       ></mesh>
