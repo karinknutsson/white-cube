@@ -1,6 +1,5 @@
 import { create } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
-import * as THREE from "three";
 
 export default create(
   subscribeWithSelector((set) => {
@@ -8,6 +7,16 @@ export default create(
       /**
        * Artwork
        */
+      grabbedWorkIndex: null,
+
+      setGrabbedWorkIndex: (value) => {
+        set((_) => {
+          return {
+            grabbedWorkIndex: value,
+          };
+        });
+      },
+
       grabMode: false,
 
       setGrabMode: (value) => {

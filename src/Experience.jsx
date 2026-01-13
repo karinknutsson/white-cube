@@ -5,10 +5,8 @@ import { useControls } from "leva";
 import { Perf } from "r3f-perf";
 import { Physics } from "@react-three/rapier";
 import Player from "./Player.jsx";
-import * as data from "./data/exampleArtworks.js";
-import Artwork from "./artwork/Artwork.jsx";
 import { Environment } from "@react-three/drei";
-import * as positionsData from "./data/positions.js";
+import ArtworkGallery from "./artwork/ArtworkGallery.jsx";
 
 export default function Experience() {
   const { perfVisible } = useControls({ perfVisible: false });
@@ -33,29 +31,9 @@ export default function Experience() {
 
         <RoomScene />
 
+        <ArtworkGallery />
+
         <Player />
-
-        {data.data.map((work) => {
-          if (!work.position) return null;
-
-          return (
-            <Artwork
-              key={work.title}
-              position={
-                positionsData.positions[work.position.wall][
-                  work.position.wallPosition
-                ]
-              }
-              rotation={positionsData.positions[work.position.wall].rotation}
-              type="canvas"
-              path={work.path}
-              size={work.size}
-              artist={work.artist}
-              title={work.title}
-              year={work.year}
-            ></Artwork>
-          );
-        })}
       </Physics>
     </>
   );

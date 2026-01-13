@@ -19,43 +19,58 @@ export default function Artwork({
   year,
 }) {
   const artworkRef = useRef();
-  let insideGrabArea = false;
+  const insideGrabArea = useRef(false);
 
   const [isGrabbed, setIsGrabbed] = useState(false);
+  const grabMode = useGallery((state) => state.grabMode);
+  const setGrabMode = useGallery((state) => state.setGrabMode);
 
-  useEffect(() => {
-    const handleMouseDown = (e) => {
-      if (!insideGrabArea) return;
+  // useEffect(() => {
+  //   const handleMouseDown = () => {
+  //     if (!useGallery.getState().grabMode && !insideGrabArea.current) return;
 
-      handleGrab();
-    };
+  //     if (!isGrabbed) {
+  //       handleGrab();
+  //     } else {
+  //       handleDrop();
+  //     }
+  //   };
 
-    window.addEventListener("mousedown", handleMouseDown);
+  //   window.addEventListener("mousedown", handleMouseDown);
 
-    return () => {
-      window.removeEventListener("mousedown", handleMouseDown);
-    };
-  }, []);
+  //   return () => {
+  //     window.removeEventListener("mousedown", handleMouseDown);
+  //   };
+  // }, [isGrabbed]);
 
-  function handleGrab() {
-    setIsGrabbed(true);
-    onIntersectionExit();
+  // function handleDrop() {
+  //   gsap.to("#grabbed-artwork-container", { duration: 0.5, opacity: 0 });
+  //   setGrabMode(false);
+  //   setIsGrabbed(false);
+  // }
 
-    const image = document.getElementById("grabbed-image");
-    image.src = path;
-    gsap.to("#grabbed-artwork-container", { duration: 0.5, opacity: 0.6 });
-  }
+  // function handleGrab() {
+  //   onIntersectionExit();
+  //   setGrabMode(true);
+  //   setIsGrabbed(true);
+
+  //   const image = document.getElementById("grabbed-image");
+  //   image.src = path;
+  //   gsap.to("#grabbed-artwork-container", { duration: 0.5, opacity: 0.6 });
+  // }
 
   function onIntersection() {
-    if (isGrabbed) return;
+    if (grabMode || isGrabbed) return;
 
     gsap.to(".grab-icon-container", { duration: 0.1, opacity: 1 });
-    insideGrabArea = true;
+    insideGrabArea.current = true;
   }
 
   function onIntersectionExit() {
+    if (grabMode || isGrabbed) return;
+
     gsap.to(".grab-icon-container", { duration: 0.1, opacity: 0 });
-    insideGrabArea = false;
+    insideGrabArea.current = false;
   }
 
   return (
