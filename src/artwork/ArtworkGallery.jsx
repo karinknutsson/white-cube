@@ -11,6 +11,8 @@ export default function ArtworkGallery() {
   const setGrabbedWorkId = useGallery((state) => state.setGrabbedWorkId);
 
   function handleGrab() {
+    window.removeEventListener("mousedown", handleMouseDownGrabArea);
+    window.addEventListener("mousedown", handleDrop, { once: true });
     gsap.to(".grab-icon-container", { duration: 0.1, opacity: 0 });
     setGrabbedWorkId(grabAreaId.current);
     const image = document.getElementById("grabbed-image");
@@ -26,8 +28,6 @@ export default function ArtworkGallery() {
   function handleMouseDownGrabArea() {
     if (!grabbedWorkId) {
       handleGrab();
-    } else {
-      handleDrop();
     }
   }
 

@@ -204,7 +204,7 @@ export default function RoomMeshes({ size, position }) {
     const grabbedWorkId = useGallery.getState().grabbedWorkId;
     if (grabbedWorkId === null) return;
     console.log(camera.position);
-    console.log(camera.rotation);
+    console.log(camera.rotation._y);
   }
 
   return (
