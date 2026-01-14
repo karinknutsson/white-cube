@@ -88,7 +88,7 @@ export function LeftWallMesh({ width, height, depth, onIntersection }) {
     >
       <CuboidCollider args={[depth * 0.5, height * 0.5, wallThickness * 0.5]} />
       <CuboidCollider
-        args={[depth * 0.5, height * 0.5, 0.5]}
+        args={[depth * 0.5, height * 0.5, 0.6]}
         sensor
         onIntersectionEnter={onIntersection}
       />
@@ -203,8 +203,29 @@ export default function RoomMeshes({ size, position }) {
   function onIntersection() {
     const grabbedWorkId = useGallery.getState().grabbedWorkId;
     if (grabbedWorkId === null) return;
-    console.log(camera.position);
-    console.log(camera.rotation._y);
+
+    const direction = new THREE.Vector3();
+    camera.getWorldDirection(direction);
+
+    if (direction.x < -0.5 && camera.position.x > -size[0] * 0.5 + 1.2) {
+      console.log("left wall");
+    } else if (direction.x > 0.5 && camera.position.x > size[0] * 0.5 - 1.2) {
+      console.log("right wall");
+    } else if (direction.z < -0.5 && camera.position.z < -size[2] * 0.5 + 1.2) {
+      console.log("back wall");
+    } else if (
+      direction.z < -0.5 &&
+      camera.position.z > 0 &&
+      camera.position.z < 1.2
+    ) {
+      console.log("window facing partition side");
+    } else if (
+      direction.z > 0.5 &&
+      camera.position.z < 0 &&
+      camera.position.z > -1.2
+    ) {
+      console.log("back room partition side");
+    }
   }
 
   return (
