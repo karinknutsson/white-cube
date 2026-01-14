@@ -13,7 +13,7 @@ export default function ArtworkGallery() {
   function handleGrab() {
     window.removeEventListener("mousedown", handleMouseDownGrabArea);
     window.addEventListener("mousedown", handleDrop, { once: true });
-    gsap.to(".grab-icon-container", { duration: 0.1, opacity: 0 });
+    gsap.to(".grab-hint-container", { duration: 0.1, opacity: 0 });
     setGrabbedWorkId(grabAreaId.current);
     const image = document.getElementById("grabbed-image");
     const work = artworkData.works.filter((w) => w.id === grabAreaId.current);
@@ -34,13 +34,13 @@ export default function ArtworkGallery() {
   function handleEnterGrabArea(id) {
     grabAreaId.current = id;
     window.addEventListener("mousedown", handleMouseDownGrabArea);
-    gsap.to(".grab-icon-container", { duration: 0.1, opacity: 1 });
+    gsap.to(".grab-hint-container", { duration: 0.1, opacity: 1 });
   }
 
   function handleLeaveGrabArea() {
     grabAreaId.current = null;
     window.removeEventListener("mousedown", handleMouseDownGrabArea);
-    gsap.to(".grab-icon-container", { duration: 0.1, opacity: 0 });
+    gsap.to(".grab-hint-container", { duration: 0.1, opacity: 0 });
   }
 
   return (

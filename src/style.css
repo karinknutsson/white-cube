@@ -17,7 +17,7 @@ body,
 .grab-hint-container,
 .drop-hint-container {
   position: absolute;
-  bottom: 60px;
+  bottom: 40px;
   left: 50%;
   transform: translateX(-50%);
   width: 160px;
@@ -45,7 +45,7 @@ body,
 #grabbed-artwork-container {
   position: absolute;
   width: 100vw;
-  height: 100vh;
+  height: calc(100vh - 200px) !important;
   opacity: 0;
   z-index: 999;
   display: flex;
@@ -57,6 +57,6 @@ body,
 
 #grabbed-image {
   max-width: 50vw;
-  max-height: 70vh;
+  max-height: 60vh;
   object-fit: contain;
 }

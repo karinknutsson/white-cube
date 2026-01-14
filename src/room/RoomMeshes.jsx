@@ -2,7 +2,9 @@ import { RigidBody, CuboidCollider } from "@react-three/rapier";
 import * as THREE from "three";
 import { useControls } from "leva";
 import useGallery from "../stores/useGallery";
-import { useThree } from "@react-three/fiber";
+import { useThree, useFrame } from "@react-three/fiber";
+import gsap from "gsap";
+import { useEffect, useRef, useMemo } from "react";
 
 const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
 const wallThickness = 0.1;
@@ -50,7 +52,7 @@ export function CeilingMesh({ width, depth, position }) {
   );
 }
 
-export function BackWallMesh({ width, height, depth, onIntersection }) {
+export function BackWallMesh({ ref, width, height, depth, onIntersection }) {
   return (
     <>
       <RigidBody
@@ -67,6 +69,8 @@ export function BackWallMesh({ width, height, depth, onIntersection }) {
           onIntersectionEnter={onIntersection}
         />
         <mesh
+          ref={ref}
+          name="backWall"
           geometry={boxGeometry}
           material={roomMaterial}
           scale={[width, height, wallThickness]}
@@ -78,7 +82,7 @@ export function BackWallMesh({ width, height, depth, onIntersection }) {
   );
 }
 
-export function LeftWallMesh({ width, height, depth, onIntersection }) {
+export function LeftWallMesh({ ref, width, height, depth, onIntersection }) {
   return (
     <RigidBody
       type="fixed"
@@ -93,6 +97,8 @@ export function LeftWallMesh({ width, height, depth, onIntersection }) {
         onIntersectionEnter={onIntersection}
       />
       <mesh
+        ref={ref}
+        name="leftWall"
         geometry={boxGeometry}
         material={roomMaterial}
         scale={[depth, height, wallThickness]}
@@ -103,7 +109,7 @@ export function LeftWallMesh({ width, height, depth, onIntersection }) {
   );
 }
 
-export function RightWallMesh({ width, height, depth, onIntersection }) {
+export function RightWallMesh({ ref, width, height, depth, onIntersection }) {
   return (
     <RigidBody
       type="fixed"
@@ -118,6 +124,8 @@ export function RightWallMesh({ width, height, depth, onIntersection }) {
         onIntersectionEnter={onIntersection}
       />
       <mesh
+        ref={ref}
+        name="rightWall"
         geometry={boxGeometry}
         material={roomMaterial}
         scale={[depth, height, wallThickness]}
@@ -129,6 +137,7 @@ export function RightWallMesh({ width, height, depth, onIntersection }) {
 }
 
 export function PartitionMesh({
+  ref,
   width,
   height,
   depth,
@@ -144,6 +153,8 @@ export function PartitionMesh({
         onIntersectionEnter={onIntersection}
       />
       <mesh
+        ref={ref}
+        name="partitionWall"
         geometry={boxGeometry}
         material={roomMaterial}
         scale={[width, height, depth]}
@@ -199,45 +210,94 @@ export default function RoomMeshes({ size, position }) {
   roomMaterial.roughness = roughness;
 
   const { camera } = useThree();
+  const raycaster = useMemo(() => new THREE.Raycaster(), []);
+  const direction = useMemo(() => new THREE.Vector3(), []);
+  // const grabbedWorkId = useGallery(state => state.grabbedWorkId);
+  const isGrabbingRef = useRef(false);
+  const wallRefs = useRef({
+    left: null,
+    right: null,
+    back: null,
+    partition: null,
+  });
 
-  function dropArtworkAtWall(position) {
+  useEffect(() => {
+    const unsubscribe = useGallery.subscribe(
+      (state) => state.grabbedWorkId,
+      (grabbedWorkId) => {
+        isGrabbingRef.current = grabbedWorkId !== null;
+      }
+    );
+
+    return () => unsubscribe();
+  }, []);
+
+  useFrame(() => {
+    if (!isGrabbingRef.current) return;
+
+    const wallsArray = Object.values(wallRefs.current).filter(Boolean);
+    if (!wallsArray.length) return;
+
+    raycaster.setFromCamera(new THREE.Vector2(0, 0), camera);
+    const hits = raycaster.intersectObjects(wallsArray, false);
+    if (hits.length === 0) return;
+
+    console.log(hits[0]);
+  });
+
+  function dropArtworkAtWall(position, rotation) {
+    const eulerRotation = new THREE.Euler(
+      rotation[0],
+      rotation[1],
+      rotation[2]
+    );
+    const quaternionRotation = new THREE.Quaternion();
+    quaternionRotation.setFromEuler(eulerRotation);
+
     const setDropWallPosition = useGallery.getState().setDropWallPosition;
     setDropWallPosition(position);
   }
 
-  function onIntersection() {
-    dropArtworkAtWall({ x: 0, y: 1, z: 0.5 });
-    const grabbedWorkId = useGallery.getState().grabbedWorkId;
-    if (grabbedWorkId === null) return;
-
-    const direction = new THREE.Vector3();
-    camera.getWorldDirection(direction);
-
-    if (direction.x < -0.5 && camera.position.x > -size[0] * 0.5 + 1.2) {
-      console.log("left wall");
-    } else if (direction.x > 0.5 && camera.position.x > size[0] * 0.5 - 1.2) {
-      console.log("right wall");
-    } else if (direction.z < -0.5 && camera.position.z < -size[2] * 0.5 + 1.2) {
-      console.log("back wall");
-    } else if (
-      camera.position.x < size[0] * 0.5 - 1.3 &&
-      camera.position.x > -size[0] * 0.5 + 1.3
-    ) {
-      if (
-        direction.z < -0.5 &&
-        camera.position.z > 0 &&
-        camera.position.z < 1.2
-      ) {
-        console.log("window facing partition side");
-      } else if (
-        direction.z > 0.5 &&
-        camera.position.z < 0 &&
-        camera.position.z > -1.2
-      ) {
-        console.log("back room partition side");
-      }
-    }
+  function enterDropMode(position, rotation) {
+    // gsap.to(".drop-hint-container", { duration: 0.1, opacity: 1 });
   }
+
+  // function onIntersection() {
+  // const grabbedWorkId = useGallery.getState().grabbedWorkId;
+  // if (grabbedWorkId === null) return;
+  // // dropArtworkAtWall({ x: 0, y: 1, z: 0.5 });
+  // const direction = new THREE.Vector3();
+  // camera.getWorldDirection(direction);
+  // if (direction.x < -0.5 && camera.position.x > -size[0] * 0.5 + 1.2) {
+  //   console.log("left wall");
+  //   enterDropMode({ x: -3.4, y: 1.6, z: camera.position.z }, [
+  //     0,
+  //     Math.PI * 0.5,
+  //     0,
+  //   ]);
+  // } else if (direction.x > 0.5 && camera.position.x > size[0] * 0.5 - 1.2) {
+  //   console.log("right wall");
+  // } else if (direction.z < -0.5 && camera.position.z < -size[2] * 0.5 + 1.2) {
+  //   console.log("back wall");
+  // } else if (
+  //   camera.position.x < size[0] * 0.5 - 1.3 &&
+  //   camera.position.x > -size[0] * 0.5 + 1.3
+  // ) {
+  //   if (
+  //     direction.z < -0.5 &&
+  //     camera.position.z > 0 &&
+  //     camera.position.z < 1.2
+  //   ) {
+  //     console.log("window facing partition side");
+  //   } else if (
+  //     direction.z > 0.5 &&
+  //     camera.position.z < 0 &&
+  //     camera.position.z > -1.2
+  //   ) {
+  //     console.log("back room partition side");
+  //   }
+  // }
+  // }
 
   return (
     <group position={position}>
@@ -246,32 +306,36 @@ export default function RoomMeshes({ size, position }) {
       <CeilingMesh width={size[0]} depth={size[2]} position={[0, size[1], 0]} />
 
       <BackWallMesh
+        ref={(el) => (wallRefs.current.back = el)}
         width={size[0]}
         height={size[1]}
         depth={size[2]}
-        onIntersection={onIntersection}
+        // onIntersection={onIntersection}
       />
 
       <LeftWallMesh
+        ref={(el) => (wallRefs.current.left = el)}
         width={size[0]}
         height={size[1]}
         depth={size[2]}
-        onIntersection={onIntersection}
+        // onIntersection={onIntersection}
       />
 
       <RightWallMesh
+        ref={(el) => (wallRefs.current.right = el)}
         width={size[0]}
         height={size[1]}
         depth={size[2]}
-        onIntersection={onIntersection}
+        // onIntersection={onIntersection}
       />
 
       <PartitionMesh
+        ref={(el) => (wallRefs.current.partition = el)}
         width={size[0] - 2.6}
         height={size[1]}
         depth={0.2}
         position={[0, size[1] * 0.5, 0]}
-        onIntersection={onIntersection}
+        // onIntersection={onIntersection}
       />
 
       <WindowSeatMesh

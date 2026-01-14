@@ -27,6 +27,16 @@ export default create(
           };
         });
       },
+
+      dropWallRotation: null,
+
+      setDropWallRotation: (rotation) => {
+        set((_) => {
+          return {
+            dropWallRotation: rotation,
+          };
+        });
+      },
     };
   })
 );

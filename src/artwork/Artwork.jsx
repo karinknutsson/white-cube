@@ -22,10 +22,17 @@ export default function Artwork({
   const grabbedWorkId = useGallery((state) => state.grabbedWorkId);
   const setGrabbedWorkId = useGallery((state) => state.setGrabbedWorkId);
   const dropWallPosition = useGallery((state) => state.dropWallPosition);
+  const dropWallRotation = useGallery((state) => state.dropWallRotation);
 
   useFrame(() => {
-    if (grabbedWorkId === id && dropWallPosition && artworkRef.current) {
+    if (
+      grabbedWorkId === id &&
+      dropWallPosition &&
+      dropWallRotation &&
+      artworkRef.current
+    ) {
       artworkRef.current.setNextKinematicTranslation(dropWallPosition);
+      artworkRef.current.setNextKinematicRotation(dropWallRotation);
       setGrabbedWorkId(null);
     }
   });
