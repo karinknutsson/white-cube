@@ -14,9 +14,10 @@ body,
   padding: 0;
 }
 
-.grab-icon-container {
+.grab-hint-container,
+.drop-hint-container {
   position: absolute;
-  bottom: 100px;
+  bottom: 60px;
   left: 50%;
   transform: translateX(-50%);
   width: 160px;
@@ -35,13 +36,8 @@ body,
   z-index: 1000;
 }
 
-.grab-icon {
-  filter: invert(1);
-  width: 128px;
-  height: 128px;
-}
-
-.grab-icon-text {
+.grab-hint-text,
+.drop-hint-text {
   width: 60%;
   text-align: center;
 }
