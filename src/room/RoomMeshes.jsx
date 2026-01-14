@@ -214,17 +214,22 @@ export default function RoomMeshes({ size, position }) {
     } else if (direction.z < -0.5 && camera.position.z < -size[2] * 0.5 + 1.2) {
       console.log("back wall");
     } else if (
-      direction.z < -0.5 &&
-      camera.position.z > 0 &&
-      camera.position.z < 1.2
+      camera.position.x < size[0] * 0.5 - 1.3 &&
+      camera.position.x > -size[0] * 0.5 + 1.3
     ) {
-      console.log("window facing partition side");
-    } else if (
-      direction.z > 0.5 &&
-      camera.position.z < 0 &&
-      camera.position.z > -1.2
-    ) {
-      console.log("back room partition side");
+      if (
+        direction.z < -0.5 &&
+        camera.position.z > 0 &&
+        camera.position.z < 1.2
+      ) {
+        console.log("window facing partition side");
+      } else if (
+        direction.z > 0.5 &&
+        camera.position.z < 0 &&
+        camera.position.z > -1.2
+      ) {
+        console.log("back room partition side");
+      }
     }
   }
 
