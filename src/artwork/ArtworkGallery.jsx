@@ -14,6 +14,7 @@ export default function ArtworkGallery() {
     window.removeEventListener("mousedown", handleMouseDownGrabArea);
     window.addEventListener("mousedown", handleDrop, { once: true });
     gsap.to(".grab-hint-container", { duration: 0.1, opacity: 0 });
+    gsap.to(".drop-hint-container", { duration: 0.1, opacity: 1 });
     setGrabbedWorkId(grabAreaId.current);
     const image = document.getElementById("grabbed-image");
     const work = artworkData.works.filter((w) => w.id === grabAreaId.current);

@@ -4,7 +4,7 @@ import { useControls } from "leva";
 import useGallery from "../stores/useGallery";
 import { useThree, useFrame } from "@react-three/fiber";
 import gsap from "gsap";
-import { useEffect, useRef, useMemo } from "react";
+import { useEffect, useRef, useMemo, use } from "react";
 
 const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
 const wallThickness = 0.1;
@@ -229,11 +229,17 @@ export default function RoomMeshes({ size, position }) {
       }
     );
 
-    return () => unsubscribe();
+    window.addEventListener("mousedown", handleClick);
+
+    return () => {
+      unsubscribe();
+      window.removeEventListener("mousedown", handleClick);
+    };
   }, []);
 
-  useFrame(() => {
+  function handleClick() {
     if (!isGrabbingRef.current) return;
+    useGallery.getState().setGrabbedWorkId(null);
 
     const wallsArray = Object.values(wallRefs.current).filter(Boolean);
     if (!wallsArray.length) return;
@@ -243,7 +249,7 @@ export default function RoomMeshes({ size, position }) {
     if (hits.length === 0) return;
 
     console.log(hits[0]);
-  });
+  }
 
   function dropArtworkAtWall(position, rotation) {
     const eulerRotation = new THREE.Euler(
@@ -257,47 +263,6 @@ export default function RoomMeshes({ size, position }) {
     const setDropWallPosition = useGallery.getState().setDropWallPosition;
     setDropWallPosition(position);
   }
-
-  function enterDropMode(position, rotation) {
-    // gsap.to(".drop-hint-container", { duration: 0.1, opacity: 1 });
-  }
-
-  // function onIntersection() {
-  // const grabbedWorkId = useGallery.getState().grabbedWorkId;
-  // if (grabbedWorkId === null) return;
-  // // dropArtworkAtWall({ x: 0, y: 1, z: 0.5 });
-  // const direction = new THREE.Vector3();
-  // camera.getWorldDirection(direction);
-  // if (direction.x < -0.5 && camera.position.x > -size[0] * 0.5 + 1.2) {
-  //   console.log("left wall");
-  //   enterDropMode({ x: -3.4, y: 1.6, z: camera.position.z }, [
-  //     0,
-  //     Math.PI * 0.5,
-  //     0,
-  //   ]);
-  // } else if (direction.x > 0.5 && camera.position.x > size[0] * 0.5 - 1.2) {
-  //   console.log("right wall");
-  // } else if (direction.z < -0.5 && camera.position.z < -size[2] * 0.5 + 1.2) {
-  //   console.log("back wall");
-  // } else if (
-  //   camera.position.x < size[0] * 0.5 - 1.3 &&
-  //   camera.position.x > -size[0] * 0.5 + 1.3
-  // ) {
-  //   if (
-  //     direction.z < -0.5 &&
-  //     camera.position.z > 0 &&
-  //     camera.position.z < 1.2
-  //   ) {
-  //     console.log("window facing partition side");
-  //   } else if (
-  //     direction.z > 0.5 &&
-  //     camera.position.z < 0 &&
-  //     camera.position.z > -1.2
-  //   ) {
-  //     console.log("back room partition side");
-  //   }
-  // }
-  // }
 
   return (
     <group position={position}>
