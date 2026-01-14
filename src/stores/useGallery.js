@@ -18,7 +18,7 @@ export default create(
         });
       },
 
-      dropWallPosition: new THREE.Vector3(0, 0, 0),
+      dropWallPosition: null,
 
       setDropWallPosition: (position) => {
         set((_) => {

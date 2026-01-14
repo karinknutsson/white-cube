@@ -200,7 +200,13 @@ export default function RoomMeshes({ size, position }) {
 
   const { camera } = useThree();
 
+  function dropArtworkAtWall(position) {
+    const setDropWallPosition = useGallery.getState().setDropWallPosition;
+    setDropWallPosition(position);
+  }
+
   function onIntersection() {
+    dropArtworkAtWall({ x: 0, y: 1, z: 0.5 });
     const grabbedWorkId = useGallery.getState().grabbedWorkId;
     if (grabbedWorkId === null) return;
 
