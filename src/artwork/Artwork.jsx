@@ -42,7 +42,6 @@ export default function Artwork({
 
   return (
     <>
-      {/* {id !== grabbedWorkId && ( */}
       <RigidBody
         position={startPosition}
         rotation={rotation}
@@ -52,15 +51,20 @@ export default function Artwork({
         onIntersectionEnter={onIntersection}
         onIntersectionExit={onIntersectionExit}
       >
-        {/* Colliders */}
-        <CuboidCollider args={[size[0] * 0.5, size[1] * 0.5, size[2] * 0.5]} />
-        <CuboidCollider args={[size[0] * 0.5, size[1] * 0.5, 0.6]} sensor />
+        {id !== grabbedWorkId && (
+          <>
+            {/* Colliders */}
+            <CuboidCollider
+              args={[size[0] * 0.5, size[1] * 0.5, size[2] * 0.5]}
+            />
+            <CuboidCollider args={[size[0] * 0.5, size[1] * 0.5, 0.6]} sensor />
 
-        {/* Meshes */}
-        {type === "canvas" && <CanvasMesh path={path} size={size} />}
-        <ArtworkInfoMesh title={title} artist={artist} year={year} />
+            {/* Meshes */}
+            {type === "canvas" && <CanvasMesh path={path} size={size} />}
+            <ArtworkInfoMesh title={title} artist={artist} year={year} />
+          </>
+        )}
       </RigidBody>
-      {/* )} */}
     </>
   );
 }
