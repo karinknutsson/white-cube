@@ -7,11 +7,15 @@ import gsap from "gsap";
 import { useEffect, useRef, useMemo, use } from "react";
 
 const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
+const planeGeometry = new THREE.PlaneGeometry(1, 1);
 const wallThickness = 0.1;
 
 const roomMaterial = new THREE.MeshStandardMaterial({
   color: "#ffffff",
   // wireframe: true,
+});
+const redMaterial = new THREE.MeshStandardMaterial({
+  color: "#ff0000",
 });
 const windowMaterial = new THREE.MeshPhysicalMaterial({
   color: "#ffffff",
@@ -52,7 +56,7 @@ export function CeilingMesh({ width, depth, position }) {
   );
 }
 
-export function BackWallMesh({ ref, width, height, depth, onIntersection }) {
+export function BackWallMesh({ ref, width, height, depth }) {
   return (
     <>
       <RigidBody
@@ -62,11 +66,6 @@ export function BackWallMesh({ ref, width, height, depth, onIntersection }) {
       >
         <CuboidCollider
           args={[width * 0.5, height * 0.5, wallThickness * 0.5]}
-        />
-        <CuboidCollider
-          args={[width * 0.5, height * 0.5, 0.5]}
-          sensor
-          onIntersectionEnter={onIntersection}
         />
         <mesh
           ref={ref}
@@ -82,7 +81,7 @@ export function BackWallMesh({ ref, width, height, depth, onIntersection }) {
   );
 }
 
-export function LeftWallMesh({ ref, width, height, depth, onIntersection }) {
+export function LeftWallMesh({ ref, width, height, depth }) {
   return (
     <RigidBody
       type="fixed"
@@ -91,11 +90,6 @@ export function LeftWallMesh({ ref, width, height, depth, onIntersection }) {
       rotation={[0, Math.PI * 0.5, 0]}
     >
       <CuboidCollider args={[depth * 0.5, height * 0.5, wallThickness * 0.5]} />
-      <CuboidCollider
-        args={[depth * 0.5, height * 0.5, 0.6]}
-        sensor
-        onIntersectionEnter={onIntersection}
-      />
       <mesh
         ref={ref}
         name="leftWall"
@@ -109,7 +103,7 @@ export function LeftWallMesh({ ref, width, height, depth, onIntersection }) {
   );
 }
 
-export function RightWallMesh({ ref, width, height, depth, onIntersection }) {
+export function RightWallMesh({ ref, width, height, depth }) {
   return (
     <RigidBody
       type="fixed"
@@ -118,11 +112,6 @@ export function RightWallMesh({ ref, width, height, depth, onIntersection }) {
       rotation={[0, -Math.PI * 0.5, 0]}
     >
       <CuboidCollider args={[depth * 0.5, height * 0.5, wallThickness * 0.5]} />
-      <CuboidCollider
-        args={[depth * 0.5, height * 0.5, 0.5]}
-        sensor
-        onIntersectionEnter={onIntersection}
-      />
       <mesh
         ref={ref}
         name="rightWall"
@@ -136,31 +125,33 @@ export function RightWallMesh({ ref, width, height, depth, onIntersection }) {
   );
 }
 
-export function PartitionMesh({
-  ref,
-  width,
-  height,
-  depth,
-  position,
-  onIntersection,
-}) {
+export function PartitionMesh({ ref, width, height, depth, position }) {
   return (
     <RigidBody type="fixed" colliders={false} position={position}>
       <CuboidCollider args={[width * 0.5, height * 0.5, depth * 0.5]} />
-      <CuboidCollider
-        args={[width * 0.5, height * 0.5, 0.5]}
-        sensor
-        onIntersectionEnter={onIntersection}
-      />
       <mesh
         ref={ref}
-        name="partitionWall"
         geometry={boxGeometry}
         material={roomMaterial}
         scale={[width, height, depth]}
         castShadow
         receiveShadow
-      ></mesh>
+      />
+      <mesh
+        geometry={planeGeometry}
+        material={redMaterial}
+        scale={[width, height, 0]}
+        receiveShadow
+        position={[0, 0, depth * 0.5 + 0.0001]}
+      />
+      <mesh
+        geometry={planeGeometry}
+        material={redMaterial}
+        scale={[width, height, 0]}
+        receiveShadow
+        position={[0, 0, -(depth * 0.5 + 0.0001)]}
+        rotation={[0, Math.PI, 0]}
+      />
     </RigidBody>
   );
 }
@@ -211,7 +202,7 @@ export default function RoomMeshes({ size, position }) {
 
   const { camera } = useThree();
   const raycaster = useMemo(() => new THREE.Raycaster(), []);
-  const direction = useMemo(() => new THREE.Vector3(), []);
+  // const direction = useMemo(() => new THREE.Vector3(), []);
   // const grabbedWorkId = useGallery(state => state.grabbedWorkId);
   const isGrabbingRef = useRef(false);
   const wallRefs = useRef({
@@ -239,7 +230,6 @@ export default function RoomMeshes({ size, position }) {
 
   function handleClick() {
     if (!isGrabbingRef.current) return;
-    useGallery.getState().setGrabbedWorkId(null);
 
     const wallsArray = Object.values(wallRefs.current).filter(Boolean);
     if (!wallsArray.length) return;
@@ -248,7 +238,13 @@ export default function RoomMeshes({ size, position }) {
     const hits = raycaster.intersectObjects(wallsArray, false);
     if (hits.length === 0) return;
 
-    console.log(hits[0]);
+    console.log(hits[0].object.name);
+    console.log(hits[0].uv);
+
+    if (hits[0].object.name === "backWall") {
+    }
+
+    useGallery.getState().setGrabbedWorkId(null);
   }
 
   function dropArtworkAtWall(position, rotation) {
@@ -263,6 +259,7 @@ export default function RoomMeshes({ size, position }) {
     const setDropWallPosition = useGallery.getState().setDropWallPosition;
     setDropWallPosition(position);
   }
+  2;
 
   return (
     <group position={position}>

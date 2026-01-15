@@ -9,7 +9,7 @@ import { Environment } from "@react-three/drei";
 import ArtworkGallery from "./artwork/ArtworkGallery.jsx";
 
 export default function Experience() {
-  const { perfVisible } = useControls({ perfVisible: false });
+  const { perfVisible } = useControls({ perfVisible: true });
 
   return (
     <>
