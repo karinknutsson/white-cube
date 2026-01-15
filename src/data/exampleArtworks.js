@@ -7,6 +7,7 @@ export const works = [
     title: "Virtu",
     year: "2021",
     position: { wall: "rightWall", wallPosition: "right" },
+    startPosition: [0, 0, 0],
   },
   {
     id: "1",
@@ -16,6 +17,7 @@ export const works = [
     title: "ex II",
     year: "2020",
     position: { wall: "rightWall", wallPosition: "left" },
+    startPosition: [0, 0, 0],
   },
   {
     id: "2",
@@ -25,6 +27,7 @@ export const works = [
     title: "Theresa IX",
     year: "2025",
     position: { wall: "rightWall", wallPosition: "center" },
+    startPosition: [0, 0, 0],
   },
   {
     id: "3",
@@ -34,6 +37,7 @@ export const works = [
     title: "La Di",
     year: "2023",
     position: { wall: "backWall", wallPosition: "center" },
+    startPosition: [0, 0, 0],
   },
   {
     id: "4",
@@ -43,5 +47,6 @@ export const works = [
     title: "Psy Amo (1-2)",
     year: "2023",
     position: { wall: "leftWall", wallPosition: "left" },
+    startPosition: [0, 0, 0],
   },
 ];

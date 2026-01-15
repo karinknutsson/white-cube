@@ -5,6 +5,8 @@ import useGallery from "../stores/useGallery";
 import { useThree, useFrame } from "@react-three/fiber";
 import gsap from "gsap";
 import { useEffect, useRef, useMemo, use } from "react";
+import Artwork from "../artwork/Artwork";
+import * as artworkData from "../data/exampleArtworks.js";
 
 const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
 const planeGeometry = new THREE.PlaneGeometry(1, 1);
@@ -56,7 +58,15 @@ export function CeilingMesh({ width, depth, position }) {
   );
 }
 
-export function BackWallMesh({ ref, width, height, depth }) {
+export function BackWallMesh({
+  ref,
+  width,
+  height,
+  depth,
+  works,
+  handleEnterGrabArea,
+  handleLeaveGrabArea,
+}) {
   return (
     <>
       <RigidBody
@@ -76,6 +86,28 @@ export function BackWallMesh({ ref, width, height, depth }) {
           castShadow
           receiveShadow
         ></mesh>
+        <group position={[0, 0, wallThickness * 0.5 + 0.0001]}>
+          {works.map((work) => {
+            console.log(work);
+            if (!work.position) return null;
+
+            return (
+              <Artwork
+                key={work.id}
+                id={work.id}
+                startPosition={work.startPosition}
+                type="canvas"
+                path={work.path}
+                size={work.size}
+                artist={work.artist}
+                title={work.title}
+                year={work.year}
+                onEnterGrabArea={() => handleEnterGrabArea(work.id)}
+                onLeaveGrabArea={() => handleLeaveGrabArea()}
+              ></Artwork>
+            );
+          })}
+        </group>
       </RigidBody>
     </>
   );
@@ -247,19 +279,30 @@ export default function RoomMeshes({ size, position }) {
     useGallery.getState().setGrabbedWorkId(null);
   }
 
-  function dropArtworkAtWall(position, rotation) {
-    const eulerRotation = new THREE.Euler(
-      rotation[0],
-      rotation[1],
-      rotation[2]
-    );
-    const quaternionRotation = new THREE.Quaternion();
-    quaternionRotation.setFromEuler(eulerRotation);
-
-    const setDropWallPosition = useGallery.getState().setDropWallPosition;
-    setDropWallPosition(position);
+  function handleEnterGrabArea(id) {
+    grabAreaId.current = id;
+    window.addEventListener("mousedown", handleMouseDownGrabArea);
+    gsap.to(".grab-hint-container", { duration: 0.1, opacity: 1 });
   }
-  2;
+
+  function handleLeaveGrabArea() {
+    grabAreaId.current = null;
+    window.removeEventListener("mousedown", handleMouseDownGrabArea);
+    gsap.to(".grab-hint-container", { duration: 0.1, opacity: 0 });
+  }
+
+  // function dropArtworkAtWall(position, rotation) {
+  //   const eulerRotation = new THREE.Euler(
+  //     rotation[0],
+  //     rotation[1],
+  //     rotation[2]
+  //   );
+  //   const quaternionRotation = new THREE.Quaternion();
+  //   quaternionRotation.setFromEuler(eulerRotation);
+
+  //   const setDropWallPosition = useGallery.getState().setDropWallPosition;
+  //   setDropWallPosition(position);
+  // }
 
   return (
     <group position={position}>
@@ -272,7 +315,9 @@ export default function RoomMeshes({ size, position }) {
         width={size[0]}
         height={size[1]}
         depth={size[2]}
-        // onIntersection={onIntersection}
+        works={[artworkData.works[0]]}
+        handleEnterGrabArea={handleEnterGrabArea}
+        handleLeaveGrabArea={handleLeaveGrabArea}
       />
 
       <LeftWallMesh
