@@ -1,44 +1,22 @@
 import { create } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
+import * as THREE from "three";
+import { ARTWORKS } from "../data/exampleArtworks";
 
 export default create(
   subscribeWithSelector((set) => {
     return {
       /**
-       * Artwork
+       * Artworks
        */
-      grabbedWorkId: null,
+      artworks: structuredClone(ARTWORKS),
 
-      setGrabbedWorkId: (value) => {
-        set((_) => {
-          return {
-            grabbedWorkId: value,
-          };
-        });
-      },
-
-      grabMode: false,
-
-      setGrabMode: (value) => {
-        set((_) => {
-          return {
-            grabMode: value,
-          };
-        });
-      },
-
-      /**
-       * Player
-       */
-      playerRef: null,
-
-      setPlayerRef: (p) => {
-        set((_) => {
-          return {
-            playerRef: p,
-          };
-        });
-      },
+      moveArtwork: (id, updates) =>
+        set((state) => ({
+          artworks: state.artworks.map((a) =>
+            a.id === id ? { ...a, ...updates } : a
+          ),
+        })),
     };
   })
 );

@@ -3,12 +3,10 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { PointerLockControls } from "@react-three/drei";
-import useGallery from "./stores/useGallery.js";
 
 export default function Player() {
   const { camera } = useThree();
   const bodyRef = useRef();
-  const colliderRef = useRef();
   const controlsRef = useRef();
 
   const move = useRef({
@@ -18,10 +16,6 @@ export default function Player() {
     right: false,
     jump: false,
   });
-
-  useEffect(() => {
-    useGallery.getState().setPlayerRef({ playerRef: colliderRef });
-  }, []);
 
   useEffect(() => {
     if (controlsRef.current) controlsRef.current.pointerSpeed = 0.3;
@@ -97,7 +91,7 @@ export default function Player() {
     direction.normalize();
     direction.applyEuler(camera.rotation);
 
-    const speed = 3;
+    const speed = 5;
 
     bodyRef.current.setLinvel(
       {
@@ -127,7 +121,8 @@ export default function Player() {
         mass={1}
         enabledRotations={[false, false, false]}
       >
-        <CapsuleCollider ref={colliderRef} args={[0.5, 0.3]} />
+        <CapsuleCollider args={[0.5, 0.3]} />
+        <CapsuleCollider args={[0.5, 0.4]} sensor />
       </RigidBody>
     </>
   );

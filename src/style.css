@@ -14,13 +14,14 @@ body,
   padding: 0;
 }
 
-.grab-icon-container {
+.grab-hint-container,
+.drop-hint-container {
   position: absolute;
-  bottom: 100px;
+  bottom: 32px;
   left: 50%;
   transform: translateX(-50%);
-  width: 160px;
-  height: 160px;
+  width: 120px;
+  height: 120px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -29,19 +30,14 @@ body,
   border-radius: 50%;
   color: white;
   font-family: "Rubik", Arial, sans-serif;
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 400;
   opacity: 0;
   z-index: 1000;
 }
 
-.grab-icon {
-  filter: invert(1);
-  width: 128px;
-  height: 128px;
-}
-
-.grab-icon-text {
+.grab-hint-text,
+.drop-hint-text {
   width: 60%;
   text-align: center;
 }
@@ -61,6 +57,6 @@ body,
 
 #grabbed-image {
   max-width: 50vw;
-  max-height: 70vh;
+  max-height: 60vh;
   object-fit: contain;
 }

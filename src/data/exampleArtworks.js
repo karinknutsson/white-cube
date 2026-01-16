@@ -1,4 +1,4 @@
-export const works = [
+export const ARTWORKS = [
   {
     id: "0",
     path: "./works/greven-virtu.png",
@@ -6,7 +6,8 @@ export const works = [
     artist: "Vivan Greven",
     title: "Virtu",
     year: "2021",
-    position: { wall: "rightWall", wallPosition: "right" },
+    wall: "partitionFront",
+    position: { x: 0, y: 0, z: 0 },
   },
   {
     id: "1",
@@ -15,7 +16,8 @@ export const works = [
     artist: "Vivan Greven",
     title: "ex II",
     year: "2020",
-    position: { wall: "rightWall", wallPosition: "left" },
+    wall: "leftWall",
+    position: { x: -2, y: 0, z: 0 },
   },
   {
     id: "2",
@@ -24,7 +26,8 @@ export const works = [
     artist: "Vivan Greven",
     title: "Theresa IX",
     year: "2025",
-    position: { wall: "rightWall", wallPosition: "center" },
+    wall: "rightWall",
+    position: { x: -3, y: 0, z: 0 },
   },
   {
     id: "3",
@@ -33,7 +36,8 @@ export const works = [
     artist: "Vivan Greven",
     title: "La Di",
     year: "2023",
-    position: { wall: "backWall", wallPosition: "center" },
+    wall: "backWall",
+    position: { x: 0, y: 0, z: 0 },
   },
   {
     id: "4",
@@ -42,6 +46,7 @@ export const works = [
     artist: "Vivan Greven",
     title: "Psy Amo (1-2)",
     year: "2023",
-    position: { wall: "leftWall", wallPosition: "left" },
+    wall: "partitionBack",
+    position: { x: 0, y: 0, z: 0 },
   },
 ];
