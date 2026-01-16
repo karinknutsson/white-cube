@@ -19,17 +19,6 @@ export default function Artwork({
   onLeaveGrabArea,
 }) {
   const artworkRef = useRef();
-  const grabbedWorkId = useGallery((state) => state.grabbedWorkId);
-
-  function onIntersection() {
-    if (grabbedWorkId !== null) return;
-
-    onEnterGrabArea();
-  }
-
-  function onIntersectionExit() {
-    onLeaveGrabArea();
-  }
 
   return (
     <>
@@ -39,8 +28,8 @@ export default function Artwork({
         ref={artworkRef}
         type="kinematicPosition"
         colliders={false}
-        onIntersectionEnter={onIntersection}
-        onIntersectionExit={onIntersectionExit}
+        onIntersectionEnter={onEnterGrabArea}
+        onIntersectionExit={onLeaveGrabArea}
       >
         <>
           {/* Colliders */}

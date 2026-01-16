@@ -182,6 +182,9 @@ export default function RoomMeshes({
 
     if (!wallRefs.current.length) return;
 
+    const artwork = artworks.filter((w) => w.id === grabAreaId.current);
+    console.log(artwork);
+
     raycaster.setFromCamera(new THREE.Vector2(0, 0), camera);
     const hits = raycaster.intersectObjects(wallRefs.current, false);
     if (hits.length === 0) return;
@@ -251,12 +254,16 @@ export default function RoomMeshes({
   }
 
   function handleEnterGrabArea(id) {
+    if (grabbedWorkId !== null) return;
+
     grabAreaId.current = id;
     window.addEventListener("mousedown", handleGrab);
     gsap.to(".grab-hint-container", { duration: 0.1, opacity: 1 });
   }
 
   function handleLeaveGrabArea() {
+    if (grabbedWorkId !== null) return;
+
     grabAreaId.current = null;
     window.removeEventListener("mousedown", handleGrab);
     gsap.to(".grab-hint-container", { duration: 0.1, opacity: 0 });
