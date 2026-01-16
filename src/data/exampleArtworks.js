@@ -1,4 +1,4 @@
-export const works = [
+export const ARTWORKS = [
   {
     id: "0",
     path: "./works/greven-virtu.png",
@@ -7,8 +7,7 @@ export const works = [
     title: "Virtu",
     year: "2021",
     wall: "rightWall",
-    position: { wall: "rightWall", wallPosition: "right" },
-    startPosition: [0, 0, 0],
+    position: { x: 2.6, y: 0, z: 0 },
   },
   {
     id: "1",
@@ -18,8 +17,7 @@ export const works = [
     title: "ex II",
     year: "2020",
     wall: "rightWall",
-    position: { wall: "rightWall", wallPosition: "left" },
-    startPosition: [0, 0, 0],
+    position: { x: -2, y: 0, z: 0 },
   },
   {
     id: "2",
@@ -29,8 +27,7 @@ export const works = [
     title: "Theresa IX",
     year: "2025",
     wall: "rightWall",
-    position: { wall: "rightWall", wallPosition: "center" },
-    startPosition: [0, 0, 0],
+    position: { x: -3.2, y: 0, z: 0 },
   },
   {
     id: "3",
@@ -40,8 +37,7 @@ export const works = [
     title: "La Di",
     wall: "backWall",
     year: "2023",
-    position: { x: 0, y: 0 },
-    startPosition: [0, 0, 0],
+    position: { x: 0, y: 0, z: 0 },
   },
   {
     id: "4",
@@ -51,7 +47,6 @@ export const works = [
     title: "Psy Amo (1-2)",
     year: "2023",
     wall: "leftWall",
-    position: { wall: "leftWall", wallPosition: "left" },
-    startPosition: [0, 0, 0],
+    position: { x: 0, y: 0, z: 0 },
   },
 ];

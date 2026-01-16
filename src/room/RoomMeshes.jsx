@@ -6,7 +6,7 @@ import { useThree, useFrame } from "@react-three/fiber";
 import gsap from "gsap";
 import { useEffect, useRef, useMemo, useState } from "react";
 import Artwork from "../artwork/Artwork";
-import * as artworkData from "../data/exampleArtworks.js";
+// import * as artworkData from "../data/exampleArtworks.js";
 
 const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
 const planeGeometry = new THREE.PlaneGeometry(1, 1);
@@ -88,7 +88,6 @@ export function BackWallMesh({
         ></mesh>
         <group position={[0, 0, wallThickness * 0.5 + 0.0001]}>
           {works.map((work) => {
-            // console.log(work);
             if (!work.position) return null;
 
             return (
@@ -113,7 +112,15 @@ export function BackWallMesh({
   );
 }
 
-export function LeftWallMesh({ ref, width, height, depth }) {
+export function LeftWallMesh({
+  ref,
+  width,
+  height,
+  depth,
+  works,
+  handleEnterGrabArea,
+  handleLeaveGrabArea,
+}) {
   return (
     <RigidBody
       type="fixed"
@@ -131,11 +138,40 @@ export function LeftWallMesh({ ref, width, height, depth }) {
         castShadow
         receiveShadow
       ></mesh>
+      <group position={[0, 0, wallThickness * 0.5 + 0.0001]}>
+        {works.map((work) => {
+          if (!work.position) return null;
+
+          return (
+            <Artwork
+              key={work.id}
+              id={work.id}
+              position={[work.position.x, work.position.y, 0]}
+              type="canvas"
+              path={work.path}
+              size={work.size}
+              artist={work.artist}
+              title={work.title}
+              year={work.year}
+              onEnterGrabArea={() => handleEnterGrabArea(work.id)}
+              onLeaveGrabArea={() => handleLeaveGrabArea()}
+            ></Artwork>
+          );
+        })}
+      </group>
     </RigidBody>
   );
 }
 
-export function RightWallMesh({ ref, width, height, depth }) {
+export function RightWallMesh({
+  ref,
+  width,
+  height,
+  depth,
+  works,
+  handleEnterGrabArea,
+  handleLeaveGrabArea,
+}) {
   return (
     <RigidBody
       type="fixed"
@@ -152,7 +188,30 @@ export function RightWallMesh({ ref, width, height, depth }) {
         scale={[depth, height, wallThickness]}
         castShadow
         receiveShadow
+        onEnterGrabArea={() => handleEnterGrabArea(work.id)}
+        onLeaveGrabArea={() => handleLeaveGrabArea()}
       ></mesh>
+      <group position={[0, 0, wallThickness * 0.5 + 0.0001]}>
+        {works.map((work) => {
+          if (!work.position) return null;
+
+          return (
+            <Artwork
+              key={work.id}
+              id={work.id}
+              position={[work.position.x, work.position.y, 0]}
+              type="canvas"
+              path={work.path}
+              size={work.size}
+              artist={work.artist}
+              title={work.title}
+              year={work.year}
+              onEnterGrabArea={() => handleEnterGrabArea(work.id)}
+              onLeaveGrabArea={() => handleLeaveGrabArea()}
+            ></Artwork>
+          );
+        })}
+      </group>
     </RigidBody>
   );
 }
@@ -237,6 +296,9 @@ export default function RoomMeshes({ size, position }) {
   const grabAreaId = useRef(null);
   const [grabbedWorkId, setGrabbedWorkId] = useState(null);
 
+  const artworks = useGallery((state) => state.artworks);
+  const moveArtwork = useGallery((state) => state.moveArtwork);
+
   const wallRefs = useRef({
     left: null,
     right: null,
@@ -245,9 +307,10 @@ export default function RoomMeshes({ size, position }) {
   });
 
   function handleDrop() {
-    console.log("drop");
-    if (!grabbedWorkId) return;
+    console.log(grabAreaId.current);
 
+    gsap.to("#grabbed-artwork-container", { duration: 0.5, opacity: 0 });
+    gsap.to(".drop-hint-container", { duration: 0.1, opacity: 0 });
     const wallsArray = Object.values(wallRefs.current).filter(Boolean);
     if (!wallsArray.length) return;
 
@@ -255,33 +318,59 @@ export default function RoomMeshes({ size, position }) {
     const hits = raycaster.intersectObjects(wallsArray, false);
     if (hits.length === 0) return;
 
-    console.log(hits[0].object.name);
+    const artworkSize = artworks.find((q) => q.id === grabAreaId.current).size;
     console.log(hits[0].uv);
 
     if (hits[0].object.name === "backWall") {
-      console.log("back wall");
+      moveArtwork(grabAreaId.current, {
+        wall: "backWall",
+        position: {
+          x: (hits[0].uv.x - 0.5) * size[0],
+          y: (hits[0].uv.y - 0.5) * size[1],
+          z: 0,
+        },
+      });
+    } else if (hits[0].object.name === "leftWall") {
+      moveArtwork(grabAreaId.current, {
+        wall: "leftWall",
+        position: {
+          x: (hits[0].uv.x - 0.5) * size[2],
+          y: (hits[0].uv.y - 0.5) * size[1],
+          z: 0,
+        },
+      });
+      // console.log((hits[0].uv.y - 1) * 0.5 * size[1]);
+    } else if (hits[0].object.name === "rightWall") {
+      moveArtwork(grabAreaId.current, {
+        wall: "rightWall",
+        position: {
+          x: (hits[0].uv.x - 0.5) * size[2],
+          y: (hits[0].uv.y - 0.5) * size[1],
+          z: 0,
+        },
+      });
+    } else if (
+      hits[0].object.name === "partitionFront" ||
+      hits[0].object.name === "partitionBack"
+    ) {
+      console.log("partition");
     }
 
     grabAreaId.current = null;
     setGrabbedWorkId(null);
+    window.removeEventListener("mousedown", handleDrop);
   }
 
   function handleGrab() {
-    console.log("grab");
     setGrabbedWorkId(grabAreaId.current);
     window.removeEventListener("mousedown", handleGrab);
     window.addEventListener("mousedown", handleDrop);
     gsap.to(".grab-hint-container", { duration: 0.1, opacity: 0 });
     gsap.to(".drop-hint-container", { duration: 0.1, opacity: 1 });
     const image = document.getElementById("grabbed-image");
-    const work = artworkData.works.filter((w) => w.id === grabAreaId.current);
+    const work = artworks.filter((w) => w.id === grabAreaId.current);
     image.src = work[0].path ?? "";
     gsap.to("#grabbed-artwork-container", { duration: 0.5, opacity: 0.6 });
-  }
-
-  function handleDrop() {
-    console.log("drop");
-    gsap.to("#grabbed-artwork-container", { duration: 0.5, opacity: 0 });
   }
 
   function handleEnterGrabArea(id) {
@@ -307,7 +396,7 @@ export default function RoomMeshes({ size, position }) {
         width={size[0]}
         height={size[1]}
         depth={size[2]}
-        works={artworkData.works.filter(
+        works={artworks.filter(
           (w) => w.wall === "backWall" && w.id !== grabbedWorkId
         )}
         handleEnterGrabArea={handleEnterGrabArea}
@@ -319,6 +408,11 @@ export default function RoomMeshes({ size, position }) {
         width={size[0]}
         height={size[1]}
         depth={size[2]}
+        works={artworks.filter(
+          (w) => w.wall === "leftWall" && w.id !== grabbedWorkId
+        )}
+        handleEnterGrabArea={handleEnterGrabArea}
+        handleLeaveGrabArea={handleLeaveGrabArea}
       />
 
       <RightWallMesh
@@ -326,6 +420,11 @@ export default function RoomMeshes({ size, position }) {
         width={size[0]}
         height={size[1]}
         depth={size[2]}
+        works={artworks.filter(
+          (w) => w.wall === "rightWall" && w.id !== grabbedWorkId
+        )}
+        handleEnterGrabArea={handleEnterGrabArea}
+        handleLeaveGrabArea={handleLeaveGrabArea}
       />
 
       <PartitionMesh
