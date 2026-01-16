@@ -591,13 +591,17 @@ export default function RoomMeshes({
         handleEnterGrabArea={handleEnterGrabArea}
         handleLeaveGrabArea={handleLeaveGrabArea}
       />
-      {/*}
-      <PartitionBack
-        ref={(el) => (wallRefs.current.partitionBack = el)}
+
+      {/* Partition back part */}
+      <WallMesh
+        ref={(el) => (wallRefs.current[3] = el)}
+        name="partitionBack"
         width={roomWidth - 2.6}
         height={roomHeight}
-        depth={0.1}
-        position={[0, (roomHeight - wallThickness) * 0.5, 0]}
+        depth={wallThickness}
+        wallThickness={wallThickness}
+        position={[0, roomHeight * 0.5, -wallThickness * 0.5]}
+        rotation={[0, Math.PI, 0]}
         works={artworks.filter(
           (w) => w.id !== grabbedWorkId && w.wall === "partitionBack"
         )}
@@ -605,18 +609,22 @@ export default function RoomMeshes({
         handleLeaveGrabArea={handleLeaveGrabArea}
       />
 
-      <PartitionFront
-        ref={(el) => (wallRefs.current.partitionFront = el)}
+      {/* Partition front part */}
+      <WallMesh
+        ref={(el) => (wallRefs.current[4] = el)}
+        name="partitionFront"
         width={roomWidth - 2.6}
         height={roomHeight}
         depth={wallThickness}
-        position={[0, (roomHeight + wallThickness) * 0.5, 0]}
+        wallThickness={wallThickness}
+        position={[0, roomHeight * 0.5, wallThickness * 0.5]}
+        rotation={[0, 0, 0]}
         works={artworks.filter(
           (w) => w.id !== grabbedWorkId && w.wall === "partitionFront"
         )}
         handleEnterGrabArea={handleEnterGrabArea}
         handleLeaveGrabArea={handleLeaveGrabArea}
-      /> */}
+      />
 
       <FloorMesh
         width={roomWidth}
