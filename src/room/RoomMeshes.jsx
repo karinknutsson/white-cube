@@ -349,12 +349,14 @@ export default function RoomMeshes({
         handleLeaveGrabArea={handleLeaveGrabArea}
       />
 
+      {/* Floor */}
       <FloorMesh
         width={roomWidth}
         depth={roomDepth}
         wallThickness={wallThickness}
       />
 
+      {/* Ceiling */}
       <CeilingMesh
         width={roomWidth}
         depth={roomDepth}
@@ -362,6 +364,7 @@ export default function RoomMeshes({
         wallThickness={wallThickness}
       />
 
+      {/* Window seat left side */}
       <WindowSeatMesh
         width={(roomWidth - 1.3) * 0.5}
         height={0.6}
@@ -369,6 +372,7 @@ export default function RoomMeshes({
         position={[-(1.3 + roomWidth) * 0.25, 0.3, roomDepth * 0.5 - 0.3]}
       />
 
+      {/* Window seat right side */}
       <WindowSeatMesh
         width={(roomWidth - 1.3) * 0.5}
         height={0.6}
@@ -376,6 +380,7 @@ export default function RoomMeshes({
         position={[(1.3 + roomWidth) * 0.25, 0.3, roomDepth * 0.5 - 0.3]}
       />
 
+      {/* Window */}
       <WindowMesh
         width={roomWidth + wallThickness}
         height={roomHeight + wallThickness}
