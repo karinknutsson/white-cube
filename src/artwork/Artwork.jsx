@@ -35,7 +35,7 @@ export default function Artwork({
           />
           <CuboidCollider
             args={[size[0] * 0.5, size[1] * 0.5, 0.2]}
-            position={[0, 0, 0.5]}
+            position={[0, 0, 0.6]}
             sensor
           />
 

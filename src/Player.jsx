@@ -122,7 +122,7 @@ export default function Player() {
         enabledRotations={[false, false, false]}
       >
         <CapsuleCollider args={[0.5, 0.3]} />
-        <CapsuleCollider args={[0.5, 0.6]} sensor />
+        <CapsuleCollider args={[0.5, 0.4]} sensor />
       </RigidBody>
     </>
   );
