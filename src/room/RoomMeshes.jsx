@@ -185,6 +185,8 @@ export default function RoomMeshes({
     if (!wallRefs.current.length) return;
 
     const artwork = artworks.filter((w) => w.id === grabAreaId.current);
+    if (artwork.length === 0) return;
+
     const artworkWidth = artwork[0].size[0];
     const artworkHeight = artwork[0].size[1];
 
@@ -213,8 +215,16 @@ export default function RoomMeshes({
       moveArtwork(grabAreaId.current, {
         wall: "leftWall",
         position: {
-          x: (hits[0].uv.x - 0.5) * roomDepth,
-          y: (hits[0].uv.y - 0.5) * roomHeight,
+          x: clamp(
+            (hits[0].uv.x - 0.5) * roomDepth,
+            (artworkWidth - roomDepth) * 0.5,
+            (roomDepth - artworkWidth) * 0.5
+          ),
+          y: clamp(
+            (hits[0].uv.y - 0.5) * roomHeight,
+            (artworkHeight - roomHeight) * 0.5,
+            (roomHeight - artworkHeight) * 0.5
+          ),
           z: Math.random() * 0.001,
         },
       });
@@ -222,8 +232,16 @@ export default function RoomMeshes({
       moveArtwork(grabAreaId.current, {
         wall: "rightWall",
         position: {
-          x: (hits[0].uv.x - 0.5) * roomDepth,
-          y: (hits[0].uv.y - 0.5) * roomHeight,
+          x: clamp(
+            (hits[0].uv.x - 0.5) * roomDepth,
+            (artworkWidth - roomDepth) * 0.5,
+            (roomDepth - artworkWidth) * 0.5
+          ),
+          y: clamp(
+            (hits[0].uv.y - 0.5) * roomHeight,
+            (artworkHeight - roomHeight) * 0.5,
+            (roomHeight - artworkHeight) * 0.5
+          ),
           z: Math.random() * 0.001,
         },
       });
