@@ -4,7 +4,7 @@ import { useControls } from "leva";
 import useGallery from "../stores/useGallery";
 import { useThree, useFrame } from "@react-three/fiber";
 import gsap from "gsap";
-import { useEffect, useRef, useMemo, use } from "react";
+import { useEffect, useRef, useMemo, useState } from "react";
 import Artwork from "../artwork/Artwork";
 import * as artworkData from "../data/exampleArtworks.js";
 
@@ -16,9 +16,9 @@ const roomMaterial = new THREE.MeshStandardMaterial({
   color: "#ffffff",
   // wireframe: true,
 });
-const redMaterial = new THREE.MeshStandardMaterial({
-  color: "#ff0000",
-});
+// const redMaterial = new THREE.MeshStandardMaterial({
+//   color: "#ff0000",
+// });
 const windowMaterial = new THREE.MeshPhysicalMaterial({
   color: "#ffffff",
   roughness: 0,
@@ -88,14 +88,14 @@ export function BackWallMesh({
         ></mesh>
         <group position={[0, 0, wallThickness * 0.5 + 0.0001]}>
           {works.map((work) => {
-            console.log(work);
+            // console.log(work);
             if (!work.position) return null;
 
             return (
               <Artwork
                 key={work.id}
                 id={work.id}
-                startPosition={work.startPosition}
+                position={[work.position.x, work.position.y, 0]}
                 type="canvas"
                 path={work.path}
                 size={work.size}
@@ -171,14 +171,14 @@ export function PartitionMesh({ ref, width, height, depth, position }) {
       />
       <mesh
         geometry={planeGeometry}
-        material={redMaterial}
+        material={roomMaterial}
         scale={[width, height, 0]}
         receiveShadow
         position={[0, 0, depth * 0.5 + 0.0001]}
       />
       <mesh
         geometry={planeGeometry}
-        material={redMaterial}
+        material={roomMaterial}
         scale={[width, height, 0]}
         receiveShadow
         position={[0, 0, -(depth * 0.5 + 0.0001)]}
@@ -234,9 +234,9 @@ export default function RoomMeshes({ size, position }) {
 
   const { camera } = useThree();
   const raycaster = useMemo(() => new THREE.Raycaster(), []);
-  // const direction = useMemo(() => new THREE.Vector3(), []);
-  // const grabbedWorkId = useGallery(state => state.grabbedWorkId);
-  const isGrabbingRef = useRef(false);
+  const grabAreaId = useRef(null);
+  const [grabbedWorkId, setGrabbedWorkId] = useState(null);
+
   const wallRefs = useRef({
     left: null,
     right: null,
@@ -244,24 +244,9 @@ export default function RoomMeshes({ size, position }) {
     partition: null,
   });
 
-  useEffect(() => {
-    const unsubscribe = useGallery.subscribe(
-      (state) => state.grabbedWorkId,
-      (grabbedWorkId) => {
-        isGrabbingRef.current = grabbedWorkId !== null;
-      }
-    );
-
-    window.addEventListener("mousedown", handleClick);
-
-    return () => {
-      unsubscribe();
-      window.removeEventListener("mousedown", handleClick);
-    };
-  }, []);
-
-  function handleClick() {
-    if (!isGrabbingRef.current) return;
+  function handleDrop() {
+    console.log("drop");
+    if (!grabbedWorkId) return;
 
     const wallsArray = Object.values(wallRefs.current).filter(Boolean);
     if (!wallsArray.length) return;
@@ -274,35 +259,42 @@ export default function RoomMeshes({ size, position }) {
     console.log(hits[0].uv);
 
     if (hits[0].object.name === "backWall") {
+      console.log("back wall");
     }
 
-    useGallery.getState().setGrabbedWorkId(null);
+    grabAreaId.current = null;
+    setGrabbedWorkId(null);
+  }
+
+  function handleGrab() {
+    console.log("grab");
+    setGrabbedWorkId(grabAreaId.current);
+    window.removeEventListener("mousedown", handleGrab);
+    window.addEventListener("mousedown", handleDrop);
+    gsap.to(".grab-hint-container", { duration: 0.1, opacity: 0 });
+    gsap.to(".drop-hint-container", { duration: 0.1, opacity: 1 });
+    const image = document.getElementById("grabbed-image");
+    const work = artworkData.works.filter((w) => w.id === grabAreaId.current);
+    image.src = work[0].path ?? "";
+    gsap.to("#grabbed-artwork-container", { duration: 0.5, opacity: 0.6 });
+  }
+
+  function handleDrop() {
+    console.log("drop");
+    gsap.to("#grabbed-artwork-container", { duration: 0.5, opacity: 0 });
   }
 
   function handleEnterGrabArea(id) {
     grabAreaId.current = id;
-    window.addEventListener("mousedown", handleMouseDownGrabArea);
+    window.addEventListener("mousedown", handleGrab);
     gsap.to(".grab-hint-container", { duration: 0.1, opacity: 1 });
   }
 
   function handleLeaveGrabArea() {
     grabAreaId.current = null;
-    window.removeEventListener("mousedown", handleMouseDownGrabArea);
+    window.removeEventListener("mousedown", handleGrab);
     gsap.to(".grab-hint-container", { duration: 0.1, opacity: 0 });
   }
-
-  // function dropArtworkAtWall(position, rotation) {
-  //   const eulerRotation = new THREE.Euler(
-  //     rotation[0],
-  //     rotation[1],
-  //     rotation[2]
-  //   );
-  //   const quaternionRotation = new THREE.Quaternion();
-  //   quaternionRotation.setFromEuler(eulerRotation);
-
-  //   const setDropWallPosition = useGallery.getState().setDropWallPosition;
-  //   setDropWallPosition(position);
-  // }
 
   return (
     <group position={position}>
@@ -315,7 +307,9 @@ export default function RoomMeshes({ size, position }) {
         width={size[0]}
         height={size[1]}
         depth={size[2]}
-        works={[artworkData.works[0]]}
+        works={artworkData.works.filter(
+          (w) => w.wall === "backWall" && w.id !== grabbedWorkId
+        )}
         handleEnterGrabArea={handleEnterGrabArea}
         handleLeaveGrabArea={handleLeaveGrabArea}
       />
@@ -325,7 +319,6 @@ export default function RoomMeshes({ size, position }) {
         width={size[0]}
         height={size[1]}
         depth={size[2]}
-        // onIntersection={onIntersection}
       />
 
       <RightWallMesh
@@ -333,7 +326,6 @@ export default function RoomMeshes({ size, position }) {
         width={size[0]}
         height={size[1]}
         depth={size[2]}
-        // onIntersection={onIntersection}
       />
 
       <PartitionMesh
@@ -342,7 +334,6 @@ export default function RoomMeshes({ size, position }) {
         height={size[1]}
         depth={0.2}
         position={[0, size[1] * 0.5, 0]}
-        // onIntersection={onIntersection}
       />
 
       <WindowSeatMesh

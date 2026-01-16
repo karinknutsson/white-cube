@@ -7,7 +7,7 @@ import { useFrame } from "@react-three/fiber";
 
 export default function Artwork({
   id,
-  startPosition,
+  position,
   rotation,
   type,
   path,
@@ -20,22 +20,6 @@ export default function Artwork({
 }) {
   const artworkRef = useRef();
   const grabbedWorkId = useGallery((state) => state.grabbedWorkId);
-  const setGrabbedWorkId = useGallery((state) => state.setGrabbedWorkId);
-  const dropWallPosition = useGallery((state) => state.dropWallPosition);
-  const dropWallRotation = useGallery((state) => state.dropWallRotation);
-
-  useFrame(() => {
-    if (
-      grabbedWorkId === id &&
-      dropWallPosition &&
-      dropWallRotation &&
-      artworkRef.current
-    ) {
-      artworkRef.current.setNextKinematicTranslation(dropWallPosition);
-      artworkRef.current.setNextKinematicRotation(dropWallRotation);
-      setGrabbedWorkId(null);
-    }
-  });
 
   function onIntersection() {
     if (grabbedWorkId !== null) return;
@@ -50,7 +34,7 @@ export default function Artwork({
   return (
     <>
       <RigidBody
-        position={startPosition}
+        position={position}
         rotation={rotation}
         ref={artworkRef}
         type="kinematicPosition"
@@ -58,19 +42,19 @@ export default function Artwork({
         onIntersectionEnter={onIntersection}
         onIntersectionExit={onIntersectionExit}
       >
-        {id !== grabbedWorkId && (
-          <>
-            {/* Colliders */}
-            <CuboidCollider
-              args={[size[0] * 0.5, size[1] * 0.5, size[2] * 0.5]}
-            />
-            <CuboidCollider args={[size[0] * 0.5, size[1] * 0.5, 0.6]} sensor />
+        {/* {id !== grabbedWorkId && ( */}
+        <>
+          {/* Colliders */}
+          <CuboidCollider
+            args={[size[0] * 0.5, size[1] * 0.5, size[2] * 0.5]}
+          />
+          <CuboidCollider args={[size[0] * 0.5, size[1] * 0.5, 0.6]} sensor />
 
-            {/* Meshes */}
-            {type === "canvas" && <CanvasMesh path={path} size={size} />}
-            <ArtworkInfoMesh title={title} artist={artist} year={year} />
-          </>
-        )}
+          {/* Meshes */}
+          {type === "canvas" && <CanvasMesh path={path} size={size} />}
+          <ArtworkInfoMesh title={title} artist={artist} year={year} />
+        </>
+        {/* )} */}
       </RigidBody>
     </>
   );

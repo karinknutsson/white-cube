@@ -37,6 +37,10 @@ export default create(
           };
         });
       },
+
+      backWallWorks: ["3"],
+      leftWallWorks: ["4"],
+      rightWallWorks: ["1", "2"],
     };
   })
 );
