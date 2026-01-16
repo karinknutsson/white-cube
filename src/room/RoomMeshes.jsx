@@ -1,6 +1,6 @@
 import { RigidBody, CuboidCollider } from "@react-three/rapier";
 import * as THREE from "three";
-import { useControls } from "leva";
+// import { useControls } from "leva";
 import useGallery from "../stores/useGallery";
 import { useThree, useFrame } from "@react-three/fiber";
 import gsap from "gsap";
@@ -151,20 +151,20 @@ export default function RoomMeshes({
   wallThickness,
   position,
 }) {
-  const { color, roughness } = useControls("material", {
-    color: {
-      value: "#ffffff",
-    },
-    roughness: {
-      value: 1,
-      min: 0,
-      max: 1,
-      step: 0.01,
-    },
-  });
+  // const { color, roughness } = useControls("material", {
+  //   color: {
+  //     value: "#ffffff",
+  //   },
+  //   roughness: {
+  //     value: 1,
+  //     min: 0,
+  //     max: 1,
+  //     step: 0.01,
+  //   },
+  // });
 
-  roomMaterial.color = new THREE.Color(color);
-  roomMaterial.roughness = roughness;
+  // roomMaterial.color = new THREE.Color(color);
+  // roomMaterial.roughness = roughness;
 
   const { camera } = useThree();
   const raycaster = useMemo(() => new THREE.Raycaster(), []);
