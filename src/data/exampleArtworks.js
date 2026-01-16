@@ -16,7 +16,7 @@ export const ARTWORKS = [
     artist: "Vivan Greven",
     title: "ex II",
     year: "2020",
-    wall: "partitionBack",
+    wall: "leftWall",
     position: { x: 0, y: 0, z: 0 },
   },
   {
@@ -26,7 +26,7 @@ export const ARTWORKS = [
     artist: "Vivan Greven",
     title: "Theresa IX",
     year: "2025",
-    wall: "partitionFront",
+    wall: "rightWall",
     position: { x: 0, y: 0, z: 0 },
   },
   {
@@ -35,8 +35,8 @@ export const ARTWORKS = [
     size: [4.25, 1.8, 0.018],
     artist: "Vivan Greven",
     title: "La Di",
-    wall: "backWall",
     year: "2023",
+    wall: "backWall",
     position: { x: 0, y: 0, z: 0 },
   },
   {

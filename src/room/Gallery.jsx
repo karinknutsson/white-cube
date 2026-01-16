@@ -33,7 +33,11 @@ export default function TheRoom() {
 
       {/* Room mesh */}
       <RoomMeshes
-        size={[roomWidth, roomHeight, roomDepth]}
+        // size={[roomWidth, roomHeight, roomDepth]}
+        roomWidth={roomWidth}
+        roomHeight={roomHeight}
+        roomDepth={roomDepth}
+        wallThickness={0.1}
         position={[0, 0, 0]}
       />
     </>
