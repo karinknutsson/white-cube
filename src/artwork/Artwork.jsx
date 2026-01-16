@@ -1,12 +1,9 @@
 import CanvasMesh from "./CanvasMesh";
 import ArtworkInfoMesh from "./ArtworkInfoMesh";
 import { RigidBody, CuboidCollider } from "@react-three/rapier";
-import { useRef, useEffect } from "react";
-import useGallery from "../stores/useGallery.js";
-import { useFrame } from "@react-three/fiber";
+import { useRef } from "react";
 
 export default function Artwork({
-  id,
   position,
   rotation,
   type,

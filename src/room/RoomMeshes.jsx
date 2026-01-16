@@ -176,6 +176,8 @@ export default function RoomMeshes({
 
   const wallRefs = useRef([]);
 
+  const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+
   function handleDrop() {
     gsap.to("#grabbed-artwork-container", { duration: 0.5, opacity: 0 });
     gsap.to(".drop-hint-container", { duration: 0.1, opacity: 0 });
@@ -183,7 +185,8 @@ export default function RoomMeshes({
     if (!wallRefs.current.length) return;
 
     const artwork = artworks.filter((w) => w.id === grabAreaId.current);
-    console.log(artwork);
+    const artworkWidth = artwork[0].size[0];
+    const artworkHeight = artwork[0].size[1];
 
     raycaster.setFromCamera(new THREE.Vector2(0, 0), camera);
     const hits = raycaster.intersectObjects(wallRefs.current, false);
@@ -193,8 +196,16 @@ export default function RoomMeshes({
       moveArtwork(grabAreaId.current, {
         wall: "backWall",
         position: {
-          x: (hits[0].uv.x - 0.5) * roomWidth,
-          y: (hits[0].uv.y - 0.5) * roomHeight,
+          x: clamp(
+            (hits[0].uv.x - 0.5) * roomWidth,
+            (artworkWidth - roomWidth) * 0.5,
+            (roomWidth - artworkWidth) * 0.5
+          ),
+          y: clamp(
+            (hits[0].uv.y - 0.5) * roomHeight,
+            (artworkHeight - roomHeight) * 0.5,
+            (roomHeight - artworkHeight) * 0.5
+          ),
           z: Math.random() * 0.001,
         },
       });
