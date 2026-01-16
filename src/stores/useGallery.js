@@ -27,30 +27,6 @@ export default create(
           };
         });
       },
-
-      dropWallPosition: null,
-
-      setDropWallPosition: (position) => {
-        set((_) => {
-          return {
-            dropWallPosition: position,
-          };
-        });
-      },
-
-      dropWallRotation: null,
-
-      setDropWallRotation: (rotation) => {
-        set((_) => {
-          return {
-            dropWallRotation: rotation,
-          };
-        });
-      },
-
-      backWallWorks: ["3"],
-      leftWallWorks: ["4"],
-      rightWallWorks: ["1", "2"],
     };
   })
 );

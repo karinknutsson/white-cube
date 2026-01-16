@@ -4,21 +4,17 @@ import { useControls } from "leva";
 import useGallery from "../stores/useGallery";
 import { useThree, useFrame } from "@react-three/fiber";
 import gsap from "gsap";
-import { useEffect, useRef, useMemo, useState } from "react";
+import { useRef, useMemo, useState, useImperativeHandle } from "react";
 import Artwork from "../artwork/Artwork";
-// import * as artworkData from "../data/exampleArtworks.js";
 
 const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
-const planeGeometry = new THREE.PlaneGeometry(1, 1);
 const wallThickness = 0.1;
 
 const roomMaterial = new THREE.MeshStandardMaterial({
   color: "#ffffff",
   // wireframe: true,
 });
-// const redMaterial = new THREE.MeshStandardMaterial({
-//   color: "#ff0000",
-// });
+
 const windowMaterial = new THREE.MeshPhysicalMaterial({
   color: "#ffffff",
   roughness: 0,
@@ -94,7 +90,11 @@ export function BackWallMesh({
               <Artwork
                 key={work.id}
                 id={work.id}
-                position={[work.position.x, work.position.y, 0]}
+                position={[
+                  work.position.x,
+                  work.position.y,
+                  Math.random() * 0.001,
+                ]}
                 type="canvas"
                 path={work.path}
                 size={work.size}
@@ -146,7 +146,11 @@ export function LeftWallMesh({
             <Artwork
               key={work.id}
               id={work.id}
-              position={[work.position.x, work.position.y, 0]}
+              position={[
+                work.position.x,
+                work.position.y,
+                Math.random() * 0.001,
+              ]}
               type="canvas"
               path={work.path}
               size={work.size}
@@ -199,7 +203,11 @@ export function RightWallMesh({
             <Artwork
               key={work.id}
               id={work.id}
-              position={[work.position.x, work.position.y, 0]}
+              position={[
+                work.position.x,
+                work.position.y,
+                Math.random() * 0.001,
+              ]}
               type="canvas"
               path={work.path}
               size={work.size}
@@ -227,31 +235,34 @@ export function PartitionMesh({
   handleEnterGrabArea,
   handleLeaveGrabArea,
 }) {
+  const frontRef = useRef();
+  const backRef = useRef();
+
+  useImperativeHandle(ref, () => ({
+    front: frontRef.current,
+    back: backRef.current,
+  }));
+
   return (
     <RigidBody type="fixed" colliders={false} position={position}>
       <CuboidCollider args={[width * 0.5, height * 0.5, depth * 0.5]} />
       <mesh
-        ref={ref}
+        ref={frontRef}
+        name="partitionFront"
         geometry={boxGeometry}
         material={roomMaterial}
-        scale={[width, height, depth]}
-        castShadow
+        scale={[width, height, depth * 0.5]}
         receiveShadow
+        position={[0, 0, depth * 0.25]}
       />
       <mesh
-        geometry={planeGeometry}
+        ref={backRef}
+        name="partitionBack"
+        geometry={boxGeometry}
         material={roomMaterial}
-        scale={[width, height, 0]}
+        scale={[width, height, depth * 0.5]}
         receiveShadow
-        position={[0, 0, depth * 0.5 + 0.0001]}
-      />
-      <mesh
-        geometry={planeGeometry}
-        material={roomMaterial}
-        scale={[width, height, 0]}
-        receiveShadow
-        position={[0, 0, -(depth * 0.5 + 0.0001)]}
-        rotation={[0, Math.PI, 0]}
+        position={[0, 0, -depth * 0.25]}
       />
       <group position={[0, 0, depth * 0.5 + 0.0001]}>
         {worksFront.map((work) => {
@@ -363,19 +374,26 @@ export default function RoomMeshes({ size, position }) {
   });
 
   function handleDrop() {
-    console.log(grabAreaId.current);
-
     gsap.to("#grabbed-artwork-container", { duration: 0.5, opacity: 0 });
     gsap.to(".drop-hint-container", { duration: 0.1, opacity: 0 });
-    const wallsArray = Object.values(wallRefs.current).filter(Boolean);
-    if (!wallsArray.length) return;
+
+    const wallsArray = [];
+
+    for (const wall of Object.values(wallRefs.current)) {
+      if (!wall) continue;
+
+      if (wall.isObject3D) {
+        wallsArray.push(wall);
+      } else if (wall.front || wall.back) {
+        wall.front && wallsArray.push(wall.front);
+        wall.back && wallsArray.push(wall.back);
+      }
+    }
 
     raycaster.setFromCamera(new THREE.Vector2(0, 0), camera);
     const hits = raycaster.intersectObjects(wallsArray, false);
     if (hits.length === 0) return;
-
-    const artworkSize = artworks.find((q) => q.id === grabAreaId.current).size;
-    console.log(hits[0].uv);
+    console.log(hits[0].object.name);
 
     if (hits[0].object.name === "backWall") {
       moveArtwork(grabAreaId.current, {
@@ -383,7 +401,7 @@ export default function RoomMeshes({ size, position }) {
         position: {
           x: (hits[0].uv.x - 0.5) * size[0],
           y: (hits[0].uv.y - 0.5) * size[1],
-          z: 0,
+          z: Math.random() * 0.001,
         },
       });
     } else if (hits[0].object.name === "leftWall") {
@@ -392,7 +410,7 @@ export default function RoomMeshes({ size, position }) {
         position: {
           x: (hits[0].uv.x - 0.5) * size[2],
           y: (hits[0].uv.y - 0.5) * size[1],
-          z: 0,
+          z: Math.random() * 0.001,
         },
       });
     } else if (hits[0].object.name === "rightWall") {
@@ -401,13 +419,29 @@ export default function RoomMeshes({ size, position }) {
         position: {
           x: (hits[0].uv.x - 0.5) * size[2],
           y: (hits[0].uv.y - 0.5) * size[1],
-          z: 0,
+          z: Math.random() * 0.001,
         },
       });
     } else if (hits[0].object.name === "partitionFront") {
-      console.log("partition front");
+      console.log(hits[0].uv.x, hits[0].uv.y);
+      moveArtwork(grabAreaId.current, {
+        wall: "partitionFront",
+        position: {
+          x: (hits[0].uv.x - 0.5) * size[0],
+          y: (hits[0].uv.y - 0.5) * size[1],
+          z: Math.random() * 0.001,
+        },
+      });
     } else if (hits[0].object.name === "partitionBack") {
-      console.log("partition back");
+      console.log(hits[0].uv.x, hits[0].uv.y);
+      moveArtwork(grabAreaId.current, {
+        wall: "partitionBack",
+        position: {
+          x: (hits[0].uv.x - 0.5) * size[0],
+          y: (hits[0].uv.y - 0.5) * size[1],
+          z: Math.random() * 0.001,
+        },
+      });
     }
 
     grabAreaId.current = null;
@@ -441,10 +475,6 @@ export default function RoomMeshes({ size, position }) {
 
   return (
     <group position={position}>
-      <FloorMesh width={size[0]} depth={size[2]} />
-
-      <CeilingMesh width={size[0]} depth={size[2]} position={[0, size[1], 0]} />
-
       <BackWallMesh
         ref={(el) => (wallRefs.current.back = el)}
         width={size[0]}
@@ -496,6 +526,10 @@ export default function RoomMeshes({ size, position }) {
         handleEnterGrabArea={handleEnterGrabArea}
         handleLeaveGrabArea={handleLeaveGrabArea}
       />
+
+      <FloorMesh width={size[0]} depth={size[2]} />
+
+      <CeilingMesh width={size[0]} depth={size[2]} position={[0, size[1], 0]} />
 
       <WindowSeatMesh
         width={(size[0] - 1.3) * 0.5}
