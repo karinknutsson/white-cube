@@ -32,8 +32,6 @@ export default function Experience() {
 
         <Gallery />
 
-        {/* <ArtworkGallery /> */}
-
         <Player />
       </Physics>
     </>

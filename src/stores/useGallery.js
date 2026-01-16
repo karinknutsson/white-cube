@@ -17,16 +17,6 @@ export default create(
             a.id === id ? { ...a, ...updates } : a
           ),
         })),
-
-      grabbedWorkId: null,
-
-      setGrabbedWorkId: (id) => {
-        set((_) => {
-          return {
-            grabbedWorkId: id,
-          };
-        });
-      },
     };
   })
 );
