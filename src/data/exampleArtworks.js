@@ -16,8 +16,8 @@ export const ARTWORKS = [
     artist: "Vivan Greven",
     title: "ex II",
     year: "2020",
-    wall: "rightWall",
-    position: { x: -2, y: 0, z: 0 },
+    wall: "partitionBack",
+    position: { x: 0, y: 0, z: 0 },
   },
   {
     id: "2",
@@ -26,8 +26,8 @@ export const ARTWORKS = [
     artist: "Vivan Greven",
     title: "Theresa IX",
     year: "2025",
-    wall: "rightWall",
-    position: { x: -3.2, y: 0, z: 0 },
+    wall: "partitionFront",
+    position: { x: 0, y: 0, z: 0 },
   },
   {
     id: "3",
