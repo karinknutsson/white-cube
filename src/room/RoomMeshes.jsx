@@ -131,13 +131,13 @@ export function WindowSeatMesh({ width, height, depth, position }) {
   );
 }
 
-export function WindowMesh({ roomWidth, roomHeight, roomDepth, position }) {
+export function WindowMesh({ width, height, depth, position }) {
   return (
     <RigidBody type="fixed" colliders="trimesh">
       <mesh
         geometry={boxGeometry}
         material={windowMaterial}
-        scale={[roomWidth, roomHeight, roomDepth]}
+        scale={[width, height, depth]}
         position={position}
       ></mesh>
     </RigidBody>

@@ -48,7 +48,11 @@ export default function Artwork({
           <CuboidCollider
             args={[size[0] * 0.5, size[1] * 0.5, size[2] * 0.5]}
           />
-          <CuboidCollider args={[size[0] * 0.5, size[1] * 0.5, 0.6]} sensor />
+          <CuboidCollider
+            args={[size[0] * 0.5, size[1] * 0.5, 0.3]}
+            position={[0, 0, 0.6]}
+            sensor
+          />
 
           {/* Meshes */}
           {type === "canvas" && <CanvasMesh path={path} size={size} />}

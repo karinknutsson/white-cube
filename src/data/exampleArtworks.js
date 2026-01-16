@@ -6,8 +6,8 @@ export const ARTWORKS = [
     artist: "Vivan Greven",
     title: "Virtu",
     year: "2021",
-    wall: "rightWall",
-    position: { x: 2.6, y: 0, z: 0 },
+    wall: "partitionFront",
+    position: { x: 0, y: 0, z: 0 },
   },
   {
     id: "1",
@@ -17,7 +17,7 @@ export const ARTWORKS = [
     title: "ex II",
     year: "2020",
     wall: "leftWall",
-    position: { x: 0, y: 0, z: 0 },
+    position: { x: -2, y: 0, z: 0 },
   },
   {
     id: "2",
@@ -27,7 +27,7 @@ export const ARTWORKS = [
     title: "Theresa IX",
     year: "2025",
     wall: "rightWall",
-    position: { x: 0, y: 0, z: 0 },
+    position: { x: -3, y: 0, z: 0 },
   },
   {
     id: "3",
@@ -46,7 +46,7 @@ export const ARTWORKS = [
     artist: "Vivan Greven",
     title: "Psy Amo (1-2)",
     year: "2023",
-    wall: "leftWall",
+    wall: "partitionBack",
     position: { x: 0, y: 0, z: 0 },
   },
 ];

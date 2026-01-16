@@ -6,7 +6,6 @@ import { Perf } from "r3f-perf";
 import { Physics } from "@react-three/rapier";
 import Player from "./Player.jsx";
 import { Environment } from "@react-three/drei";
-import ArtworkGallery from "./artwork/ArtworkGallery.jsx";
 
 export default function Experience() {
   const { perfVisible } = useControls({ perfVisible: false });
@@ -25,8 +24,8 @@ export default function Experience() {
         <meshNormalMaterial />
       </mesh> */}
 
-      {/* <Physics debug> */}
-      <Physics>
+      <Physics debug>
+        {/* <Physics> */}
         <Environment files="./hdr/qwantani_dusk_2_puresky_1k.hdr" background />
 
         <Gallery />
