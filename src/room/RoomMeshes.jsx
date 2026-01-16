@@ -53,6 +53,34 @@ export function CeilingMesh({ width, depth, wallThickness, position }) {
   );
 }
 
+export function WindowSeatMesh({ width, height, depth, position }) {
+  return (
+    <RigidBody type="fixed" colliders="trimesh">
+      <mesh
+        geometry={boxGeometry}
+        material={roomMaterial}
+        scale={[width, height, depth]}
+        position={position}
+        castShadow
+        receiveShadow
+      ></mesh>
+    </RigidBody>
+  );
+}
+
+export function WindowMesh({ width, height, depth, position }) {
+  return (
+    <RigidBody type="fixed" colliders="trimesh">
+      <mesh
+        geometry={boxGeometry}
+        material={windowMaterial}
+        scale={[width, height, depth]}
+        position={position}
+      ></mesh>
+    </RigidBody>
+  );
+}
+
 export function WallMesh({
   ref,
   name,
@@ -113,34 +141,6 @@ export function WallMesh({
         </group>
       </RigidBody>
     </>
-  );
-}
-
-export function WindowSeatMesh({ width, height, depth, position }) {
-  return (
-    <RigidBody type="fixed" colliders="trimesh">
-      <mesh
-        geometry={boxGeometry}
-        material={roomMaterial}
-        scale={[width, height, depth]}
-        position={position}
-        castShadow
-        receiveShadow
-      ></mesh>
-    </RigidBody>
-  );
-}
-
-export function WindowMesh({ width, height, depth, position }) {
-  return (
-    <RigidBody type="fixed" colliders="trimesh">
-      <mesh
-        geometry={boxGeometry}
-        material={windowMaterial}
-        scale={[width, height, depth]}
-        position={position}
-      ></mesh>
-    </RigidBody>
   );
 }
 
@@ -233,9 +233,9 @@ export default function RoomMeshes({
       });
     }
 
-    grabAreaId.current = null;
-    setGrabbedWorkId(null);
     window.removeEventListener("mousedown", handleDrop);
+    setGrabbedWorkId(null);
+    grabAreaId.current = null;
   }
 
   function handleGrab() {

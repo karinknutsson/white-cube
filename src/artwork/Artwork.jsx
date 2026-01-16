@@ -42,7 +42,6 @@ export default function Artwork({
         onIntersectionEnter={onIntersection}
         onIntersectionExit={onIntersectionExit}
       >
-        {/* {id !== grabbedWorkId && ( */}
         <>
           {/* Colliders */}
           <CuboidCollider
@@ -58,7 +57,6 @@ export default function Artwork({
           {type === "canvas" && <CanvasMesh path={path} size={size} />}
           <ArtworkInfoMesh title={title} artist={artist} year={year} />
         </>
-        {/* )} */}
       </RigidBody>
     </>
   );
