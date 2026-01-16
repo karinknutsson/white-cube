@@ -55,6 +55,7 @@ export function CeilingMesh({ width, depth, wallThickness, position }) {
 
 export function WallMesh({
   ref,
+  name,
   width,
   height,
   depth,
@@ -112,278 +113,6 @@ export function WallMesh({
         </group>
       </RigidBody>
     </>
-  );
-}
-
-// export function BackWallMesh({
-//   ref,
-//   width,
-//   height,
-//   depth,
-//   position,
-//   works,
-//   handleEnterGrabArea,
-//   handleLeaveGrabArea,
-// }) {
-//   return (
-//     <>
-//       <RigidBody type="fixed" colliders={false} position={position}>
-//         <CuboidCollider
-//           args={[width * 0.5, height * 0.5, wallThickness * 0.5]}
-//         />
-//         <mesh
-//           ref={ref}
-//           name="backWall"
-//           geometry={boxGeometry}
-//           material={roomMaterial}
-//           scale={[width, height, wallThickness]}
-//           castShadow
-//           receiveShadow
-//         ></mesh>
-//         <group position={[0, 0, wallThickness * 0.5 + 0.0001]}>
-//           {works.map((work) => {
-//             if (!work.position) return null;
-
-//             return (
-//               <Artwork
-//                 key={work.id}
-//                 id={work.id}
-//                 position={[
-//                   work.position.x,
-//                   work.position.y,
-//                   Math.random() * 0.001,
-//                 ]}
-//                 type="canvas"
-//                 path={work.path}
-//                 size={work.size}
-//                 artist={work.artist}
-//                 title={work.title}
-//                 year={work.year}
-//                 onEnterGrabArea={() => handleEnterGrabArea(work.id)}
-//                 onLeaveGrabArea={() => handleLeaveGrabArea()}
-//               ></Artwork>
-//             );
-//           })}
-//         </group>
-//       </RigidBody>
-//     </>
-//   );
-// }
-
-export function LeftWallMesh({
-  ref,
-  width,
-  height,
-  depth,
-  works,
-  handleEnterGrabArea,
-  handleLeaveGrabArea,
-}) {
-  return (
-    <RigidBody
-      type="fixed"
-      colliders={false}
-      position={[-width * 0.5, height * 0.5, 0]}
-      rotation={[0, Math.PI * 0.5, 0]}
-    >
-      <CuboidCollider args={[depth * 0.5, height * 0.5, wallThickness * 0.5]} />
-      <mesh
-        ref={ref}
-        name="leftWall"
-        geometry={boxGeometry}
-        material={roomMaterial}
-        scale={[depth, height, wallThickness]}
-        castShadow
-        receiveShadow
-      ></mesh>
-      <group position={[0, 0, wallThickness * 0.5 + 0.0001]}>
-        {works.map((work) => {
-          if (!work.position) return null;
-
-          return (
-            <Artwork
-              key={work.id}
-              id={work.id}
-              position={[
-                work.position.x,
-                work.position.y,
-                Math.random() * 0.001,
-              ]}
-              type="canvas"
-              path={work.path}
-              size={work.size}
-              artist={work.artist}
-              title={work.title}
-              year={work.year}
-              onEnterGrabArea={() => handleEnterGrabArea(work.id)}
-              onLeaveGrabArea={() => handleLeaveGrabArea()}
-            ></Artwork>
-          );
-        })}
-      </group>
-    </RigidBody>
-  );
-}
-
-export function RightWallMesh({
-  ref,
-  width,
-  height,
-  depth,
-  works,
-  handleEnterGrabArea,
-  handleLeaveGrabArea,
-}) {
-  return (
-    <RigidBody
-      type="fixed"
-      colliders={false}
-      position={[width * 0.5, height * 0.5, 0]}
-      rotation={[0, -Math.PI * 0.5, 0]}
-    >
-      <CuboidCollider args={[depth * 0.5, height * 0.5, wallThickness * 0.5]} />
-      <mesh
-        ref={ref}
-        name="rightWall"
-        geometry={boxGeometry}
-        material={roomMaterial}
-        scale={[depth, height, wallThickness]}
-        castShadow
-        receiveShadow
-        onEnterGrabArea={() => handleEnterGrabArea(work.id)}
-        onLeaveGrabArea={() => handleLeaveGrabArea()}
-      ></mesh>
-      <group position={[0, 0, wallThickness * 0.5 + 0.0001]}>
-        {works.map((work) => {
-          if (!work.position) return null;
-
-          return (
-            <Artwork
-              key={work.id}
-              id={work.id}
-              position={[
-                work.position.x,
-                work.position.y,
-                Math.random() * 0.001,
-              ]}
-              type="canvas"
-              path={work.path}
-              size={work.size}
-              artist={work.artist}
-              title={work.title}
-              year={work.year}
-              onEnterGrabArea={() => handleEnterGrabArea(work.id)}
-              onLeaveGrabArea={() => handleLeaveGrabArea()}
-            ></Artwork>
-          );
-        })}
-      </group>
-    </RigidBody>
-  );
-}
-
-export function PartitionBack({
-  ref,
-  width,
-  height,
-  depth,
-  position,
-  works,
-  handleEnterGrabArea,
-  handleLeaveGrabArea,
-}) {
-  return (
-    <RigidBody type="fixed" colliders={false} position={position}>
-      <CuboidCollider args={[width * 0.5, height * 0.5, depth * 0.5]} />
-      <mesh
-        ref={ref}
-        name="partitionBack"
-        geometry={boxGeometry}
-        material={roomMaterial}
-        scale={[width, height, depth * 0.5]}
-        receiveShadow
-        position={[0, 0, -depth * 0.25]}
-      />
-      <group
-        position={[0, 0, -depth * 0.5 + 0.0001]}
-        rotation={[0, Math.PI, 0]}
-      >
-        {works.map((work) => {
-          if (!work.position) return null;
-
-          return (
-            <Artwork
-              key={work.id}
-              id={work.id}
-              position={[
-                work.position.x,
-                work.position.y,
-                Math.random() * 0.001,
-              ]}
-              type="canvas"
-              path={work.path}
-              size={work.size}
-              artist={work.artist}
-              title={work.title}
-              year={work.year}
-              onEnterGrabArea={() => handleEnterGrabArea(work.id)}
-              onLeaveGrabArea={() => handleLeaveGrabArea()}
-            ></Artwork>
-          );
-        })}
-      </group>
-    </RigidBody>
-  );
-}
-
-export function PartitionFront({
-  ref,
-  width,
-  height,
-  depth,
-  position,
-  works,
-  handleEnterGrabArea,
-  handleLeaveGrabArea,
-}) {
-  return (
-    <RigidBody type="fixed" colliders={false} position={position}>
-      <CuboidCollider args={[width * 0.5, height * 0.5, depth * 0.5]} />
-      <mesh
-        ref={ref}
-        name="partitionFront"
-        geometry={boxGeometry}
-        material={roomMaterial}
-        scale={[width, height, depth * 0.5]}
-        receiveShadow
-        position={[0, 0, depth * 0.25]}
-      />
-      <group position={[0, 0, depth * 0.5 + 0.0001]}>
-        {works.map((work) => {
-          if (!work.position) return null;
-
-          return (
-            <Artwork
-              key={work.id}
-              id={work.id}
-              position={[
-                work.position.x,
-                work.position.y,
-                Math.random() * 0.001,
-              ]}
-              type="canvas"
-              path={work.path}
-              size={work.size}
-              artist={work.artist}
-              title={work.title}
-              year={work.year}
-              onEnterGrabArea={() => handleEnterGrabArea(work.id)}
-              onLeaveGrabArea={() => handleLeaveGrabArea()}
-            ></Artwork>
-          );
-        })}
-      </group>
-    </RigidBody>
   );
 }
 
@@ -451,11 +180,10 @@ export default function RoomMeshes({
     gsap.to("#grabbed-artwork-container", { duration: 0.5, opacity: 0 });
     gsap.to(".drop-hint-container", { duration: 0.1, opacity: 0 });
 
-    const wallsArray = Object.values(wallRefs.current).filter(Boolean);
-    if (!wallsArray.length) return;
+    if (!wallRefs.current.length) return;
 
     raycaster.setFromCamera(new THREE.Vector2(0, 0), camera);
-    const hits = raycaster.intersectObjects(wallsArray, false);
+    const hits = raycaster.intersectObjects(wallRefs.current, false);
     if (hits.length === 0) return;
 
     if (hits[0].object.name === "backWall") {
@@ -485,30 +213,25 @@ export default function RoomMeshes({
           z: Math.random() * 0.001,
         },
       });
+    } else if (hits[0].object.name === "partitionBack") {
+      moveArtwork(grabAreaId.current, {
+        wall: "partitionBack",
+        position: {
+          x: (hits[0].uv.x - 0.5) * (roomWidth - 2.6),
+          y: (hits[0].uv.y - 0.5) * roomHeight,
+          z: Math.random() * 0.001,
+        },
+      });
+    } else if (hits[0].object.name === "partitionFront") {
+      moveArtwork(grabAreaId.current, {
+        wall: "partitionFront",
+        position: {
+          x: (hits[0].uv.x - 0.5) * (roomWidth - 2.6),
+          y: (hits[0].uv.y - 0.5) * roomHeight,
+          z: Math.random() * 0.001,
+        },
+      });
     }
-    // else if (hits[0].object.name === "partitionBack") {
-    //   console.log("back");
-    //   console.log(hits[0].uv.x, hits[0].uv.y);
-    //   moveArtwork(grabAreaId.current, {
-    //     wall: "partitionBack",
-    //     position: {
-    //       x: (hits[0].uv.x - 0.5) * roomWidth,
-    //       y: (hits[0].uv.y - 0.5) * roomHeight,
-    //       z: Math.random() * 0.001,
-    //     },
-    //   });
-    // } else if (hits[0].object.name === "partitionFront") {
-    //   console.log("front");
-    //   console.log(hits[0].uv.x, hits[0].uv.y);
-    //   moveArtwork(grabAreaId.current, {
-    //     wall: "partitionFront",
-    //     position: {
-    //       x: (hits[0].uv.x - 0.5) * roomWidth,
-    //       y: (hits[0].uv.y - 0.5) * roomHeight,
-    //       z: Math.random() * 0.001,
-    //     },
-    //   });
-    // }
 
     grabAreaId.current = null;
     setGrabbedWorkId(null);
