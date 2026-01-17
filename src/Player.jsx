@@ -15,6 +15,7 @@ export default function Player() {
     left: false,
     right: false,
     jump: false,
+    crouch: false,
   });
 
   useEffect(() => {
@@ -41,6 +42,10 @@ export default function Player() {
         case "Space":
           move.current.jump = true;
           break;
+        case "ShiftLeft":
+        case "ShiftRight":
+          move.current.crouch = true;
+          break;
       }
     };
 
@@ -64,6 +69,10 @@ export default function Player() {
           break;
         case "Space":
           move.current.jump = false;
+          break;
+        case "ShiftLeft":
+        case "ShiftRight":
+          move.current.crouch = false;
           break;
       }
     };
@@ -91,7 +100,7 @@ export default function Player() {
     direction.normalize();
     direction.applyEuler(camera.rotation);
 
-    const speed = 5;
+    const speed = 1;
 
     bodyRef.current.setLinvel(
       {
@@ -99,7 +108,7 @@ export default function Player() {
         y: velocity.y,
         z: direction.z * speed,
       },
-      true
+      true,
     );
 
     if (move.current.jump && Math.abs(velocity.y) < 0.05) {
@@ -107,7 +116,11 @@ export default function Player() {
     }
 
     const position = bodyRef.current.translation();
-    camera.position.set(position.x, position.y + 0.7, position.z);
+    const targetY = move.current.crouch ? position.y : position.y + 0.7;
+
+    camera.position.y += (targetY - camera.position.y) * 0.1;
+    camera.position.x = position.x;
+    camera.position.z = position.z;
   });
 
   return (
