@@ -15,7 +15,7 @@ export default function ArtworkInfoMesh({
         font="./fonts/IBMPlexSans-SemiBold.woff"
         position={[
           0.016 - size[0] * 0.5,
-          size[1] * 0.5 - 0.02,
+          size[1] * 0.5 - 0.018,
           size[2] + 0.001,
         ]}
         fontSize={0.016}
@@ -29,7 +29,7 @@ export default function ArtworkInfoMesh({
         font="./fonts/IBMPlexSans-Italic.woff"
         position={[
           0.016 - size[0] * 0.5,
-          size[1] * 0.5 - 0.05,
+          size[1] * 0.5 - 0.048,
           size[2] + 0.001,
         ]}
         fontSize={0.016}
@@ -44,10 +44,10 @@ export default function ArtworkInfoMesh({
         font="./fonts/IBMPlexSans-Regular.woff"
         position={[
           0.016 - size[0] * 0.5,
-          size[1] * 0.5 - 0.08,
+          size[1] * 0.5 - 0.078,
           size[2] + 0.001,
         ]}
-        fontSize={0.013}
+        fontSize={0.016}
         color="black"
         anchorX="left"
         anchorY="top"
