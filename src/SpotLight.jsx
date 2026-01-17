@@ -18,7 +18,6 @@ export default function SpotLight({
 }) {
   const spotLight = useRef();
   const spotLightTarget = useRef();
-  const spotLightHelper = useRef();
 
   useHelper(spotLight, SpotLightHelper, "cyan");
 
@@ -38,10 +37,10 @@ export default function SpotLight({
 
   return (
     <>
-      <group position={position}>
+      <group position={position} rotation={rotation}>
         <spotLight
           ref={spotLight}
-          position={[0.04, -0.12, -0.07]}
+          position={[0.01, -0.1, -0.012]}
           angle={angle}
           penumbra={1}
           intensity={intensity}
@@ -53,9 +52,9 @@ export default function SpotLight({
         />
 
         <primitive
-          object={scene}
+          object={scene.clone()}
           position={[0, 0, 0]}
-          rotation={rotation}
+          rotation={[0, 0, Math.PI]}
           scale={1}
         />
       </group>

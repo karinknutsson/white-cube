@@ -90,16 +90,26 @@ export default function Lights() {
         targetPosition={[0, 1.2, 0]}
         intensity={spotIntensity}
         angle={0.6}
-        rotation={[0, -0.6, Math.PI]}
+        rotation={[0, -0.6, 0]}
       />
 
       {/* Spotlight on partition back */}
-      {/* <SpotLight
-        position={[0, 3.06, -3]}
+      <SpotLight
+        position={[2, 3.06, -2]}
         targetPosition={[0, 1.8, 0]}
         intensity={spotIntensity}
         angle={0.6}
-      /> */}
+        rotation={[0, Math.PI * 0.9, 0]}
+      />
+
+      {/* Spotlight on back wall */}
+      <SpotLight
+        position={[-3, 3.06, -3]}
+        targetPosition={[0, 1.8, -4]}
+        intensity={spotIntensity}
+        angle={0.6}
+        rotation={[0, 0.2, 0]}
+      />
     </>
   );
 }
