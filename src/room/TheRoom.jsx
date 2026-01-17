@@ -4,8 +4,9 @@ import * as THREE from "three";
 import useGallery from "../stores/useGallery";
 import { useThree, useFrame } from "@react-three/fiber";
 import gsap from "gsap";
-import { useRef, useMemo, useState, useImperativeHandle } from "react";
+import { useRef, useMemo, useState } from "react";
 import Artwork from "../artwork/Artwork";
+import { wallLabelSizes } from "../data/wallLabelSizes";
 
 const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
 
@@ -144,7 +145,7 @@ export function WallMesh({
   );
 }
 
-export default function RoomMeshes({
+export default function TheRoom({
   roomWidth,
   roomHeight,
   roomDepth,
@@ -200,13 +201,15 @@ export default function RoomMeshes({
         position: {
           x: clamp(
             (hits[0].uv.x - 0.5) * roomWidth,
-            (artworkWidth - roomWidth) * 0.5,
-            (roomWidth - artworkWidth) * 0.5
+            (artworkWidth - roomWidth) * 0.5 +
+              wallLabelSizes.width +
+              wallLabelSizes.distanceFromArtwork * 2,
+            (roomWidth - artworkWidth) * 0.5,
           ),
           y: clamp(
             (hits[0].uv.y - 0.5) * roomHeight,
             (artworkHeight - roomHeight) * 0.5,
-            (roomHeight - artworkHeight) * 0.5
+            (roomHeight - artworkHeight) * 0.5,
           ),
           z: Math.random() * 0.001,
         },
@@ -218,12 +221,12 @@ export default function RoomMeshes({
           x: clamp(
             (hits[0].uv.x - 0.5) * roomDepth,
             (artworkWidth - roomDepth) * 0.5,
-            (roomDepth - artworkWidth) * 0.5
+            (roomDepth - artworkWidth) * 0.5,
           ),
           y: clamp(
             (hits[0].uv.y - 0.5) * roomHeight,
             (artworkHeight - roomHeight) * 0.5,
-            (roomHeight - artworkHeight) * 0.5
+            (roomHeight - artworkHeight) * 0.5,
           ),
           z: Math.random() * 0.001,
         },
@@ -235,12 +238,12 @@ export default function RoomMeshes({
           x: clamp(
             (hits[0].uv.x - 0.5) * roomDepth,
             (artworkWidth - roomDepth) * 0.5,
-            (roomDepth - artworkWidth) * 0.5
+            (roomDepth - artworkWidth) * 0.5,
           ),
           y: clamp(
             (hits[0].uv.y - 0.5) * roomHeight,
             (artworkHeight - roomHeight) * 0.5,
-            (roomHeight - artworkHeight) * 0.5
+            (roomHeight - artworkHeight) * 0.5,
           ),
           z: Math.random() * 0.001,
         },
@@ -252,12 +255,12 @@ export default function RoomMeshes({
           x: clamp(
             (hits[0].uv.x - 0.5) * (roomWidth - 2.6),
             (artworkWidth - roomWidth + 2.6) * 0.5,
-            (roomWidth - 2.6 - artworkWidth) * 0.5
+            (roomWidth - 2.6 - artworkWidth) * 0.5,
           ),
           y: clamp(
             (hits[0].uv.y - 0.5) * roomHeight,
             (artworkHeight - roomHeight) * 0.5,
-            (roomHeight - artworkHeight) * 0.5
+            (roomHeight - artworkHeight) * 0.5,
           ),
           z: Math.random() * 0.001,
         },
@@ -269,12 +272,12 @@ export default function RoomMeshes({
           x: clamp(
             (hits[0].uv.x - 0.5) * (roomWidth - 2.6),
             (artworkWidth - roomWidth + 2.6) * 0.5,
-            (roomWidth - 2.6 - artworkWidth) * 0.5
+            (roomWidth - 2.6 - artworkWidth) * 0.5,
           ),
           y: clamp(
             (hits[0].uv.y - 0.5) * roomHeight,
             (artworkHeight - roomHeight) * 0.5,
-            (roomHeight - artworkHeight) * 0.5
+            (roomHeight - artworkHeight) * 0.5,
           ),
           z: Math.random() * 0.001,
         },
@@ -327,7 +330,7 @@ export default function RoomMeshes({
         position={[0, roomHeight * 0.5, (wallThickness - roomDepth) * 0.5]}
         rotation={[0, 0, 0]}
         works={artworks.filter(
-          (w) => w.id !== grabbedWorkId && w.wall === "backWall"
+          (w) => w.id !== grabbedWorkId && w.wall === "backWall",
         )}
         handleEnterGrabArea={handleEnterGrabArea}
         handleLeaveGrabArea={handleLeaveGrabArea}
@@ -344,7 +347,7 @@ export default function RoomMeshes({
         position={[-roomWidth * 0.5, roomHeight * 0.5, 0]}
         rotation={[0, Math.PI * 0.5, 0]}
         works={artworks.filter(
-          (w) => w.id !== grabbedWorkId && w.wall === "leftWall"
+          (w) => w.id !== grabbedWorkId && w.wall === "leftWall",
         )}
         handleEnterGrabArea={handleEnterGrabArea}
         handleLeaveGrabArea={handleLeaveGrabArea}
@@ -361,7 +364,7 @@ export default function RoomMeshes({
         position={[roomWidth * 0.5, roomHeight * 0.5, 0]}
         rotation={[0, -Math.PI * 0.5, 0]}
         works={artworks.filter(
-          (w) => w.id !== grabbedWorkId && w.wall === "rightWall"
+          (w) => w.id !== grabbedWorkId && w.wall === "rightWall",
         )}
         handleEnterGrabArea={handleEnterGrabArea}
         handleLeaveGrabArea={handleLeaveGrabArea}
@@ -378,7 +381,7 @@ export default function RoomMeshes({
         position={[0, roomHeight * 0.5, -wallThickness * 0.5]}
         rotation={[0, Math.PI, 0]}
         works={artworks.filter(
-          (w) => w.id !== grabbedWorkId && w.wall === "partitionBack"
+          (w) => w.id !== grabbedWorkId && w.wall === "partitionBack",
         )}
         handleEnterGrabArea={handleEnterGrabArea}
         handleLeaveGrabArea={handleLeaveGrabArea}
@@ -395,7 +398,7 @@ export default function RoomMeshes({
         position={[0, roomHeight * 0.5, wallThickness * 0.5]}
         rotation={[0, 0, 0]}
         works={artworks.filter(
-          (w) => w.id !== grabbedWorkId && w.wall === "partitionFront"
+          (w) => w.id !== grabbedWorkId && w.wall === "partitionFront",
         )}
         handleEnterGrabArea={handleEnterGrabArea}
         handleLeaveGrabArea={handleLeaveGrabArea}

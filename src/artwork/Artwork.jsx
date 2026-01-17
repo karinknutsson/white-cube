@@ -1,8 +1,8 @@
-import { distance } from "three/tsl";
 import CanvasMesh from "./CanvasMesh";
 import WallLabel from "./WallLabel";
 import { RigidBody, CuboidCollider } from "@react-three/rapier";
 import { useRef } from "react";
+import { wallLabelSizes } from "../data/wallLabelSizes";
 
 export default function Artwork({
   position,
@@ -17,13 +17,6 @@ export default function Artwork({
   onLeaveGrabArea,
 }) {
   const artworkRef = useRef();
-
-  const wallLabelSizes = {
-    width: 0.2,
-    height: 0.12,
-    depth: 0.004,
-    distanceFromArtwork: 0.1,
-  };
 
   return (
     <>

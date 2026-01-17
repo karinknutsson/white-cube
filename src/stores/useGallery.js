@@ -1,6 +1,5 @@
 import { create } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
-import * as THREE from "three";
 import { ARTWORKS } from "../data/exampleArtworks";
 
 export default create(
@@ -14,9 +13,9 @@ export default create(
       moveArtwork: (id, updates) =>
         set((state) => ({
           artworks: state.artworks.map((a) =>
-            a.id === id ? { ...a, ...updates } : a
+            a.id === id ? { ...a, ...updates } : a,
           ),
         })),
     };
-  })
+  }),
 );

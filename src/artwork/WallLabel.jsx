@@ -8,7 +8,7 @@ export default function ArtworkInfoMesh({
   year,
 }) {
   return (
-    <mesh castShadow receiveShadow position={position}>
+    <mesh receiveShadow position={position}>
       <boxGeometry args={[size[0], size[1], size[2]]} />
       <meshStandardMaterial color="#f5f4f2" />
       <Text
