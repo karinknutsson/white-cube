@@ -1,7 +1,8 @@
 import CanvasMesh from "./CanvasMesh";
-import ArtworkInfoMesh from "./ArtworkInfoMesh";
+import WallLabel from "./WallLabel";
 import { RigidBody, CuboidCollider } from "@react-three/rapier";
 import { useRef } from "react";
+import { wallLabelSizes } from "../data/wallLabelSizes";
 
 export default function Artwork({
   position,
@@ -41,7 +42,21 @@ export default function Artwork({
 
           {/* Meshes */}
           {type === "canvas" && <CanvasMesh path={path} size={size} />}
-          <ArtworkInfoMesh title={title} artist={artist} year={year} />
+          <WallLabel
+            size={[
+              wallLabelSizes.width,
+              wallLabelSizes.height,
+              wallLabelSizes.depth,
+            ]}
+            position={[
+              -(wallLabelSizes.width + size[0] * 0.5),
+              (wallLabelSizes.height - size[1]) * 0.5,
+              0,
+            ]}
+            title={title}
+            artist={artist}
+            year={year}
+          />
         </>
       </RigidBody>
     </>
