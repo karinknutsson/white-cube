@@ -220,7 +220,9 @@ export default function TheRoom({
         position: {
           x: clamp(
             (hits[0].uv.x - 0.5) * roomDepth,
-            (artworkWidth - roomDepth) * 0.5,
+            (artworkWidth - roomDepth) * 0.5 +
+              wallLabelSizes.width +
+              wallLabelSizes.distanceFromArtwork * 2,
             (roomDepth - artworkWidth) * 0.5,
           ),
           y: clamp(
@@ -237,7 +239,9 @@ export default function TheRoom({
         position: {
           x: clamp(
             (hits[0].uv.x - 0.5) * roomDepth,
-            (artworkWidth - roomDepth) * 0.5,
+            (artworkWidth - roomDepth) * 0.5 +
+              wallLabelSizes.width +
+              wallLabelSizes.distanceFromArtwork * 3,
             (roomDepth - artworkWidth) * 0.5,
           ),
           y: clamp(
@@ -254,7 +258,9 @@ export default function TheRoom({
         position: {
           x: clamp(
             (hits[0].uv.x - 0.5) * (roomWidth - 2.6),
-            (artworkWidth - roomWidth + 2.6) * 0.5,
+            (artworkWidth - roomWidth + 2.6) * 0.5 +
+              wallLabelSizes.width +
+              wallLabelSizes.distanceFromArtwork * 2,
             (roomWidth - 2.6 - artworkWidth) * 0.5,
           ),
           y: clamp(
@@ -271,7 +277,9 @@ export default function TheRoom({
         position: {
           x: clamp(
             (hits[0].uv.x - 0.5) * (roomWidth - 2.6),
-            (artworkWidth - roomWidth + 2.6) * 0.5,
+            (artworkWidth - roomWidth + 2.6) * 0.5 +
+              wallLabelSizes.width +
+              wallLabelSizes.distanceFromArtwork * 2,
             (roomWidth - 2.6 - artworkWidth) * 0.5,
           ),
           y: clamp(
