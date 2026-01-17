@@ -1,22 +1,22 @@
 import { useRef, useEffect } from "react";
 // import { useControls } from "leva";
 import { BakeShadows } from "@react-three/drei";
-// import { CameraHelper } from "three";
+import { CameraHelper } from "three";
+import { useHelper } from "@react-three/drei";
+import { SpotLightHelper } from "three";
+import SpotLight from "./SpotLight";
 
 export default function Lights() {
   const sunLight = useRef();
   const sunLightTarget = useRef();
-  const sunLightHelper = useRef();
-  const spotLight1 = useRef();
-  const spotLight1Target = useRef();
-  const spotLight2 = useRef();
-  const spotLight2Target = useRef();
 
   const ambientIntensity = 2;
   const sunIntensity = 1;
-  const spotIntensity = 30;
+  const spotIntensity = 100;
   const shadowBias = 0.0005;
   const shadowNormalBias = 0.005;
+
+  useHelper(spotLight1, SpotLightHelper, "cyan");
 
   // const {
   //   ambientIntensity,
@@ -58,16 +58,18 @@ export default function Lights() {
   // });
 
   useEffect(() => {
-    // if (sunLight.current) {
-    //   sunLightHelper.current = new CameraHelper(sunLight.current.shadow.camera);
-    //   sunLight.current.add(sunLightHelper.current);
-    // }
-
     if (sunLight.current && sunLightTarget.current)
       sunLight.current.target = sunLightTarget.current;
 
     if (spotLight1.current && spotLight1Target.current)
       spotLight1.current.target = spotLight1Target.current;
+
+    // if (spotLight1.current) {
+    //   spotLight1Helper.current = new CameraHelper(
+    //     spotLight1.current.shadow.camera,
+    //   );
+    //   spotLight1.current.add(spotLight1Helper.current);
+    // }
 
     if (spotLight2.current && spotLight2Target.current)
       spotLight2.current.target = spotLight2Target.current;
