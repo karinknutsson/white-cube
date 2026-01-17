@@ -1,3 +1,4 @@
+import { distance } from "three/tsl";
 import CanvasMesh from "./CanvasMesh";
 import WallLabel from "./WallLabel";
 import { RigidBody, CuboidCollider } from "@react-three/rapier";
@@ -16,6 +17,13 @@ export default function Artwork({
   onLeaveGrabArea,
 }) {
   const artworkRef = useRef();
+
+  const wallLabelSizes = {
+    width: 0.2,
+    height: 0.15,
+    depth: 0.004,
+    distanceFromArtwork: 0.1,
+  };
 
   return (
     <>
@@ -42,9 +50,17 @@ export default function Artwork({
           {/* Meshes */}
           {type === "canvas" && <CanvasMesh path={path} size={size} />}
           <WallLabel
-            size={[0.2, 0.15, 0.004]}
-            // position={[0.1 - size[0] * 0.5, -(size[1] * 0.5 + 0.2), 0]}
-            position={[-(0.2 + size[0] * 0.5), 0.075 - size[1] * 0.5, 0.1]}
+            size={[
+              wallLabelSizes.width,
+              wallLabelSizes.height,
+              wallLabelSizes.depth,
+            ]}
+            // position={[0.1 - size[0] * 0.5, -(size[1] * 0.5 + wallLabelSizes.width), 0]}
+            position={[
+              -(wallLabelSizes.width + size[0] * 0.5),
+              (wallLabelSizes.height - size[1]) * 0.5,
+              0,
+            ]}
             title={title}
             artist={artist}
             year={year}
