@@ -10,27 +10,48 @@ export default function ArtworkInfoMesh({
   return (
     <mesh castShadow receiveShadow position={position}>
       <boxGeometry args={[size[0], size[1], size[2]]} />
-      <meshStandardMaterial color="red" />
+      <meshStandardMaterial color="#f5f4f2" />
       <Text
-        font="./fonts/IBMPlexSans-Medium.woff"
-        position={[-0.9, 0.2, 0.06]}
-        fontSize={0.06}
+        font="./fonts/IBMPlexSans-SemiBold.woff"
+        position={[
+          0.016 - size[0] * 0.5,
+          size[1] * 0.5 - 0.02,
+          size[2] + 0.001,
+        ]}
+        fontSize={0.016}
+        color="black"
+        anchorX="left"
+        anchorY="top"
+      >
+        {artist}
+      </Text>
+      <Text
+        font="./fonts/IBMPlexSans-Italic.woff"
+        position={[
+          0.016 - size[0] * 0.5,
+          size[1] * 0.5 - 0.05,
+          size[2] + 0.001,
+        ]}
+        fontSize={0.016}
         color="black"
         anchorX="left"
         anchorY="top"
       >
         {title}
       </Text>
+
       <Text
-        font="./fonts/IBMPlexSans-Medium.woff"
-        position={[-0.9, 0.5, 0.001]}
-        fontSize={0.06}
+        font="./fonts/IBMPlexSans-Regular.woff"
+        position={[
+          0.016 - size[0] * 0.5,
+          size[1] * 0.5 - 0.08,
+          size[2] + 0.001,
+        ]}
+        fontSize={0.013}
         color="black"
         anchorX="left"
         anchorY="top"
       >
-        {artist}
-
         {year}
       </Text>
     </mesh>

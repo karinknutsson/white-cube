@@ -55,7 +55,6 @@ export default function Artwork({
               wallLabelSizes.height,
               wallLabelSizes.depth,
             ]}
-            // position={[0.1 - size[0] * 0.5, -(size[1] * 0.5 + wallLabelSizes.width), 0]}
             position={[
               -(wallLabelSizes.width + size[0] * 0.5),
               (wallLabelSizes.height - size[1]) * 0.5,
