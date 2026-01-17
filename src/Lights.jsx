@@ -16,8 +16,6 @@ export default function Lights() {
   const shadowBias = 0.0005;
   const shadowNormalBias = 0.005;
 
-  useHelper(spotLight1, SpotLightHelper, "cyan");
-
   // const {
   //   ambientIntensity,
   //   sunIntensity,
@@ -60,26 +58,11 @@ export default function Lights() {
   useEffect(() => {
     if (sunLight.current && sunLightTarget.current)
       sunLight.current.target = sunLightTarget.current;
-
-    if (spotLight1.current && spotLight1Target.current)
-      spotLight1.current.target = spotLight1Target.current;
-
-    // if (spotLight1.current) {
-    //   spotLight1Helper.current = new CameraHelper(
-    //     spotLight1.current.shadow.camera,
-    //   );
-    //   spotLight1.current.add(spotLight1Helper.current);
-    // }
-
-    if (spotLight2.current && spotLight2Target.current)
-      spotLight2.current.target = spotLight2Target.current;
   }, []);
 
   return (
     <>
       <BakeShadows />
-
-      {/* <SoftShadows size={10} samples={50} focus={0} /> */}
 
       <ambientLight intensity={ambientIntensity} />
 
@@ -101,36 +84,22 @@ export default function Lights() {
       />
       <object3D ref={sunLightTarget} position={[-0.4, 0.4, 0]} />
 
-      <spotLight
-        ref={spotLight1}
+      {/* Spotlight on partition front */}
+      <SpotLight
         position={[-2, 3.06, 3]}
-        angle={0.6}
-        penumbra={1}
+        targetPosition={[0, 1.2, 0]}
         intensity={spotIntensity}
-        castShadow
-        color="#ffffee"
-        decay={2}
-        onUpdate={(self) => self.lookAt(0, 0, 4)}
-        shadow-mapSize-width={1024}
-        shadow-mapSize-height={1024}
+        angle={0.6}
+        rotation={[0, -0.6, Math.PI]}
       />
-      <object3D ref={spotLight1Target} position={[0, 1.2, 0]} />
 
-      <spotLight
-        ref={spotLight2}
+      {/* Spotlight on partition back */}
+      {/* <SpotLight
         position={[0, 3.06, -3]}
-        angle={0.6}
-        penumbra={1}
+        targetPosition={[0, 1.8, 0]}
         intensity={spotIntensity}
-        castShadow
-        color="#ffffee"
-        decay={2}
-        onUpdate={(self) => self.lookAt(0, 0, 4)}
-        shadow-mapSize-width={1024}
-        shadow-mapSize-height={1024}
-      />
-
-      <object3D ref={spotLight2Target} position={[0, 1.8, 0]} />
+        angle={0.6}
+      /> */}
     </>
   );
 }
