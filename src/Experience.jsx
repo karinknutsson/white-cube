@@ -10,7 +10,7 @@ import { Environment } from "@react-three/drei";
 export default function Experience() {
   // const { perfVisible } = useControls({ perfVisible: false });
 
-  const perfVisible = true;
+  const perfVisible = false;
 
   return (
     <>
@@ -21,10 +21,10 @@ export default function Experience() {
       <Lights />
 
       {/* Center cube mesh */}
-      {/* <mesh>
+      <mesh>
         <boxGeometry args={[0.1, 0.1, 0.1]} />
         <meshNormalMaterial />
-      </mesh> */}
+      </mesh>
 
       {/* <Physics debug> */}
       <Physics>
