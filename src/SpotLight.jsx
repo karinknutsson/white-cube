@@ -2,17 +2,23 @@ import { SpotLightHelper } from "three";
 import { useHelper, useGLTF, shaderMaterial } from "@react-three/drei";
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
-import lightDiscVertexShader from "./shaders/vertex.glsl";
-import lightDiscFragmentShader from "./shaders/fragment.glsl";
+import { extend } from "@react-three/fiber";
+import lightSourceVertexShader from "./shaders/light-source/vertex.glsl";
+import lightSourceFragmentShader from "./shaders/light-source/fragment.glsl";
+
+console.log(lightSourceFragmentShader);
 
 const lampMaterial = new THREE.MeshStandardMaterial({
   color: "#ffffff",
 });
 
 const LightDiscMaterial = shaderMaterial(
-  lightDiscVertexShader,
-  lightDiscFragmentShader,
+  {},
+  lightSourceVertexShader,
+  lightSourceFragmentShader,
 );
+
+extend({ LightDiscMaterial });
 
 export default function SpotLight({
   position,
@@ -112,6 +118,13 @@ export default function SpotLight({
       </group>
 
       <object3D ref={spotLightTargetRef} position={targetPosition} />
+
+      <mesh position={[0, 1.5, 1]}>
+        {/* <mesh > */}
+        {/* <meshStandardMaterial color="yellow" /> */}
+        <lightDiscMaterial />
+        <planeGeometry args={[1, 1]} />
+      </mesh>
     </>
   );
 }
