@@ -13,7 +13,6 @@ export default function SpotLight({
   targetPosition,
   intensity,
   dispersionAngle,
-  rotation,
 }) {
   const spotLightRef = useRef();
   const spotLightTargetRef = useRef();
@@ -27,41 +26,6 @@ export default function SpotLight({
   const { scene: sceneLamp } = useGLTF(
     "./models/spotlight-model-flexi-lamp.glb",
   );
-
-  useEffect(() => {
-    if (!lampRef.current || !position || !targetPosition) return;
-
-    const positionVector = new THREE.Vector3(...position);
-    const targetPositionVector = new THREE.Vector3(...targetPosition);
-
-    const direction = new THREE.Vector3()
-      .subVectors(targetPositionVector, positionVector)
-      .normalize();
-
-    const lampForward = new THREE.Vector3(0, -1, 0);
-    const quaternion = new THREE.Quaternion();
-
-    if (lampForward.clone().dot(direction) < -0.9999) {
-      quaternion.setFromAxisAngle(new THREE.Vector3(1, 0, 0), Math.PI);
-    } else {
-      quaternion.setFromUnitVectors(lampForward, direction);
-    }
-
-    lampRef.current.quaternion.copy(quaternion);
-
-    if (spotLightRef.current && spotLightTargetRef.current) {
-      spotLightRef.current.target = spotLightTargetRef.current;
-
-      const currentPosition = new THREE.Vector3(0, 0, 0);
-      const distance = direction.length();
-      const step = 0.1;
-      const newPosition = currentPosition
-        .clone()
-        .add(direction.multiplyScalar(Math.min(step, distance)));
-
-      spotLightRef.current.position.copy(newPosition);
-    }
-  }, [position, targetPosition]);
 
   useEffect(() => {
     sceneBase.traverse((child) => {
@@ -79,13 +43,44 @@ export default function SpotLight({
     });
   }, []);
 
+  useEffect(() => {
+    if (
+      !spotLightRef.current ||
+      !spotLightTargetRef.current ||
+      !lampRef.current
+    )
+      return;
+    spotLightRef.current.target = spotLightTargetRef.current;
+
+    const positionVector = new THREE.Vector3(...position);
+    const targetPositionVector = new THREE.Vector3(...targetPosition);
+    const spotLightWorldPosition = new THREE.Vector3();
+    spotLightRef.current.getWorldPosition(spotLightWorldPosition);
+
+    const direction = new THREE.Vector3()
+      .subVectors(targetPositionVector, spotLightWorldPosition)
+      .normalize();
+
+    const distance = direction.length();
+    const step = 0.1;
+
+    const newWorldPosition = positionVector
+      .clone()
+      .add(direction.multiplyScalar(Math.min(step, distance)));
+    const group = spotLightRef.current.parent;
+    group.worldToLocal(newWorldPosition);
+    spotLightRef.current.position.copy(newWorldPosition);
+
+    // console.log(spotLightRef);
+    // lampRef.current.rotation.copy(spotLightRef.current.rotation);
+    lampRef.current.lookAt(targetPositionVector);
+  }, [position, targetPosition]);
+
   return (
     <>
-      <group position={position} rotation={rotation}>
+      <group position={position}>
         <spotLight
           ref={spotLightRef}
-          // position={[0, -0.1, -0.04]}
-          position={[0, 0, 0]}
           angle={dispersionAngle}
           penumbra={1}
           intensity={intensity}
