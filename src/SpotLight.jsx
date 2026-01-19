@@ -29,7 +29,7 @@ export default function SpotLight({
   const lampRef = useRef();
   const lightDiscRef = useRef();
 
-  // useHelper(spotLightRef, SpotLightHelper, "cyan");
+  useHelper(spotLightRef, SpotLightHelper, "cyan");
 
   const { scene: sceneBase } = useGLTF(
     "./models/spotlight-model-flexi-base.glb",
@@ -65,7 +65,7 @@ export default function SpotLight({
 
     if (lampRef.current && lightDiscRef.current) {
       lampRef.current.add(lightDiscRef.current);
-      lightDiscRef.current.position.set(0, 0, 0.08);
+      lightDiscRef.current.position.set(0, 0, 0.11);
     }
 
     const positionVector = new THREE.Vector3(...position);
@@ -80,7 +80,7 @@ export default function SpotLight({
     const distance = direction.length();
     const group = spotLightRef.current.parent;
 
-    const spotLightStep = 0.04;
+    const spotLightStep = 0.08;
     const newSpotLightPosition = positionVector
       .clone()
       .add(direction.clone().multiplyScalar(Math.min(spotLightStep, distance)));
@@ -110,7 +110,7 @@ export default function SpotLight({
         <primitive ref={lampRef} object={sceneLamp.clone()} />
 
         <mesh ref={lightDiscRef}>
-          <ringGeometry args={[0, 0.04, 16]} />
+          <ringGeometry args={[0, 0.04, 32]} />
           <lightDiscMaterial
             transparent
             depthWrite={false}
