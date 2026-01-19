@@ -1,11 +1,18 @@
 import { SpotLightHelper } from "three";
-import { useHelper, useGLTF } from "@react-three/drei";
+import { useHelper, useGLTF, shaderMaterial } from "@react-three/drei";
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
+import lightDiscVertexShader from "./shaders/vertex.glsl";
+import lightDiscFragmentShader from "./shaders/fragment.glsl";
 
 const lampMaterial = new THREE.MeshStandardMaterial({
   color: "#ffffff",
 });
+
+const LightDiscMaterial = shaderMaterial(
+  lightDiscVertexShader,
+  lightDiscFragmentShader,
+);
 
 export default function SpotLight({
   position,
@@ -16,7 +23,7 @@ export default function SpotLight({
   const spotLightRef = useRef();
   const spotLightTargetRef = useRef();
   const lampRef = useRef();
-  const lampRingRef = useRef();
+  const lightDiscRef = useRef();
 
   useHelper(spotLightRef, SpotLightHelper, "cyan");
 
@@ -62,7 +69,7 @@ export default function SpotLight({
       .normalize();
 
     const distance = direction.length();
-    const step = 0.02;
+    const step = 0.04;
 
     const newWorldPosition = positionVector
       .clone()
@@ -70,9 +77,10 @@ export default function SpotLight({
     const group = spotLightRef.current.parent;
     group.worldToLocal(newWorldPosition);
     spotLightRef.current.position.copy(newWorldPosition);
+    lightDiscRef.current.position.copy(newWorldPosition);
 
     lampRef.current.lookAt(targetPositionVector);
-    lampRingRef.current.lookAt(targetPositionVector);
+    lightDiscRef.current.lookAt(targetPositionVector);
   }, [position, targetPosition]);
 
   return (
@@ -94,9 +102,12 @@ export default function SpotLight({
 
         <primitive ref={lampRef} object={sceneLamp.clone()} />
 
-        <mesh ref={lampRingRef} rotation={[Math.PI * 0.5, 0, 0]}>
+        <mesh
+          ref={lightDiscRef}
+          rotation={[Math.PI * 0.5, 0, 0]}
+          material={LightDiscMaterial}
+        >
           <ringGeometry args={[0, 0.1, 16]} />
-          <meshStandardMaterial color={"#ff0000"} />
         </mesh>
       </group>
 
