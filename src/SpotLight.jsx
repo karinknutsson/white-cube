@@ -29,7 +29,7 @@ export default function SpotLight({
   const lampRef = useRef();
   const lightDiscRef = useRef();
 
-  useHelper(spotLightRef, SpotLightHelper, "cyan");
+  // useHelper(spotLightRef, SpotLightHelper, "cyan");
 
   const { scene: sceneBase } = useGLTF(
     "./models/spotlight-model-flexi-base.glb",
@@ -80,7 +80,7 @@ export default function SpotLight({
     const distance = direction.length();
     const group = spotLightRef.current.parent;
 
-    const spotLightStep = 0.08;
+    const spotLightStep = 0.07;
     const newSpotLightPosition = positionVector
       .clone()
       .add(direction.clone().multiplyScalar(Math.min(spotLightStep, distance)));

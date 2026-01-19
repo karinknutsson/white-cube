@@ -86,7 +86,7 @@ export default function Lights() {
 
       {/* Spotlight on partition front */}
       <SpotLight
-        position={[-2, 1.66, 2]}
+        position={[-2, 3.06, 2]}
         targetPosition={[1, 1, 0.2]}
         intensity={spotIntensity}
         angle={0.6}
@@ -95,7 +95,7 @@ export default function Lights() {
 
       {/* Spotlight on partition back */}
       <SpotLight
-        position={[2, 3.06, -2]}
+        position={[1.8, 3.06, -1.4]}
         targetPosition={[-0.6, 1, -0.2]}
         intensity={spotIntensity}
         angle={0.6}
