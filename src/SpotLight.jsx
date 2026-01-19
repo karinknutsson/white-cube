@@ -5,7 +5,6 @@ import * as THREE from "three";
 
 const lampMaterial = new THREE.MeshStandardMaterial({
   color: "#ffffff",
-  // wireframe: true,
 });
 
 export default function SpotLight({
@@ -62,7 +61,7 @@ export default function SpotLight({
       .normalize();
 
     const distance = direction.length();
-    const step = 0.1;
+    const step = 0.02;
 
     const newWorldPosition = positionVector
       .clone()
@@ -71,8 +70,6 @@ export default function SpotLight({
     group.worldToLocal(newWorldPosition);
     spotLightRef.current.position.copy(newWorldPosition);
 
-    // console.log(spotLightRef);
-    // lampRef.current.rotation.copy(spotLightRef.current.rotation);
     lampRef.current.lookAt(targetPositionVector);
   }, [position, targetPosition]);
 
@@ -97,11 +94,6 @@ export default function SpotLight({
       </group>
 
       <object3D ref={spotLightTargetRef} position={targetPosition} />
-
-      <mesh position={targetPosition}>
-        <boxGeometry args={[0.1, 0.1, 0.1]} />
-        <meshNormalMaterial />
-      </mesh>
     </>
   );
 }
