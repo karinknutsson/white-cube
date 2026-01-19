@@ -1,20 +1,18 @@
 import { useRef, useEffect } from "react";
 // import { useControls } from "leva";
 import { BakeShadows } from "@react-three/drei";
-// import { CameraHelper } from "three";
+import { CameraHelper } from "three";
+import { useHelper } from "@react-three/drei";
+import { SpotLightHelper } from "three";
+import SpotLight from "./SpotLight";
 
 export default function Lights() {
   const sunLight = useRef();
   const sunLightTarget = useRef();
-  const sunLightHelper = useRef();
-  const spotLight1 = useRef();
-  const spotLight1Target = useRef();
-  const spotLight2 = useRef();
-  const spotLight2Target = useRef();
 
   const ambientIntensity = 2;
   const sunIntensity = 1;
-  const spotIntensity = 30;
+  const spotIntensity = 100;
   const shadowBias = 0.0005;
   const shadowNormalBias = 0.005;
 
@@ -58,26 +56,13 @@ export default function Lights() {
   // });
 
   useEffect(() => {
-    // if (sunLight.current) {
-    //   sunLightHelper.current = new CameraHelper(sunLight.current.shadow.camera);
-    //   sunLight.current.add(sunLightHelper.current);
-    // }
-
     if (sunLight.current && sunLightTarget.current)
       sunLight.current.target = sunLightTarget.current;
-
-    if (spotLight1.current && spotLight1Target.current)
-      spotLight1.current.target = spotLight1Target.current;
-
-    if (spotLight2.current && spotLight2Target.current)
-      spotLight2.current.target = spotLight2Target.current;
   }, []);
 
   return (
     <>
       <BakeShadows />
-
-      {/* <SoftShadows size={10} samples={50} focus={0} /> */}
 
       <ambientLight intensity={ambientIntensity} />
 
@@ -99,36 +84,32 @@ export default function Lights() {
       />
       <object3D ref={sunLightTarget} position={[-0.4, 0.4, 0]} />
 
-      <spotLight
-        ref={spotLight1}
-        position={[-2, 3.06, 3]}
-        angle={0.6}
-        penumbra={1}
+      {/* Spotlight on partition front */}
+      <SpotLight
+        position={[-2, 3.06, 2]}
+        targetPosition={[1, 1, 0.2]}
         intensity={spotIntensity}
-        castShadow
-        color="#ffffee"
-        decay={2}
-        onUpdate={(self) => self.lookAt(0, 0, 4)}
-        shadow-mapSize-width={1024}
-        shadow-mapSize-height={1024}
-      />
-      <object3D ref={spotLight1Target} position={[0, 1.2, 0]} />
-
-      <spotLight
-        ref={spotLight2}
-        position={[0, 3.06, -3]}
         angle={0.6}
-        penumbra={1}
-        intensity={spotIntensity}
-        castShadow
-        color="#ffffee"
-        decay={2}
-        onUpdate={(self) => self.lookAt(0, 0, 4)}
-        shadow-mapSize-width={1024}
-        shadow-mapSize-height={1024}
+        rotation={[0, -0.6, 0]}
       />
 
-      <object3D ref={spotLight2Target} position={[0, 1.8, 0]} />
+      {/* Spotlight on partition back */}
+      <SpotLight
+        position={[1.8, 3.06, -1.4]}
+        targetPosition={[-0.6, 1, -0.2]}
+        intensity={spotIntensity}
+        angle={0.6}
+        rotation={[0, Math.PI * 0.9, 0]}
+      />
+
+      {/* Spotlight on back wall */}
+      <SpotLight
+        position={[-3, 3.06, -3]}
+        targetPosition={[0, 1.8, -4]}
+        intensity={spotIntensity}
+        angle={0.6}
+        rotation={[0, 0.2, 0]}
+      />
     </>
   );
 }
