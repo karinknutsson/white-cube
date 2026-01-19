@@ -6,8 +6,6 @@ import { extend } from "@react-three/fiber";
 import lightSourceVertexShader from "./shaders/light-source/vertex.glsl";
 import lightSourceFragmentShader from "./shaders/light-source/fragment.glsl";
 
-console.log(lightSourceFragmentShader);
-
 const lampMaterial = new THREE.MeshStandardMaterial({
   color: "#ffffff",
 });
@@ -75,7 +73,7 @@ export default function SpotLight({
       .normalize();
 
     const distance = direction.length();
-    const step = 0.04;
+    const step = 0.06;
 
     const newWorldPosition = positionVector
       .clone()
@@ -108,21 +106,20 @@ export default function SpotLight({
 
         <primitive ref={lampRef} object={sceneLamp.clone()} />
 
-        <mesh
-          ref={lightDiscRef}
-          rotation={[Math.PI * 0.5, 0, 0]}
-          material={LightDiscMaterial}
-        >
-          <ringGeometry args={[0, 0.1, 16]} />
+        <mesh ref={lightDiscRef} rotation={[Math.PI * 0.5, 0, 0]}>
+          <ringGeometry args={[0, 0.04, 16]} />
+          <lightDiscMaterial
+            transparent
+            depthWrite={false}
+            toneMapped={false}
+          />
         </mesh>
       </group>
 
       <object3D ref={spotLightTargetRef} position={targetPosition} />
 
       <mesh position={[0, 1.5, 1]}>
-        {/* <mesh > */}
-        {/* <meshStandardMaterial color="yellow" /> */}
-        <lightDiscMaterial />
+        <lightDiscMaterial transparent depthWrite={false} toneMapped={false} />
         <planeGeometry args={[1, 1]} />
       </mesh>
     </>
