@@ -4,7 +4,7 @@ import * as THREE from "three";
 import useGallery from "../stores/useGallery";
 import { useThree, useFrame } from "@react-three/fiber";
 import gsap from "gsap";
-import { useRef, useMemo, useState, useEffect } from "react";
+import { useRef, useMemo, useState, useEffect, use } from "react";
 import Artwork from "../artwork/Artwork";
 import { wallLabelSizes } from "../data/wallLabelSizes";
 
@@ -161,11 +161,151 @@ export default function TheRoom({
   const moveArtwork = useGallery((state) => state.moveArtwork);
 
   const wallRefs = useRef([]);
+  const handleDropRef = useRef(null);
+  const handleGrabRef = useRef(null);
+
+  const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 
   useEffect(() => {
+    handleDropRef.current = (e) => {
+      {
+        gsap.to("#grabbed-artwork-container", { duration: 0.5, opacity: 0 });
+        gsap.to(".drop-hint-container", { duration: 0.1, opacity: 0 });
+
+        if (!wallRefs.current.length) return;
+
+        const artwork = artworks.filter((w) => w.id === grabAreaId.current);
+        if (artwork.length === 0) return;
+
+        const artworkWidth = artwork[0].size[0];
+        const artworkHeight = artwork[0].size[1];
+
+        raycaster.setFromCamera(new THREE.Vector2(0, 0), camera);
+        const hits = raycaster.intersectObjects(wallRefs.current, false);
+        if (hits.length === 0) return;
+
+        if (hits[0].object.name === "backWall") {
+          moveArtwork(grabAreaId.current, {
+            wall: "backWall",
+            position: {
+              x: clamp(
+                (hits[0].uv.x - 0.5) * roomWidth,
+                (artworkWidth - roomWidth) * 0.5 +
+                  wallLabelSizes.width +
+                  wallLabelSizes.distanceFromArtwork * 2,
+                (roomWidth - artworkWidth) * 0.5,
+              ),
+              y: clamp(
+                (hits[0].uv.y - 0.5) * roomHeight,
+                (artworkHeight - roomHeight) * 0.5,
+                (roomHeight - artworkHeight) * 0.5,
+              ),
+              z: Math.random() * 0.001,
+            },
+          });
+        } else if (hits[0].object.name === "leftWall") {
+          moveArtwork(grabAreaId.current, {
+            wall: "leftWall",
+            position: {
+              x: clamp(
+                (hits[0].uv.x - 0.5) * roomDepth,
+                (artworkWidth - roomDepth) * 0.5 +
+                  wallLabelSizes.width +
+                  wallLabelSizes.distanceFromArtwork * 2,
+                (roomDepth - artworkWidth) * 0.5,
+              ),
+              y: clamp(
+                (hits[0].uv.y - 0.5) * roomHeight,
+                (artworkHeight - roomHeight) * 0.5,
+                (roomHeight - artworkHeight) * 0.5,
+              ),
+              z: Math.random() * 0.001,
+            },
+          });
+        } else if (hits[0].object.name === "rightWall") {
+          moveArtwork(grabAreaId.current, {
+            wall: "rightWall",
+            position: {
+              x: clamp(
+                (hits[0].uv.x - 0.5) * roomDepth,
+                (artworkWidth - roomDepth) * 0.5 +
+                  wallLabelSizes.width +
+                  wallLabelSizes.distanceFromArtwork * 3,
+                (roomDepth - artworkWidth) * 0.5,
+              ),
+              y: clamp(
+                (hits[0].uv.y - 0.5) * roomHeight,
+                (artworkHeight - roomHeight) * 0.5,
+                (roomHeight - artworkHeight) * 0.5,
+              ),
+              z: Math.random() * 0.001,
+            },
+          });
+        } else if (hits[0].object.name === "partitionBack") {
+          moveArtwork(grabAreaId.current, {
+            wall: "partitionBack",
+            position: {
+              x: clamp(
+                (hits[0].uv.x - 0.5) * (roomWidth - 2.6),
+                (artworkWidth - roomWidth + 2.6) * 0.5 +
+                  wallLabelSizes.width +
+                  wallLabelSizes.distanceFromArtwork * 2,
+                (roomWidth - 2.6 - artworkWidth) * 0.5,
+              ),
+              y: clamp(
+                (hits[0].uv.y - 0.5) * roomHeight,
+                (artworkHeight - roomHeight) * 0.5,
+                (roomHeight - artworkHeight) * 0.5,
+              ),
+              z: Math.random() * 0.001,
+            },
+          });
+        } else if (hits[0].object.name === "partitionFront") {
+          moveArtwork(grabAreaId.current, {
+            wall: "partitionFront",
+            position: {
+              x: clamp(
+                (hits[0].uv.x - 0.5) * (roomWidth - 2.6),
+                (artworkWidth - roomWidth + 2.6) * 0.5 +
+                  wallLabelSizes.width +
+                  wallLabelSizes.distanceFromArtwork * 2,
+                (roomWidth - 2.6 - artworkWidth) * 0.5,
+              ),
+              y: clamp(
+                (hits[0].uv.y - 0.5) * roomHeight,
+                (artworkHeight - roomHeight) * 0.5,
+                (roomHeight - artworkHeight) * 0.5,
+              ),
+              z: Math.random() * 0.001,
+            },
+          });
+        }
+
+        window.removeEventListener("mousedown", handleDropRef.current);
+        setGrabbedWorkId(() => null);
+        grabAreaId.current = null;
+      }
+    };
+
+    handleGrabRef.current = (e) => {
+      setGrabbedWorkId(grabAreaId.current);
+      window.removeEventListener("mousedown", handleGrabRef.current);
+      window.addEventListener("mousedown", handleDropRef.current);
+      gsap.to(".grab-hint-container", { duration: 0.1, opacity: 0 });
+      gsap.to(".drop-hint-container", { duration: 0.1, opacity: 1 });
+      const work = artworks.find((w) => w.id === grabAreaId.current);
+      if (!work) return;
+      const image = document.getElementById("grabbed-image");
+      image.src = work.path ?? "";
+      gsap.to("#grabbed-artwork-container", { duration: 0.5, opacity: 0.6 });
+    };
+  }, []);
+
+  useEffect(() => {
+    if (grabbedWorkId === null) return;
+
     const handleKeyDown = (e) => {
-      console.log(e);
-      if (grabAreaId.current !== null && e.code === "KeyX") {
+      if (grabbedWorkId !== null && e.code === "KeyX") {
         cancelDrop();
       }
     };
@@ -175,156 +315,23 @@ export default function TheRoom({
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, []);
+  }, [grabbedWorkId]);
 
   function cancelDrop() {
-    console.log("cancel drop");
+    window.removeEventListener("mousedown", handleDropRef.current);
+    setGrabbedWorkId(() => null);
+    grabAreaId.current = null;
+
     gsap.to("#grabbed-artwork-container", { duration: 0.5, opacity: 0 });
     gsap.to(".grab-hint-container", { duration: 0.1, opacity: 0 });
     gsap.to(".drop-hint-container", { duration: 0.1, opacity: 0 });
-
-    window.removeEventListener("mousedown", handleDrop);
-    setGrabbedWorkId(null);
-    grabAreaId.current = null;
-  }
-
-  const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
-
-  function handleDrop() {
-    gsap.to("#grabbed-artwork-container", { duration: 0.5, opacity: 0 });
-    gsap.to(".drop-hint-container", { duration: 0.1, opacity: 0 });
-
-    if (!wallRefs.current.length) return;
-
-    const artwork = artworks.filter((w) => w.id === grabAreaId.current);
-    if (artwork.length === 0) return;
-
-    const artworkWidth = artwork[0].size[0];
-    const artworkHeight = artwork[0].size[1];
-
-    raycaster.setFromCamera(new THREE.Vector2(0, 0), camera);
-    const hits = raycaster.intersectObjects(wallRefs.current, false);
-    if (hits.length === 0) return;
-
-    if (hits[0].object.name === "backWall") {
-      moveArtwork(grabAreaId.current, {
-        wall: "backWall",
-        position: {
-          x: clamp(
-            (hits[0].uv.x - 0.5) * roomWidth,
-            (artworkWidth - roomWidth) * 0.5 +
-              wallLabelSizes.width +
-              wallLabelSizes.distanceFromArtwork * 2,
-            (roomWidth - artworkWidth) * 0.5,
-          ),
-          y: clamp(
-            (hits[0].uv.y - 0.5) * roomHeight,
-            (artworkHeight - roomHeight) * 0.5,
-            (roomHeight - artworkHeight) * 0.5,
-          ),
-          z: Math.random() * 0.001,
-        },
-      });
-    } else if (hits[0].object.name === "leftWall") {
-      moveArtwork(grabAreaId.current, {
-        wall: "leftWall",
-        position: {
-          x: clamp(
-            (hits[0].uv.x - 0.5) * roomDepth,
-            (artworkWidth - roomDepth) * 0.5 +
-              wallLabelSizes.width +
-              wallLabelSizes.distanceFromArtwork * 2,
-            (roomDepth - artworkWidth) * 0.5,
-          ),
-          y: clamp(
-            (hits[0].uv.y - 0.5) * roomHeight,
-            (artworkHeight - roomHeight) * 0.5,
-            (roomHeight - artworkHeight) * 0.5,
-          ),
-          z: Math.random() * 0.001,
-        },
-      });
-    } else if (hits[0].object.name === "rightWall") {
-      moveArtwork(grabAreaId.current, {
-        wall: "rightWall",
-        position: {
-          x: clamp(
-            (hits[0].uv.x - 0.5) * roomDepth,
-            (artworkWidth - roomDepth) * 0.5 +
-              wallLabelSizes.width +
-              wallLabelSizes.distanceFromArtwork * 3,
-            (roomDepth - artworkWidth) * 0.5,
-          ),
-          y: clamp(
-            (hits[0].uv.y - 0.5) * roomHeight,
-            (artworkHeight - roomHeight) * 0.5,
-            (roomHeight - artworkHeight) * 0.5,
-          ),
-          z: Math.random() * 0.001,
-        },
-      });
-    } else if (hits[0].object.name === "partitionBack") {
-      moveArtwork(grabAreaId.current, {
-        wall: "partitionBack",
-        position: {
-          x: clamp(
-            (hits[0].uv.x - 0.5) * (roomWidth - 2.6),
-            (artworkWidth - roomWidth + 2.6) * 0.5 +
-              wallLabelSizes.width +
-              wallLabelSizes.distanceFromArtwork * 2,
-            (roomWidth - 2.6 - artworkWidth) * 0.5,
-          ),
-          y: clamp(
-            (hits[0].uv.y - 0.5) * roomHeight,
-            (artworkHeight - roomHeight) * 0.5,
-            (roomHeight - artworkHeight) * 0.5,
-          ),
-          z: Math.random() * 0.001,
-        },
-      });
-    } else if (hits[0].object.name === "partitionFront") {
-      moveArtwork(grabAreaId.current, {
-        wall: "partitionFront",
-        position: {
-          x: clamp(
-            (hits[0].uv.x - 0.5) * (roomWidth - 2.6),
-            (artworkWidth - roomWidth + 2.6) * 0.5 +
-              wallLabelSizes.width +
-              wallLabelSizes.distanceFromArtwork * 2,
-            (roomWidth - 2.6 - artworkWidth) * 0.5,
-          ),
-          y: clamp(
-            (hits[0].uv.y - 0.5) * roomHeight,
-            (artworkHeight - roomHeight) * 0.5,
-            (roomHeight - artworkHeight) * 0.5,
-          ),
-          z: Math.random() * 0.001,
-        },
-      });
-    }
-
-    window.removeEventListener("mousedown", handleDrop);
-    setGrabbedWorkId(null);
-    grabAreaId.current = null;
-  }
-
-  function handleGrab() {
-    setGrabbedWorkId(grabAreaId.current);
-    window.removeEventListener("mousedown", handleGrab);
-    window.addEventListener("mousedown", handleDrop);
-    gsap.to(".grab-hint-container", { duration: 0.1, opacity: 0 });
-    gsap.to(".drop-hint-container", { duration: 0.1, opacity: 1 });
-    const image = document.getElementById("grabbed-image");
-    const work = artworks.filter((w) => w.id === grabAreaId.current);
-    image.src = work[0].path ?? "";
-    gsap.to("#grabbed-artwork-container", { duration: 0.5, opacity: 0.6 });
   }
 
   function handleEnterGrabArea(id) {
     if (grabbedWorkId !== null) return;
 
     grabAreaId.current = id;
-    window.addEventListener("mousedown", handleGrab);
+    window.addEventListener("mousedown", handleGrabRef.current);
     gsap.to(".grab-hint-container", { duration: 0.1, opacity: 1 });
   }
 
@@ -332,7 +339,7 @@ export default function TheRoom({
     if (grabbedWorkId !== null) return;
 
     grabAreaId.current = null;
-    window.removeEventListener("mousedown", handleGrab);
+    window.removeEventListener("mousedown", handleGrabRef.current);
     gsap.to(".grab-hint-container", { duration: 0.1, opacity: 0 });
   }
 
