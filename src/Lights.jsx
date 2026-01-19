@@ -90,6 +90,7 @@ export default function Lights() {
         intensity={spotIntensity}
         angle={0.6}
         rotation={[0, 0, 0]}
+        targetPosition={[0, 1.2, 0]}
       />
 
       {/* Spotlight on partition front */}

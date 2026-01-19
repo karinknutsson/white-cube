@@ -11,7 +11,7 @@ const lampMaterial = new THREE.MeshStandardMaterial({
 
 export default function SpotLight({
   position,
-  // targetPosition,
+  targetPosition,
   intensity,
   dispersionAngle,
   rotation,
@@ -21,19 +21,26 @@ export default function SpotLight({
 
   useHelper(spotLight, SpotLightHelper, "cyan");
 
-  const { scene: sceneBase } = useGLTF("./models/spotlight-model-base.glb");
-  const { scene: sceneLamp } = useGLTF("./models/spotlight-model-lamp.glb");
+  const { scene: sceneBase } = useGLTF(
+    "./models/spotlight-model-flexi-base.glb",
+  );
+  const { scene: sceneLamp } = useGLTF(
+    "./models/spotlight-model-flexi-lamp.glb",
+  );
 
   const topPosition = new THREE.Vector3(position[0], position[1], position[2]);
-  const angle = Math.PI;
-  const distance = 4;
-  const theta = -Math.PI / 5;
+  const lampRotation = [1, 0, 0];
 
-  const targetPosition = new THREE.Vector3(
-    topPosition.x + Math.sin(angle) * distance,
-    topPosition.y + Math.sin(theta) * distance,
-    topPosition.z + Math.cos(angle) * distance,
-  );
+  // const topPosition = new THREE.Vector3(position[0], position[1], position[2]);
+  // const angle = Math.PI;
+  // const distance = 4;
+  // const theta = -Math.PI / 5;
+
+  // const targetPosition = new THREE.Vector3(
+  //   topPosition.x + Math.sin(angle) * distance,
+  //   topPosition.y + Math.sin(theta) * distance,
+  //   topPosition.z + Math.cos(angle) * distance,
+  // );
 
   useEffect(() => {
     sceneBase.traverse((child) => {
@@ -53,13 +60,13 @@ export default function SpotLight({
     if (spotLight.current && spotLightTarget.current)
       spotLight.current.target = spotLightTarget.current;
 
-    const direction = targetPosition.clone().sub(topPosition).normalize();
-    const quaternion = new THREE.Quaternion();
-    quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), direction);
-    spotLight.current.quaternion.copy(quaternion);
+    // const direction = targetPosition.clone().sub(topPosition).normalize();
+    // const quaternion = new THREE.Quaternion();
+    // quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), direction);
+    // spotLight.current.quaternion.copy(quaternion);
 
-    const euler = new THREE.Euler().setFromQuaternion(quaternion);
-    console.log(euler.x, euler.y, euler.z);
+    // const euler = new THREE.Euler().setFromQuaternion(quaternion);
+    // console.log(euler.x, euler.y, euler.z);
   }, []);
 
   return (
@@ -80,18 +87,13 @@ export default function SpotLight({
           shadow-mapSize-height={1024}
         />
 
-        <primitive
-          object={sceneBase.clone()}
-          position={[0, 0, 0]}
-          rotation={[0, 0, Math.PI]}
-          scale={1}
-        />
+        <primitive object={sceneBase.clone()} position={[0, 0, 0]} scale={1} />
 
         <primitive
           object={sceneLamp.clone()}
           position={[0, 0, 0]}
-          rotation={[0, 0, Math.PI]}
           scale={1}
+          rotation={lampRotation}
         />
       </group>
 
