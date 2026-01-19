@@ -16,6 +16,7 @@ export default function SpotLight({
   const spotLightRef = useRef();
   const spotLightTargetRef = useRef();
   const lampRef = useRef();
+  const lampRingRef = useRef();
 
   useHelper(spotLightRef, SpotLightHelper, "cyan");
 
@@ -71,6 +72,7 @@ export default function SpotLight({
     spotLightRef.current.position.copy(newWorldPosition);
 
     lampRef.current.lookAt(targetPositionVector);
+    lampRingRef.current.lookAt(targetPositionVector);
   }, [position, targetPosition]);
 
   return (
@@ -91,6 +93,11 @@ export default function SpotLight({
         <primitive object={sceneBase.clone()} />
 
         <primitive ref={lampRef} object={sceneLamp.clone()} />
+
+        <mesh ref={lampRingRef} rotation={[Math.PI * 0.5, 0, 0]}>
+          <ringGeometry args={[0, 0.1, 16]} />
+          <meshStandardMaterial color={"#ff0000"} />
+        </mesh>
       </group>
 
       <object3D ref={spotLightTargetRef} position={targetPosition} />
