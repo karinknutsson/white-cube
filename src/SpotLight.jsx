@@ -29,7 +29,7 @@ export default function SpotLight({
   const lampRef = useRef();
   const lightDiscRef = useRef();
 
-  useHelper(spotLightRef, SpotLightHelper, "cyan");
+  // useHelper(spotLightRef, SpotLightHelper, "cyan");
 
   const { scene: sceneBase } = useGLTF(
     "./models/spotlight-model-flexi-base.glb",
@@ -63,6 +63,11 @@ export default function SpotLight({
       return;
     spotLightRef.current.target = spotLightTargetRef.current;
 
+    if (lampRef.current && lightDiscRef.current) {
+      lampRef.current.add(lightDiscRef.current);
+      lightDiscRef.current.position.set(0, 0, 0.08);
+    }
+
     const positionVector = new THREE.Vector3(...position);
     const targetPositionVector = new THREE.Vector3(...targetPosition);
     const spotLightWorldPosition = new THREE.Vector3();
@@ -73,18 +78,16 @@ export default function SpotLight({
       .normalize();
 
     const distance = direction.length();
-    const step = 0.06;
-
-    const newWorldPosition = positionVector
-      .clone()
-      .add(direction.multiplyScalar(Math.min(step, distance)));
     const group = spotLightRef.current.parent;
-    group.worldToLocal(newWorldPosition);
-    spotLightRef.current.position.copy(newWorldPosition);
-    lightDiscRef.current.position.copy(newWorldPosition);
+
+    const spotLightStep = 0.04;
+    const newSpotLightPosition = positionVector
+      .clone()
+      .add(direction.clone().multiplyScalar(Math.min(spotLightStep, distance)));
+    group.worldToLocal(newSpotLightPosition);
+    spotLightRef.current.position.copy(newSpotLightPosition);
 
     lampRef.current.lookAt(targetPositionVector);
-    lightDiscRef.current.lookAt(targetPositionVector);
   }, [position, targetPosition]);
 
   return (
@@ -106,7 +109,7 @@ export default function SpotLight({
 
         <primitive ref={lampRef} object={sceneLamp.clone()} />
 
-        <mesh ref={lightDiscRef} rotation={[Math.PI * 0.5, 0, 0]}>
+        <mesh ref={lightDiscRef}>
           <ringGeometry args={[0, 0.04, 16]} />
           <lightDiscMaterial
             transparent
@@ -117,11 +120,6 @@ export default function SpotLight({
       </group>
 
       <object3D ref={spotLightTargetRef} position={targetPosition} />
-
-      <mesh position={[0, 1.5, 1]}>
-        <lightDiscMaterial transparent depthWrite={false} toneMapped={false} />
-        <planeGeometry args={[1, 1]} />
-      </mesh>
     </>
   );
 }
