@@ -4,7 +4,7 @@ import * as THREE from "three";
 import useGallery from "../stores/useGallery";
 import { useThree, useFrame } from "@react-three/fiber";
 import gsap from "gsap";
-import { useRef, useMemo, useState } from "react";
+import { useRef, useMemo, useState, useEffect } from "react";
 import Artwork from "../artwork/Artwork";
 import { wallLabelSizes } from "../data/wallLabelSizes";
 
@@ -152,21 +152,6 @@ export default function TheRoom({
   wallThickness,
   position,
 }) {
-  // const { color, roughness } = useControls("material", {
-  //   color: {
-  //     value: "#ffffff",
-  //   },
-  //   roughness: {
-  //     value: 1,
-  //     min: 0,
-  //     max: 1,
-  //     step: 0.01,
-  //   },
-  // });
-
-  // roomMaterial.color = new THREE.Color(color);
-  // roomMaterial.roughness = roughness;
-
   const { camera } = useThree();
   const raycaster = useMemo(() => new THREE.Raycaster(), []);
   const grabAreaId = useRef(null);
@@ -176,6 +161,32 @@ export default function TheRoom({
   const moveArtwork = useGallery((state) => state.moveArtwork);
 
   const wallRefs = useRef([]);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      console.log(e);
+      if (grabAreaId.current !== null && e.code === "KeyX") {
+        cancelDrop();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
+  function cancelDrop() {
+    console.log("cancel drop");
+    gsap.to("#grabbed-artwork-container", { duration: 0.5, opacity: 0 });
+    gsap.to(".grab-hint-container", { duration: 0.1, opacity: 0 });
+    gsap.to(".drop-hint-container", { duration: 0.1, opacity: 0 });
+
+    window.removeEventListener("mousedown", handleDrop);
+    setGrabbedWorkId(null);
+    grabAreaId.current = null;
+  }
 
   const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 
