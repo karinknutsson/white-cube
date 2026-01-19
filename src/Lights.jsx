@@ -84,13 +84,14 @@ export default function Lights() {
       />
       <object3D ref={sunLightTarget} position={[-0.4, 0.4, 0]} />
 
+      {/* Test spotlight */}
       <SpotLight
-        position={[0, 2, 2]}
+        position={[0, 2, 1]}
         // targetPosition={[0, 0, 0]}
         intensity={spotIntensity}
         angle={0.6}
         rotation={[0, 0, 0]}
-        targetPosition={[0, 1.2, 0]}
+        targetPosition={[-1, 2, 3]}
       />
 
       {/* Spotlight on partition front */}

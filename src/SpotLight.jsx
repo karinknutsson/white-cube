@@ -1,7 +1,6 @@
-import { useRef } from "react";
 import { SpotLightHelper } from "three";
 import { useHelper, useGLTF } from "@react-three/drei";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import * as THREE from "three";
 
 const lampMaterial = new THREE.MeshStandardMaterial({
@@ -16,10 +15,11 @@ export default function SpotLight({
   dispersionAngle,
   rotation,
 }) {
-  const spotLight = useRef();
-  const spotLightTarget = useRef();
+  const spotLightRef = useRef();
+  const spotLightTargetRef = useRef();
+  const lampRef = useRef();
 
-  useHelper(spotLight, SpotLightHelper, "cyan");
+  useHelper(spotLightRef, SpotLightHelper, "cyan");
 
   const { scene: sceneBase } = useGLTF(
     "./models/spotlight-model-flexi-base.glb",
@@ -28,19 +28,40 @@ export default function SpotLight({
     "./models/spotlight-model-flexi-lamp.glb",
   );
 
-  const topPosition = new THREE.Vector3(position[0], position[1], position[2]);
-  const lampRotation = [1, 0, 0];
+  useEffect(() => {
+    if (!lampRef.current || !position || !targetPosition) return;
 
-  // const topPosition = new THREE.Vector3(position[0], position[1], position[2]);
-  // const angle = Math.PI;
-  // const distance = 4;
-  // const theta = -Math.PI / 5;
+    const positionVector = new THREE.Vector3(...position);
+    const targetPositionVector = new THREE.Vector3(...targetPosition);
 
-  // const targetPosition = new THREE.Vector3(
-  //   topPosition.x + Math.sin(angle) * distance,
-  //   topPosition.y + Math.sin(theta) * distance,
-  //   topPosition.z + Math.cos(angle) * distance,
-  // );
+    const direction = new THREE.Vector3()
+      .subVectors(targetPositionVector, positionVector)
+      .normalize();
+
+    const lampForward = new THREE.Vector3(0, -1, 0);
+    const quaternion = new THREE.Quaternion();
+
+    if (lampForward.clone().dot(direction) < -0.9999) {
+      quaternion.setFromAxisAngle(new THREE.Vector3(1, 0, 0), Math.PI);
+    } else {
+      quaternion.setFromUnitVectors(lampForward, direction);
+    }
+
+    lampRef.current.quaternion.copy(quaternion);
+
+    if (spotLightRef.current && spotLightTargetRef.current) {
+      spotLightRef.current.target = spotLightTargetRef.current;
+
+      const currentPosition = new THREE.Vector3(0, 0, 0);
+      const distance = direction.length();
+      const step = 0.1;
+      const newPosition = currentPosition
+        .clone()
+        .add(direction.multiplyScalar(Math.min(step, distance)));
+
+      spotLightRef.current.position.copy(newPosition);
+    }
+  }, [position, targetPosition]);
 
   useEffect(() => {
     sceneBase.traverse((child) => {
@@ -56,27 +77,15 @@ export default function SpotLight({
         child.material = lampMaterial;
       }
     });
-
-    if (spotLight.current && spotLightTarget.current)
-      spotLight.current.target = spotLightTarget.current;
-
-    // const direction = targetPosition.clone().sub(topPosition).normalize();
-    // const quaternion = new THREE.Quaternion();
-    // quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), direction);
-    // spotLight.current.quaternion.copy(quaternion);
-
-    // const euler = new THREE.Euler().setFromQuaternion(quaternion);
-    // console.log(euler.x, euler.y, euler.z);
   }, []);
 
   return (
     <>
-      <group position={topPosition} rotation={rotation}>
+      <group position={position} rotation={rotation}>
         <spotLight
-          ref={spotLight}
-          // position={[0.01, -0.1, -0.012]}
-          // position={topPosition}
-          position={[0, -0.1, -0.04]}
+          ref={spotLightRef}
+          // position={[0, -0.1, -0.04]}
+          position={[0, 0, 0]}
           angle={dispersionAngle}
           penumbra={1}
           intensity={intensity}
@@ -87,17 +96,17 @@ export default function SpotLight({
           shadow-mapSize-height={1024}
         />
 
-        <primitive object={sceneBase.clone()} position={[0, 0, 0]} scale={1} />
+        <primitive object={sceneBase.clone()} />
 
-        <primitive
-          object={sceneLamp.clone()}
-          position={[0, 0, 0]}
-          scale={1}
-          rotation={lampRotation}
-        />
+        <primitive ref={lampRef} object={sceneLamp.clone()} />
       </group>
 
-      <object3D ref={spotLightTarget} position={targetPosition} />
+      <object3D ref={spotLightTargetRef} position={targetPosition} />
+
+      <mesh position={targetPosition}>
+        <boxGeometry args={[0.1, 0.1, 0.1]} />
+        <meshNormalMaterial />
+      </mesh>
     </>
   );
 }
