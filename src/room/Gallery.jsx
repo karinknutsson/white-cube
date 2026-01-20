@@ -21,13 +21,6 @@ export default function Gallery() {
         frames={1}
       />
 
-      <RigidBody type="dynamic" colliders="ball" restitution={1}>
-        <mesh position={[0, 1, -3]}>
-          <octahedronGeometry args={[0.3, 50]} />
-          <meshStandardMaterial color="grey" roughness={0} metalness={1} />
-        </mesh>
-      </RigidBody>
-
       {/* Room mesh */}
       <TheRoom
         roomWidth={roomWidth}
