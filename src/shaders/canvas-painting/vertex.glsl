@@ -1,5 +1,5 @@
-uniform float uWidth;
-uniform float uHeight;
+uniform float uEdgeStartX;
+uniform float uEdgeStartY;
 
 varying vec2 vUv;
 
@@ -12,13 +12,12 @@ void main() {
     float distanceX = length(adjustedX);
     float distanceY = length(adjustedY);
 
-    float edgeStart = 0.9;
-    float edgeEnd = 1.3;
+    float edgeEnd = 1.02;
 
-    float elevation = smoothstep(edgeStart, edgeEnd, distanceX) * pow(adjustedX, 4.0);
-    elevation += smoothstep(edgeStart, edgeEnd, distanceY) * pow(adjustedY, 4.0);
+    float elevation = smoothstep(uEdgeStartX, edgeEnd, distanceX) * pow(adjustedX, 2.0);
+    elevation += smoothstep(uEdgeStartY, edgeEnd, distanceY) * pow(adjustedY, 2.0);
 
-    localPosition.z += elevation * -0.1;
+    localPosition.z += elevation * -0.01;
 
     vec4 modelPosition = modelMatrix * vec4(localPosition, 1.0);
     vec4 viewPosition = viewMatrix * modelPosition;

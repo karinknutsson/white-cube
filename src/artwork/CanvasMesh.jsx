@@ -5,10 +5,13 @@ import canvasPaintingVertexShader from "../shaders/canvas-painting/vertex.glsl";
 import canvasPaintingFragmentShader from "../shaders/canvas-painting/fragment.glsl";
 
 export default function ArtworkMesh({ path, size }) {
+  const edgeStartX = 1 - 0.02 / size[0];
+  const edgeStartY = 1 - 0.02 / size[1];
+
   const CanvasPaintingMaterial = shaderMaterial(
     {
-      uWidth: size[0],
-      uHeight: size[1],
+      uEdgeStartX: edgeStartX,
+      uEdgeStartY: edgeStartY,
     },
     canvasPaintingVertexShader,
     canvasPaintingFragmentShader,
