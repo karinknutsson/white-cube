@@ -368,7 +368,6 @@ export default function TheRoom({
   }
 
   function handleEnterInfoArea() {
-    console.log("enter info area");
     if (grabbedWorkId !== null) return;
 
     window.addEventListener("mousedown", handleShowInfoRef.current);
@@ -376,7 +375,6 @@ export default function TheRoom({
   }
 
   function handleLeaveInfoArea() {
-    console.log("leave info area");
     if (grabbedWorkId !== null) return;
 
     window.removeEventListener("mousedown", handleShowInfoRef.current);

@@ -1,5 +1,18 @@
-@import url("https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=block");
-@import url("https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=block");
+@font-face {
+  font-family: "IBMPlexSans-Regular";
+  src: url("./fonts/IBMPlexSans-Regular.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IBMPlexSans-Semibold";
+  src: url("./fonts/IBMPlexSans-SemiBold.woff") format("woff");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
 
 html,
 body,
@@ -12,6 +25,13 @@ body,
   background: black;
   margin: 0;
   padding: 0;
+  font-family: "IBMPlexSans-Regular", Arial, sans-serif;
+}
+
+h1 {
+  font-family: "IBMPlexSans-Semibold", Arial, sans-serif;
+  margin: 0;
+  font-size: 2.4rem;
 }
 
 .grab-hint-container,
@@ -31,7 +51,6 @@ body,
   background: rgba(0, 0, 0, 0.3);
   border-radius: 50%;
   color: white;
-  font-family: "Rubik", Arial, sans-serif;
   font-size: 20px;
   font-weight: 400;
   opacity: 0;
@@ -41,6 +60,16 @@ body,
 .hint-text {
   width: 60%;
   text-align: center;
+  font-family: "IBMPlexSans-Semibold", Arial, sans-serif;
+}
+
+.info-content {
+  aspect-ratio: 210 / 297;
+  background: white;
+  max-width: 50vw;
+  max-height: 60vh;
+  padding: 64px 40px;
+  box-sizing: border-box;
 }
 
 #grabbed-artwork-container {
@@ -73,9 +102,4 @@ body,
   justify-content: center;
   top: 0;
   left: 0;
-}
-
-.info-content {
-  aspect-ratio: 210 / 297;
-  background: white;
 }
