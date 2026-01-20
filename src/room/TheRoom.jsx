@@ -7,6 +7,7 @@ import gsap from "gsap";
 import { useRef, useMemo, useState, useEffect, use } from "react";
 import Artwork from "../artwork/Artwork";
 import { wallLabelSizes } from "../data/wallLabelSizes";
+import PaperStack from "../PaperStack";
 
 const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
 
@@ -451,6 +452,11 @@ export default function TheRoom({
         height={0.6}
         depth={0.6}
         position={[-(1.3 + roomWidth) * 0.25, 0.3, roomDepth * 0.5 - 0.3]}
+      />
+      {/* Info paper stack */}
+      <PaperStack
+        position={[1 - roomWidth * 0.5, 0.6, roomDepth * 0.5 - 0.36]}
+        rotation={[0, 0.2, 0]}
       />
 
       {/* Window seat right side */}
