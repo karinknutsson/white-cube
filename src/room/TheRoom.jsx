@@ -1,12 +1,12 @@
 import { RigidBody, CuboidCollider } from "@react-three/rapier";
 import * as THREE from "three";
-// import { useControls } from "leva";
 import useGallery from "../stores/useGallery";
-import { useThree, useFrame } from "@react-three/fiber";
+import { useThree } from "@react-three/fiber";
 import gsap from "gsap";
 import { useRef, useMemo, useState, useEffect, use } from "react";
 import Artwork from "../artwork/Artwork";
 import { wallLabelSizes } from "../data/wallLabelSizes";
+import PaperStack from "../PaperStack";
 
 const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
 
@@ -154,6 +154,7 @@ export default function TheRoom({
 }) {
   const { camera } = useThree();
   const raycaster = useMemo(() => new THREE.Raycaster(), []);
+
   const grabAreaId = useRef(null);
   const [grabbedWorkId, setGrabbedWorkId] = useState(null);
 
@@ -161,8 +162,14 @@ export default function TheRoom({
   const moveArtwork = useGallery((state) => state.moveArtwork);
 
   const wallRefs = useRef([]);
+
   const handleDropRef = useRef(null);
   const handleGrabRef = useRef(null);
+
+  const handleHideInfoRef = useRef(null);
+  const handleShowInfoRef = useRef(null);
+
+  const isInfoVisible = useRef(false);
 
   const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 
@@ -182,7 +189,11 @@ export default function TheRoom({
 
         raycaster.setFromCamera(new THREE.Vector2(0, 0), camera);
         const hits = raycaster.intersectObjects(wallRefs.current, false);
-        if (hits.length === 0) return;
+
+        if (hits.length === 0) {
+          cancelDrop();
+          return;
+        }
 
         if (hits[0].object.name === "backWall") {
           moveArtwork(grabAreaId.current, {
@@ -291,13 +302,36 @@ export default function TheRoom({
       setGrabbedWorkId(grabAreaId.current);
       window.removeEventListener("mousedown", handleGrabRef.current);
       window.addEventListener("mousedown", handleDropRef.current);
+
       gsap.to(".grab-hint-container", { duration: 0.1, opacity: 0 });
       gsap.to(".drop-hint-container", { duration: 0.1, opacity: 1 });
+
       const work = artworks.find((w) => w.id === grabAreaId.current);
       if (!work) return;
+
       const image = document.getElementById("grabbed-image");
       image.src = work.path ?? "";
       gsap.to("#grabbed-artwork-container", { duration: 0.5, opacity: 0.6 });
+    };
+
+    handleShowInfoRef.current = (e) => {
+      isInfoVisible.current = true;
+
+      window.removeEventListener("mousedown", handleShowInfoRef.current);
+      window.addEventListener("mousedown", handleHideInfoRef.current);
+
+      gsap.to("#info-container", { duration: 0.1, opacity: 1 });
+      gsap.to(".show-info-hint-container", { duration: 0.1, opacity: 0 });
+      gsap.to(".hide-info-hint-container", { duration: 0.1, opacity: 1 });
+    };
+
+    handleHideInfoRef.current = (e) => {
+      isInfoVisible.current = false;
+
+      window.removeEventListener("mousedown", handleHideInfoRef.current);
+
+      gsap.to("#info-container", { duration: 0.1, opacity: 0 });
+      gsap.to(".hide-info-hint-container", { duration: 0.1, opacity: 0 });
     };
   }, []);
 
@@ -328,7 +362,7 @@ export default function TheRoom({
   }
 
   function handleEnterGrabArea(id) {
-    if (grabbedWorkId !== null) return;
+    if (grabbedWorkId !== null || isInfoVisible.current) return;
 
     grabAreaId.current = id;
     window.addEventListener("mousedown", handleGrabRef.current);
@@ -341,6 +375,20 @@ export default function TheRoom({
     grabAreaId.current = null;
     window.removeEventListener("mousedown", handleGrabRef.current);
     gsap.to(".grab-hint-container", { duration: 0.1, opacity: 0 });
+  }
+
+  function handleEnterInfoArea() {
+    if (grabbedWorkId !== null || grabAreaId.current) return;
+
+    window.addEventListener("mousedown", handleShowInfoRef.current);
+    gsap.to(".show-info-hint-container", { duration: 0.1, opacity: 1 });
+  }
+
+  function handleLeaveInfoArea() {
+    if (grabbedWorkId !== null) return;
+
+    window.removeEventListener("mousedown", handleShowInfoRef.current);
+    gsap.to(".show-info-hint-container", { duration: 0.1, opacity: 0 });
   }
 
   return (
@@ -451,6 +499,13 @@ export default function TheRoom({
         height={0.6}
         depth={0.6}
         position={[-(1.3 + roomWidth) * 0.25, 0.3, roomDepth * 0.5 - 0.3]}
+      />
+      {/* Info paper stack */}
+      <PaperStack
+        position={[1 - roomWidth * 0.5, 0.601, roomDepth * 0.5 - 0.36]}
+        rotation={[0, -0.1, 0]}
+        onEnterGrabArea={handleEnterInfoArea}
+        onLeaveGrabArea={handleLeaveInfoArea}
       />
 
       {/* Window seat right side */}

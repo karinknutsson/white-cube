@@ -101,8 +101,8 @@ export default function SpotLight({
           castShadow
           color="#ffffee"
           decay={2}
-          shadow-mapSize-width={1024}
-          shadow-mapSize-height={1024}
+          shadow-mapSize-width={4096}
+          shadow-mapSize-height={4096}
         />
 
         <primitive object={sceneBase.clone()} />
