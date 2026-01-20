@@ -22,10 +22,10 @@ root.render(
         position: [0, 2, 10],
       }}
       onCreated={({ gl }) => {
-        gl.toneMappingExposure = 0.5;
+        gl.toneMappingExposure = 0.4;
       }}
     >
       <Experience />
     </Canvas>
-  </>
+  </>,
 );

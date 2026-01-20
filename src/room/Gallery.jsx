@@ -9,27 +9,7 @@ export default function Gallery() {
   return (
     <>
       {/* Environment map */}
-      <CubeCamera resolution={256}>
-        {(texture) => {
-          return (
-            <>
-              {" "}
-              <Environment map={texture} />
-              {/* Metallic sphere for testing */}
-              {/* <RigidBody type="dynamic" colliders="ball" restitution={1}>
-                <mesh position={[0, 3, 3]}>
-                  <octahedronGeometry args={[0.5, 50]} />
-                  <meshStandardMaterial
-                    color="grey"
-                    roughness={0}
-                    metalness={1}
-                  />
-                </mesh>
-              </RigidBody> */}
-            </>
-          );
-        }}
-      </CubeCamera>
+      <CubeCamera resolution={256} />
 
       {/* Room mesh */}
       <TheRoom

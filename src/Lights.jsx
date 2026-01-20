@@ -1,59 +1,16 @@
 import { useRef, useEffect } from "react";
-// import { useControls } from "leva";
 import { BakeShadows } from "@react-three/drei";
-import { CameraHelper } from "three";
-import { useHelper } from "@react-three/drei";
-import { SpotLightHelper } from "three";
 import SpotLight from "./SpotLight";
 
 export default function Lights() {
   const sunLight = useRef();
   const sunLightTarget = useRef();
 
-  const ambientIntensity = 2;
-  const sunIntensity = 1;
+  const ambientIntensity = 1;
+  const sunIntensity = 0.6;
   const spotIntensity = 100;
   const shadowBias = 0.0005;
   const shadowNormalBias = 0.005;
-
-  // const {
-  //   ambientIntensity,
-  //   sunIntensity,
-  //   spotIntensity,
-  //   shadowBias,
-  //   shadowNormalBias,
-  // } = useControls("lights", {
-  //   ambientIntensity: {
-  //     value: 2,
-  //     min: 0,
-  //     max: 10,
-  //     step: 0.1,
-  //   },
-  //   sunIntensity: {
-  //     value: 1,
-  //     min: 0,
-  //     max: 10,
-  //     step: 0.1,
-  //   },
-  //   spotIntensity: {
-  //     value: 30,
-  //     min: 0,
-  //     max: 100,
-  //     step: 1,
-  //   },
-  //   shadowBias: {
-  //     value: 0.0005,
-  //     min: -0.01,
-  //     max: 0.01,
-  //     step: 0.0001,
-  //   },
-  //   shadowNormalBias: {
-  //     value: 0.005,
-  //     min: 0,
-  //     max: 1,
-  //     step: 0.01,
-  //   },
-  // });
 
   useEffect(() => {
     if (sunLight.current && sunLightTarget.current)
