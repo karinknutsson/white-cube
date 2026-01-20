@@ -455,8 +455,8 @@ export default function TheRoom({
       />
       {/* Info paper stack */}
       <PaperStack
-        position={[1 - roomWidth * 0.5, 0.6, roomDepth * 0.5 - 0.36]}
-        rotation={[0, 0.2, 0]}
+        position={[1 - roomWidth * 0.5, 0.601, roomDepth * 0.5 - 0.36]}
+        rotation={[0, -0.1, 0]}
       />
 
       {/* Window seat right side */}
