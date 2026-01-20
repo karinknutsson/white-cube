@@ -21,7 +21,7 @@ export default function ArtworkMesh({ path, size }) {
   return (
     <>
       {/* Test plane */}
-      <mesh position={[0, 0, 1]}>
+      <mesh position={[0, 1, 1]}>
         <planeGeometry args={[size[0], size[1], 1000, 1000]} />
         <canvasPaintingMaterial />
       </mesh>
