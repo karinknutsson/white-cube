@@ -1,12 +1,26 @@
-import { useLoader } from "@react-three/fiber";
+import { useLoader, extend } from "@react-three/fiber";
 import * as THREE from "three";
-import { RoundedBoxGeometry } from "@react-three/drei";
+import { RoundedBoxGeometry, shaderMaterial } from "@react-three/drei";
+import canvasPaintingVertexShader from "../shaders/canvas-painting/vertex.glsl";
+import canvasPaintingFragmentShader from "../shaders/canvas-painting/fragment.glsl";
+
+const CanvasPaintingMaterial = shaderMaterial(
+  {},
+  canvasPaintingVertexShader,
+  canvasPaintingFragmentShader,
+);
+
+extend({ CanvasPaintingMaterial });
 
 export default function ArtworkMesh({ path, size }) {
   const texture = useLoader(THREE.TextureLoader, path);
 
   return (
     <group position={[0, 0, size[2] * 0.5 + 0.003]}>
+      <mesh position={[0, 0, 1]}>
+        <planeGeometry args={[size[0], size[1]]} />
+        <canvasPaintingMaterial />
+      </mesh>
       {/* Front face */}
       <mesh position={[0, 0, size[2]]}>
         <planeGeometry args={[size[0], size[1]]} />
