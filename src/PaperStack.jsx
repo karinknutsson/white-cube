@@ -23,12 +23,11 @@ export default function PaperStack({ position, rotation }) {
     <>
       <group
         position={[position[0], position[1] + 0.0257, position[2]]}
-        // rotation={[-Math.PI * 0.5, rotation[1] + 0.0257, rotation[2]]}
         rotation={[Math.PI * 0.5, Math.PI, rotation[1]]}
       >
         <Text
           font="./fonts/IBMPlexSans-SemiBold.woff"
-          position={[-0.046, 0, 0.18]}
+          position={[-0.08, 0.11, 0]}
           fontSize={0.02}
           color="black"
           anchorX="left"
@@ -39,7 +38,7 @@ export default function PaperStack({ position, rotation }) {
 
         <Text
           font="./fonts/IBMPlexSans-Regular.woff"
-          position={[-0.06, 0, 0.12]}
+          position={[-0.08, 0.07, 0]}
           fontSize={0.006}
           color="black"
           anchorX="left"
