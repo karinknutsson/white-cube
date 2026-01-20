@@ -1,8 +1,7 @@
 import { RigidBody, CuboidCollider } from "@react-three/rapier";
 import * as THREE from "three";
-// import { useControls } from "leva";
 import useGallery from "../stores/useGallery";
-import { useThree, useFrame } from "@react-three/fiber";
+import { useThree } from "@react-three/fiber";
 import gsap from "gsap";
 import { useRef, useMemo, useState, useEffect, use } from "react";
 import Artwork from "../artwork/Artwork";
@@ -155,6 +154,7 @@ export default function TheRoom({
 }) {
   const { camera } = useThree();
   const raycaster = useMemo(() => new THREE.Raycaster(), []);
+
   const grabAreaId = useRef(null);
   const [grabbedWorkId, setGrabbedWorkId] = useState(null);
 
@@ -168,6 +168,8 @@ export default function TheRoom({
 
   const handleHideInfoRef = useRef(null);
   const handleShowInfoRef = useRef(null);
+
+  const isInfoVisible = useRef(false);
 
   const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 
@@ -187,7 +189,11 @@ export default function TheRoom({
 
         raycaster.setFromCamera(new THREE.Vector2(0, 0), camera);
         const hits = raycaster.intersectObjects(wallRefs.current, false);
-        if (hits.length === 0) return;
+
+        if (hits.length === 0) {
+          cancelDrop();
+          return;
+        }
 
         if (hits[0].object.name === "backWall") {
           moveArtwork(grabAreaId.current, {
@@ -309,6 +315,8 @@ export default function TheRoom({
     };
 
     handleShowInfoRef.current = (e) => {
+      isInfoVisible.current = true;
+
       window.removeEventListener("mousedown", handleShowInfoRef.current);
       window.addEventListener("mousedown", handleHideInfoRef.current);
 
@@ -318,6 +326,8 @@ export default function TheRoom({
     };
 
     handleHideInfoRef.current = (e) => {
+      isInfoVisible.current = false;
+
       window.removeEventListener("mousedown", handleHideInfoRef.current);
 
       gsap.to("#info-container", { duration: 0.1, opacity: 0 });
@@ -352,7 +362,7 @@ export default function TheRoom({
   }
 
   function handleEnterGrabArea(id) {
-    if (grabbedWorkId !== null) return;
+    if (grabbedWorkId !== null || isInfoVisible.current) return;
 
     grabAreaId.current = id;
     window.addEventListener("mousedown", handleGrabRef.current);
