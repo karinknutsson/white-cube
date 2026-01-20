@@ -162,8 +162,12 @@ export default function TheRoom({
   const moveArtwork = useGallery((state) => state.moveArtwork);
 
   const wallRefs = useRef([]);
+
   const handleDropRef = useRef(null);
   const handleGrabRef = useRef(null);
+
+  const handleHideInfoRef = useRef(null);
+  const handleShowInfoRef = useRef(null);
 
   const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 
@@ -303,6 +307,22 @@ export default function TheRoom({
       image.src = work.path ?? "";
       gsap.to("#grabbed-artwork-container", { duration: 0.5, opacity: 0.6 });
     };
+
+    handleShowInfoRef.current = (e) => {
+      window.removeEventListener("mousedown", handleShowInfoRef.current);
+      window.addEventListener("mousedown", handleHideInfoRef.current);
+
+      gsap.to("#info-container", { duration: 0.1, opacity: 1 });
+      gsap.to(".show-info-hint-container", { duration: 0.1, opacity: 0 });
+      gsap.to(".hide-info-hint-container", { duration: 0.1, opacity: 1 });
+    };
+
+    handleHideInfoRef.current = (e) => {
+      window.removeEventListener("mousedown", handleHideInfoRef.current);
+
+      gsap.to("#info-container", { duration: 0.1, opacity: 0 });
+      gsap.to(".hide-info-hint-container", { duration: 0.1, opacity: 0 });
+    };
   }, []);
 
   useEffect(() => {
@@ -348,16 +368,19 @@ export default function TheRoom({
   }
 
   function handleEnterInfoArea() {
+    console.log("enter info area");
     if (grabbedWorkId !== null) return;
 
-    // window.addEventListener("mousedown", handleGrabRef.current);
-    gsap.to(".info-hint-container", { duration: 0.1, opacity: 1 });
+    window.addEventListener("mousedown", handleShowInfoRef.current);
+    gsap.to(".show-info-hint-container", { duration: 0.1, opacity: 1 });
   }
 
   function handleLeaveInfoArea() {
+    console.log("leave info area");
     if (grabbedWorkId !== null) return;
-    // window.removeEventListener("mousedown", handleGrabRef.current);
-    gsap.to(".info-hint-container", { duration: 0.1, opacity: 0 });
+
+    window.removeEventListener("mousedown", handleShowInfoRef.current);
+    gsap.to(".show-info-hint-container", { duration: 0.1, opacity: 0 });
   }
 
   return (

@@ -16,7 +16,8 @@ body,
 
 .grab-hint-container,
 .drop-hint-container,
-.info-hint-container {
+.show-info-hint-container,
+.hide-info-hint-container {
   position: absolute;
   bottom: 32px;
   left: 50%;
@@ -59,4 +60,22 @@ body,
   max-width: 50vw;
   max-height: 60vh;
   object-fit: contain;
+}
+
+#info-container {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  opacity: 0;
+  z-index: 998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 0;
+  left: 0;
+}
+
+.info-content {
+  aspect-ratio: 210 / 297;
+  background: white;
 }

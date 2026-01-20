@@ -10,7 +10,7 @@ import { Environment } from "@react-three/drei";
 export default function Experience() {
   // const { perfVisible } = useControls({ perfVisible: false });
 
-  const perfVisible = true;
+  const perfVisible = false;
 
   return (
     <>
@@ -26,8 +26,8 @@ export default function Experience() {
         <meshNormalMaterial />
       </mesh> */}
 
-      <Physics debug>
-        {/* <Physics> */}
+      {/* <Physics debug> */}
+      <Physics>
         <Environment files="./hdr/qwantani_dusk_2_puresky_1k.hdr" background />
 
         <Gallery />

@@ -48,7 +48,7 @@ export default function PaperStack({
           anchorX="left"
           anchorY="top"
         >
-          Title
+          whtie cube
         </Text>
 
         <Text
