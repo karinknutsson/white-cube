@@ -378,7 +378,7 @@ export default function TheRoom({
   }
 
   function handleEnterInfoArea() {
-    if (grabbedWorkId !== null) return;
+    if (grabbedWorkId !== null || grabAreaId.current) return;
 
     window.addEventListener("mousedown", handleShowInfoRef.current);
     gsap.to(".show-info-hint-container", { duration: 0.1, opacity: 1 });
