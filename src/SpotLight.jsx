@@ -8,6 +8,8 @@ import lightSourceFragmentShader from "./shaders/light-source/fragment.glsl";
 
 const lampMaterial = new THREE.MeshStandardMaterial({
   color: "#ffffff",
+  roughness: 1,
+  metalness: 0,
 });
 
 const LightDiscMaterial = shaderMaterial(
@@ -52,6 +54,10 @@ export default function SpotLight({
         child.material = lampMaterial;
       }
     });
+
+    lampMaterial.envMap = null;
+    lampMaterial.reflectivity = 0;
+    lampMaterial.needsUpdate = true;
   }, []);
 
   useEffect(() => {

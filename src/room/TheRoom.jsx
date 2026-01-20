@@ -302,6 +302,7 @@ export default function TheRoom({
   }, []);
 
   useEffect(() => {
+    wallRefs.current.forEach((wall) => wall.layers.enable(1));
     if (grabbedWorkId === null) return;
 
     const handleKeyDown = (e) => {
