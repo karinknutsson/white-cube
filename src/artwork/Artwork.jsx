@@ -6,7 +6,6 @@ import { wallLabelSizes } from "../data/wallLabelSizes";
 
 export default function Artwork({
   position,
-  rotation,
   type,
   path,
   size,
@@ -22,7 +21,6 @@ export default function Artwork({
     <>
       <RigidBody
         position={position}
-        rotation={rotation}
         ref={artworkRef}
         type="kinematicPosition"
         colliders={false}
