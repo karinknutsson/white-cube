@@ -15,7 +15,8 @@ body,
 }
 
 .grab-hint-container,
-.drop-hint-container {
+.drop-hint-container,
+.info-hint-container {
   position: absolute;
   bottom: 32px;
   left: 50%;
@@ -36,8 +37,7 @@ body,
   z-index: 1000;
 }
 
-.grab-hint-text,
-.drop-hint-text {
+.hint-text {
   width: 60%;
   text-align: center;
 }

@@ -292,10 +292,13 @@ export default function TheRoom({
       setGrabbedWorkId(grabAreaId.current);
       window.removeEventListener("mousedown", handleGrabRef.current);
       window.addEventListener("mousedown", handleDropRef.current);
+
       gsap.to(".grab-hint-container", { duration: 0.1, opacity: 0 });
       gsap.to(".drop-hint-container", { duration: 0.1, opacity: 1 });
+
       const work = artworks.find((w) => w.id === grabAreaId.current);
       if (!work) return;
+
       const image = document.getElementById("grabbed-image");
       image.src = work.path ?? "";
       gsap.to("#grabbed-artwork-container", { duration: 0.5, opacity: 0.6 });
@@ -342,6 +345,19 @@ export default function TheRoom({
     grabAreaId.current = null;
     window.removeEventListener("mousedown", handleGrabRef.current);
     gsap.to(".grab-hint-container", { duration: 0.1, opacity: 0 });
+  }
+
+  function handleEnterInfoArea() {
+    if (grabbedWorkId !== null) return;
+
+    // window.addEventListener("mousedown", handleGrabRef.current);
+    gsap.to(".info-hint-container", { duration: 0.1, opacity: 1 });
+  }
+
+  function handleLeaveInfoArea() {
+    if (grabbedWorkId !== null) return;
+    // window.removeEventListener("mousedown", handleGrabRef.current);
+    gsap.to(".info-hint-container", { duration: 0.1, opacity: 0 });
   }
 
   return (
@@ -457,6 +473,8 @@ export default function TheRoom({
       <PaperStack
         position={[1 - roomWidth * 0.5, 0.601, roomDepth * 0.5 - 0.36]}
         rotation={[0, -0.1, 0]}
+        onEnterGrabArea={handleEnterInfoArea}
+        onLeaveGrabArea={handleLeaveInfoArea}
       />
 
       {/* Window seat right side */}
