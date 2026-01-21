@@ -18,7 +18,7 @@ export default function ArtworkInfoMesh({
           size[1] * 0.5 - 0.018,
           size[2] + 0.001,
         ]}
-        fontSize={0.016}
+        fontSize={0.014}
         color="black"
         anchorX="left"
         anchorY="top"
@@ -32,7 +32,7 @@ export default function ArtworkInfoMesh({
           size[1] * 0.5 - 0.048,
           size[2] + 0.001,
         ]}
-        fontSize={0.016}
+        fontSize={0.012}
         color="black"
         anchorX="left"
         anchorY="top"
@@ -47,7 +47,7 @@ export default function ArtworkInfoMesh({
           size[1] * 0.5 - 0.078,
           size[2] + 0.001,
         ]}
-        fontSize={0.016}
+        fontSize={0.012}
         color="black"
         anchorX="left"
         anchorY="top"
