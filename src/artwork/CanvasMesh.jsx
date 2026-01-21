@@ -36,7 +36,7 @@ export default function ArtworkMesh({ path, size }) {
     <>
       <group position={[0, 0, size[2] * 0.5 + 0.003]}>
         {/* Front face */}
-        <mesh position={[0, 0, size[2] + 0.4]} geometry={geometry}>
+        <mesh position={[0, 0, size[2] + 0.002]} geometry={geometry}>
           <canvasPaintingMaterial
             key={texture.uuid}
             uTexture={texture}
@@ -49,7 +49,7 @@ export default function ArtworkMesh({ path, size }) {
         {/* Back part */}
         <mesh position={[0, 0, size[2] - 0.01]}>
           <RoundedBoxGeometry
-            args={[size[0], size[1], size[2]]}
+            args={[size[0] - 0.001, size[1] - 0.001, size[2]]}
             radius={0.005}
             steps={5}
             smoothness={7}
