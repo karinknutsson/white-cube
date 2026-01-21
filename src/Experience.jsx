@@ -10,7 +10,7 @@ import { Environment } from "@react-three/drei";
 export default function Experience() {
   // const { perfVisible } = useControls({ perfVisible: false });
 
-  const perfVisible = true;
+  const perfVisible = false;
 
   return (
     <>
