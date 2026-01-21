@@ -197,8 +197,6 @@ export default function TheRoom({
           return;
         }
 
-        setBakeKey((key) => key + 1);
-
         if (hits[0].object.name === "backWall") {
           moveArtwork(grabAreaId.current, {
             wall: "backWall",
@@ -299,6 +297,7 @@ export default function TheRoom({
         window.removeEventListener("mousedown", handleDropRef.current);
         setGrabbedWorkId(() => null);
         grabAreaId.current = null;
+        setBakeKey((key) => key + 1);
       }
     };
 
