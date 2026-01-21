@@ -49,6 +49,7 @@ export const ARTWORKS = [
     wall: "partitionFront",
     position: { x: 0, y: 0, z: 0 },
   },
+
   {
     id: "5",
     path: "./works/Near_the_Campidoglio_1.jpg",

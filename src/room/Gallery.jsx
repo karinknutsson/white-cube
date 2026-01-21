@@ -1,4 +1,4 @@
-import { CubeCamera, Environment } from "@react-three/drei";
+import { CubeCamera } from "@react-three/drei";
 import TheRoom from "./TheRoom";
 
 export default function Gallery() {
@@ -13,7 +13,6 @@ export default function Gallery() {
 
       {/* Room mesh */}
       <TheRoom
-        // size={[roomWidth, roomHeight, roomDepth]}
         roomWidth={roomWidth}
         roomHeight={roomHeight}
         roomDepth={roomDepth}
