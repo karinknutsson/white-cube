@@ -1,5 +1,4 @@
 import { useRef, useEffect } from "react";
-
 import SpotLight from "./SpotLight";
 
 export default function Lights() {

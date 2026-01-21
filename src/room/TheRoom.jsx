@@ -3,7 +3,7 @@ import * as THREE from "three";
 import useGallery from "../stores/useGallery";
 import { useThree } from "@react-three/fiber";
 import gsap from "gsap";
-import { useRef, useMemo, useState, useEffect, use } from "react";
+import { useRef, useMemo, useState, useEffect } from "react";
 import Artwork from "../artwork/Artwork";
 import { wallLabelSizes } from "../data/wallLabelSizes";
 import PaperStack from "../PaperStack";

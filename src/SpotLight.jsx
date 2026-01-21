@@ -1,5 +1,4 @@
-import { SpotLightHelper } from "three";
-import { useHelper, useGLTF, shaderMaterial } from "@react-three/drei";
+import { useGLTF, shaderMaterial } from "@react-three/drei";
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { extend } from "@react-three/fiber";
@@ -28,8 +27,6 @@ export default function SpotLight({
   const spotLightTargetRef = useRef();
   const lampRef = useRef();
   const lightDiscRef = useRef();
-
-  // useHelper(spotLightRef, SpotLightHelper, "cyan");
 
   const { scene: sceneBase } = useGLTF(
     "./models/spotlight-model-flexi-base.glb",
