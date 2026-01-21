@@ -6,7 +6,7 @@ import canvasPaintingFragmentShader from "../shaders/canvas-painting/fragment.gl
 
 export default function ArtworkMesh({ path, size }) {
   const texture = useLoader(THREE.TextureLoader, path);
-  const geometry = new THREE.PlaneGeometry(size[0], size[1], 100, 100);
+  const geometry = new THREE.PlaneGeometry(size[0], size[1], 64, 64);
 
   const edgeStartX = 1 - 0.02 / size[0];
   const edgeStartY = 1 - 0.02 / size[1];
@@ -27,8 +27,12 @@ export default function ArtworkMesh({ path, size }) {
     <>
       <group position={[0, 0, size[2] * 0.5 + 0.003]}>
         {/* Front face */}
-        <mesh position={[0, 0, 1 + size[2]]} geometry={geometry}>
-          <canvasPaintingMaterial key={texture.uuid} uTexture={texture} />
+        <mesh position={[0, 0, size[2] + 0.002]} geometry={geometry}>
+          <canvasPaintingMaterial
+            key={texture.uuid}
+            uTexture={texture}
+            transparent
+          />
         </mesh>
 
         {/* Back part */}

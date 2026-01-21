@@ -2,6 +2,7 @@ uniform float uEdgeStartX;
 uniform float uEdgeStartY;
 
 varying vec2 vUv;
+varying float vElevation;
 
 void main() {
     vec3 localPosition = position;
@@ -14,8 +15,8 @@ void main() {
 
     float edgeEnd = 1.02;
 
-    float elevation = smoothstep(uEdgeStartX, edgeEnd, distanceX) * pow(adjustedX, 2.0);
-    elevation += smoothstep(uEdgeStartY, edgeEnd, distanceY) * pow(adjustedY, 2.0);
+    float elevation = smoothstep(uEdgeStartX, edgeEnd, distanceX) * pow(adjustedX, 8.0);
+    elevation += smoothstep(uEdgeStartY, edgeEnd, distanceY) * pow(adjustedY, 8.0);
 
     localPosition.z += elevation * -0.01;
 
@@ -26,4 +27,5 @@ void main() {
     gl_Position = projectionPosition;
 
     vUv = uv;
+    vElevation = elevation;
 }
