@@ -13,7 +13,7 @@ root.render(
       camera={{
         fov: 100,
         near: 0.1,
-        far: 20,
+        far: 10,
         position: [0, 2, 10],
       }}
       onCreated={({ gl }) => {
