@@ -52,7 +52,7 @@ export default function ArtworkMesh({ path, size }) {
         </mesh>
 
         {/* Back part */}
-        <mesh position={[0, 0, size[2] - 0.01]} receiveShadow castShadow>
+        <mesh position={[0, 0, size[2] - 0.01]} receiveShadow>
           <RoundedBoxGeometry
             args={[size[0] - 0.001, size[1] - 0.001, size[2]]}
             radius={0.005}
