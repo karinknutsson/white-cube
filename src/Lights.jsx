@@ -1,5 +1,5 @@
 import { useRef, useEffect } from "react";
-import { BakeShadows } from "@react-three/drei";
+
 import SpotLight from "./SpotLight";
 
 export default function Lights() {
@@ -19,8 +19,6 @@ export default function Lights() {
 
   return (
     <>
-      <BakeShadows />
-
       <ambientLight intensity={ambientIntensity} />
 
       <directionalLight

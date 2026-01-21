@@ -7,6 +7,7 @@ import { useRef, useMemo, useState, useEffect, use } from "react";
 import Artwork from "../artwork/Artwork";
 import { wallLabelSizes } from "../data/wallLabelSizes";
 import PaperStack from "../PaperStack";
+import { BakeShadows } from "@react-three/drei";
 
 const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
 
@@ -157,6 +158,7 @@ export default function TheRoom({
 
   const grabAreaId = useRef(null);
   const [grabbedWorkId, setGrabbedWorkId] = useState(null);
+  const [bakeKey, setBakeKey] = useState(0);
 
   const artworks = useGallery((state) => state.artworks);
   const moveArtwork = useGallery((state) => state.moveArtwork);
@@ -194,6 +196,8 @@ export default function TheRoom({
           cancelDrop();
           return;
         }
+
+        setBakeKey((key) => key + 1);
 
         if (hits[0].object.name === "backWall") {
           moveArtwork(grabAreaId.current, {
@@ -392,137 +396,141 @@ export default function TheRoom({
   }
 
   return (
-    <group position={position}>
-      {/* Back wall */}
-      <WallMesh
-        ref={(el) => (wallRefs.current[0] = el)}
-        name="backWall"
-        width={roomWidth}
-        height={roomHeight}
-        depth={wallThickness}
-        wallThickness={wallThickness}
-        position={[0, roomHeight * 0.5, (wallThickness - roomDepth) * 0.5]}
-        rotation={[0, 0, 0]}
-        works={artworks.filter(
-          (w) => w.id !== grabbedWorkId && w.wall === "backWall",
-        )}
-        handleEnterGrabArea={handleEnterGrabArea}
-        handleLeaveGrabArea={handleLeaveGrabArea}
-      />
+    <>
+      <BakeShadows key={bakeKey} />
 
-      {/* Left wall */}
-      <WallMesh
-        ref={(el) => (wallRefs.current[1] = el)}
-        name="leftWall"
-        width={roomDepth}
-        height={roomHeight}
-        depth={wallThickness}
-        wallThickness={wallThickness}
-        position={[-roomWidth * 0.5, roomHeight * 0.5, 0]}
-        rotation={[0, Math.PI * 0.5, 0]}
-        works={artworks.filter(
-          (w) => w.id !== grabbedWorkId && w.wall === "leftWall",
-        )}
-        handleEnterGrabArea={handleEnterGrabArea}
-        handleLeaveGrabArea={handleLeaveGrabArea}
-      />
+      <group position={position}>
+        {/* Back wall */}
+        <WallMesh
+          ref={(el) => (wallRefs.current[0] = el)}
+          name="backWall"
+          width={roomWidth}
+          height={roomHeight}
+          depth={wallThickness}
+          wallThickness={wallThickness}
+          position={[0, roomHeight * 0.5, (wallThickness - roomDepth) * 0.5]}
+          rotation={[0, 0, 0]}
+          works={artworks.filter(
+            (w) => w.id !== grabbedWorkId && w.wall === "backWall",
+          )}
+          handleEnterGrabArea={handleEnterGrabArea}
+          handleLeaveGrabArea={handleLeaveGrabArea}
+        />
 
-      {/* Right wall */}
-      <WallMesh
-        ref={(el) => (wallRefs.current[2] = el)}
-        name="rightWall"
-        width={roomDepth}
-        height={roomHeight}
-        depth={wallThickness}
-        wallThickness={wallThickness}
-        position={[roomWidth * 0.5, roomHeight * 0.5, 0]}
-        rotation={[0, -Math.PI * 0.5, 0]}
-        works={artworks.filter(
-          (w) => w.id !== grabbedWorkId && w.wall === "rightWall",
-        )}
-        handleEnterGrabArea={handleEnterGrabArea}
-        handleLeaveGrabArea={handleLeaveGrabArea}
-      />
+        {/* Left wall */}
+        <WallMesh
+          ref={(el) => (wallRefs.current[1] = el)}
+          name="leftWall"
+          width={roomDepth}
+          height={roomHeight}
+          depth={wallThickness}
+          wallThickness={wallThickness}
+          position={[-roomWidth * 0.5, roomHeight * 0.5, 0]}
+          rotation={[0, Math.PI * 0.5, 0]}
+          works={artworks.filter(
+            (w) => w.id !== grabbedWorkId && w.wall === "leftWall",
+          )}
+          handleEnterGrabArea={handleEnterGrabArea}
+          handleLeaveGrabArea={handleLeaveGrabArea}
+        />
 
-      {/* Partition back part */}
-      <WallMesh
-        ref={(el) => (wallRefs.current[3] = el)}
-        name="partitionBack"
-        width={roomWidth - 2.6}
-        height={roomHeight}
-        depth={wallThickness}
-        wallThickness={wallThickness}
-        position={[0, roomHeight * 0.5, -wallThickness * 0.5]}
-        rotation={[0, Math.PI, 0]}
-        works={artworks.filter(
-          (w) => w.id !== grabbedWorkId && w.wall === "partitionBack",
-        )}
-        handleEnterGrabArea={handleEnterGrabArea}
-        handleLeaveGrabArea={handleLeaveGrabArea}
-      />
+        {/* Right wall */}
+        <WallMesh
+          ref={(el) => (wallRefs.current[2] = el)}
+          name="rightWall"
+          width={roomDepth}
+          height={roomHeight}
+          depth={wallThickness}
+          wallThickness={wallThickness}
+          position={[roomWidth * 0.5, roomHeight * 0.5, 0]}
+          rotation={[0, -Math.PI * 0.5, 0]}
+          works={artworks.filter(
+            (w) => w.id !== grabbedWorkId && w.wall === "rightWall",
+          )}
+          handleEnterGrabArea={handleEnterGrabArea}
+          handleLeaveGrabArea={handleLeaveGrabArea}
+        />
 
-      {/* Partition front part */}
-      <WallMesh
-        ref={(el) => (wallRefs.current[4] = el)}
-        name="partitionFront"
-        width={roomWidth - 2.6}
-        height={roomHeight}
-        depth={wallThickness}
-        wallThickness={wallThickness}
-        position={[0, roomHeight * 0.5, wallThickness * 0.5]}
-        rotation={[0, 0, 0]}
-        works={artworks.filter(
-          (w) => w.id !== grabbedWorkId && w.wall === "partitionFront",
-        )}
-        handleEnterGrabArea={handleEnterGrabArea}
-        handleLeaveGrabArea={handleLeaveGrabArea}
-      />
+        {/* Partition back part */}
+        <WallMesh
+          ref={(el) => (wallRefs.current[3] = el)}
+          name="partitionBack"
+          width={roomWidth - 2.6}
+          height={roomHeight}
+          depth={wallThickness}
+          wallThickness={wallThickness}
+          position={[0, roomHeight * 0.5, -wallThickness * 0.5]}
+          rotation={[0, Math.PI, 0]}
+          works={artworks.filter(
+            (w) => w.id !== grabbedWorkId && w.wall === "partitionBack",
+          )}
+          handleEnterGrabArea={handleEnterGrabArea}
+          handleLeaveGrabArea={handleLeaveGrabArea}
+        />
 
-      {/* Floor */}
-      <FloorMesh
-        width={roomWidth}
-        depth={roomDepth}
-        wallThickness={wallThickness}
-      />
+        {/* Partition front part */}
+        <WallMesh
+          ref={(el) => (wallRefs.current[4] = el)}
+          name="partitionFront"
+          width={roomWidth - 2.6}
+          height={roomHeight}
+          depth={wallThickness}
+          wallThickness={wallThickness}
+          position={[0, roomHeight * 0.5, wallThickness * 0.5]}
+          rotation={[0, 0, 0]}
+          works={artworks.filter(
+            (w) => w.id !== grabbedWorkId && w.wall === "partitionFront",
+          )}
+          handleEnterGrabArea={handleEnterGrabArea}
+          handleLeaveGrabArea={handleLeaveGrabArea}
+        />
 
-      {/* Ceiling */}
-      <CeilingMesh
-        width={roomWidth}
-        depth={roomDepth}
-        position={[0, roomHeight, 0]}
-        wallThickness={wallThickness}
-      />
+        {/* Floor */}
+        <FloorMesh
+          width={roomWidth}
+          depth={roomDepth}
+          wallThickness={wallThickness}
+        />
 
-      {/* Window seat left side */}
-      <WindowSeatMesh
-        width={(roomWidth - 1.3) * 0.5}
-        height={0.6}
-        depth={0.6}
-        position={[-(1.3 + roomWidth) * 0.25, 0.3, roomDepth * 0.5 - 0.3]}
-      />
-      {/* Info paper stack */}
-      <PaperStack
-        position={[1 - roomWidth * 0.5, 0.601, roomDepth * 0.5 - 0.36]}
-        rotation={[0, -0.1, 0]}
-        onEnterGrabArea={handleEnterInfoArea}
-        onLeaveGrabArea={handleLeaveInfoArea}
-      />
+        {/* Ceiling */}
+        <CeilingMesh
+          width={roomWidth}
+          depth={roomDepth}
+          position={[0, roomHeight, 0]}
+          wallThickness={wallThickness}
+        />
 
-      {/* Window seat right side */}
-      <WindowSeatMesh
-        width={(roomWidth - 1.3) * 0.5}
-        height={0.6}
-        depth={0.6}
-        position={[(1.3 + roomWidth) * 0.25, 0.3, roomDepth * 0.5 - 0.3]}
-      />
+        {/* Window seat left side */}
+        <WindowSeatMesh
+          width={(roomWidth - 1.3) * 0.5}
+          height={0.6}
+          depth={0.6}
+          position={[-(1.3 + roomWidth) * 0.25, 0.3, roomDepth * 0.5 - 0.3]}
+        />
+        {/* Info paper stack */}
+        <PaperStack
+          position={[1 - roomWidth * 0.5, 0.601, roomDepth * 0.5 - 0.36]}
+          rotation={[0, -0.1, 0]}
+          onEnterGrabArea={handleEnterInfoArea}
+          onLeaveGrabArea={handleLeaveInfoArea}
+        />
 
-      {/* Window */}
-      <WindowMesh
-        width={roomWidth + wallThickness}
-        height={roomHeight + wallThickness}
-        depth={0.02}
-        position={[0, roomHeight * 0.5, roomDepth * 0.5 + 0.01]}
-      />
-    </group>
+        {/* Window seat right side */}
+        <WindowSeatMesh
+          width={(roomWidth - 1.3) * 0.5}
+          height={0.6}
+          depth={0.6}
+          position={[(1.3 + roomWidth) * 0.25, 0.3, roomDepth * 0.5 - 0.3]}
+        />
+
+        {/* Window */}
+        <WindowMesh
+          width={roomWidth + wallThickness}
+          height={roomHeight + wallThickness}
+          depth={0.02}
+          position={[0, roomHeight * 0.5, roomDepth * 0.5 + 0.01]}
+        />
+      </group>
+    </>
   );
 }
