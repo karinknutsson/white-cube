@@ -5,6 +5,8 @@ import canvasPaintingVertexShader from "../shaders/canvas-painting/vertex.glsl";
 import canvasPaintingFragmentShader from "../shaders/canvas-painting/fragment.glsl";
 
 export default function ArtworkMesh({ path, size }) {
+  const texture = useLoader(THREE.TextureLoader, path);
+
   const edgeStartX = 1 - 0.02 / size[0];
   const edgeStartY = 1 - 0.02 / size[1];
 
@@ -12,6 +14,7 @@ export default function ArtworkMesh({ path, size }) {
     {
       uEdgeStartX: edgeStartX,
       uEdgeStartY: edgeStartY,
+      uTexture: texture,
     },
     canvasPaintingVertexShader,
     canvasPaintingFragmentShader,
@@ -19,21 +22,19 @@ export default function ArtworkMesh({ path, size }) {
 
   extend({ CanvasPaintingMaterial });
 
-  const texture = useLoader(THREE.TextureLoader, path);
-
   return (
     <>
       {/* Test plane */}
-      <mesh position={[0, 1, 1]}>
+      {/* <mesh position={[0, 1, 1]}>
         <planeGeometry args={[size[0], size[1], 1000, 1000]} />
         <canvasPaintingMaterial />
-      </mesh>
+      </mesh> */}
 
       <group position={[0, 0, size[2] * 0.5 + 0.003]}>
         {/* Front face */}
-        <mesh position={[0, 0, size[2]]}>
-          <planeGeometry args={[size[0], size[1]]} />
-          <meshStandardMaterial map={texture} receiveShadow />
+        <mesh position={[0, 0, 1 + size[2]]}>
+          <planeGeometry args={[size[0], size[1], 1000, 1000]} />
+          <canvasPaintingMaterial />
         </mesh>
 
         {/* Back part */}
