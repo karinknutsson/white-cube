@@ -17,8 +17,8 @@ export default function ArtworkMesh({ path, size }) {
     verticesY,
   );
 
-  const edgeStartX = 1 - 0.1 / size[0];
-  const edgeStartY = 1 - 0.1 / size[1];
+  const edgeStartX = 1 - 0.001 / size[0];
+  const edgeStartY = 1 - 0.001 / size[1];
 
   const CanvasPaintingMaterial = shaderMaterial(
     {
