@@ -3,7 +3,7 @@ import * as THREE from "three";
 import useGallery from "../stores/useGallery";
 import { useThree } from "@react-three/fiber";
 import gsap from "gsap";
-import { useRef, useMemo, useState, useEffect } from "react";
+import { useRef, useMemo, useState, useEffect, use } from "react";
 import Artwork from "../artwork/Artwork";
 import { wallLabelSizes } from "../data/wallLabelSizes";
 import PaperStack from "../PaperStack";
@@ -153,7 +153,7 @@ export default function TheRoom({
   wallThickness,
   position,
 }) {
-  const { camera } = useThree();
+  const { camera, scene } = useThree();
   const raycaster = useMemo(() => new THREE.Raycaster(), []);
 
   const grabAreaId = useRef(null);
@@ -365,14 +365,6 @@ export default function TheRoom({
     gsap.to(".drop-hint-container", { duration: 0.1, opacity: 0 });
   }
 
-  // function handleEnterGrabArea(id) {
-  //   if (grabbedWorkId !== null || isInfoVisible.current) return;
-
-  //   grabAreaId.current = id;
-  //   window.addEventListener("mousedown", handleGrabRef.current);
-  //   gsap.to(".grab-hint-container", { duration: 0.1, opacity: 1 });
-  // }
-
   function handleLeaveGrabArea() {
     if (grabbedWorkId !== null) return;
 
@@ -381,19 +373,29 @@ export default function TheRoom({
     gsap.to(".grab-hint-container", { duration: 0.1, opacity: 0 });
   }
 
+  // function handleEnterGrabArea(id) {
+  //   if (grabbedWorkId !== null || isInfoVisible.current) return;
+
+  //   grabAreaId.current = id;
+  //   window.addEventListener("mousedown", handleGrabRef.current);
+  //   gsap.to(".grab-hint-container", { duration: 0.1, opacity: 1 });
+  // }
+
   function handleEnterGrabArea() {
-    if (grabbedWorkId !== null || isInfoVisible.current) return;
+    wallRefs.current.forEach((wall) => {
+      wall.updateMatrixWorld(true);
+    });
+
+    console.log("enter grab area");
+    // if (grabbedWorkId !== null || isInfoVisible.current) return;
 
     raycaster.setFromCamera(new THREE.Vector2(0, 0), camera);
-    const hits = raycaster.intersectObjects(
-      [paperStackRef.current, ...wallRefs.current],
-      true,
-    );
+    const hits = raycaster.intersectObjects(scene.children, true);
 
     console.log(hits);
 
-    window.addEventListener("mousedown", handleShowInfoRef.current);
-    gsap.to(".show-info-hint-container", { duration: 0.1, opacity: 1 });
+    // window.addEventListener("mousedown", handleShowInfoRef.current);
+    // gsap.to(".show-info-hint-container", { duration: 0.1, opacity: 1 });
   }
 
   function handleLeaveInfoArea() {
@@ -521,8 +523,8 @@ export default function TheRoom({
           ref={paperStackRef}
           position={[1 - roomWidth * 0.5, 0.601, roomDepth * 0.5 - 0.36]}
           rotation={[0, -0.1, 0]}
-          onEnterGrabArea={handleEnterInfoArea}
-          onLeaveGrabArea={handleLeaveInfoArea}
+          onEnterGrabArea={handleEnterGrabArea}
+          onLeaveGrabArea={handleLeaveGrabArea}
         />
 
         {/* Window seat right side */}

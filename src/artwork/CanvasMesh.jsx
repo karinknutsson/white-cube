@@ -38,6 +38,7 @@ export default function CanvasMesh({ path, size, id }) {
         {/* Front face */}
         <mesh
           name={id}
+          userData={{ type: "artwork" }}
           position={[0, 0, size[2] + 0.002]}
           geometry={geometry}
           castShadow
