@@ -64,11 +64,10 @@ h1 {
 }
 
 .info-content {
-  aspect-ratio: 210 / 297;
   background: white;
   max-width: 50vw;
   max-height: 60vh;
-  padding: 64px 40px;
+  padding: 40px;
   box-sizing: border-box;
 }
 
