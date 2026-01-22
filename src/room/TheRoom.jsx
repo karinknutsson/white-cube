@@ -136,7 +136,7 @@ export function WallMesh({
                 title={work.title}
                 year={work.year}
                 onEnterGrabArea={() => handleEnterGrabArea("artwork")}
-                onLeaveGrabArea={() => handleLeaveGrabArea()}
+                onLeaveGrabArea={() => handleLeaveGrabArea("artwork")}
               ></Artwork>
             );
           })}
@@ -395,36 +395,38 @@ export default function TheRoom({
       if (!isInsideGrabArea.current) return;
 
       if (hit.object.userData.type === isInsideGrabArea.current) {
-        console.log(hit.object);
-        isInsideGrabArea.current = false;
+        isInsideGrabArea.current = null;
+
+        window.addEventListener("mousedown", handleShowInfoRef.current);
+        gsap.to(".show-info-hint-container", { duration: 0.1, opacity: 1 });
       }
 
       if (hit.object.userData.type === isInsideGrabArea.current) {
-        console.log(hit.object);
         grabAreaId.current = hit.object.name;
-        isInsideGrabArea.current = false;
+        isInsideGrabArea.current = null;
+
+        window.addEventListener("mousedown", handleGrabRef.current);
+        gsap.to(".grab-hint-container", { duration: 0.1, opacity: 1 });
       }
     });
   });
 
   function handleEnterGrabArea(type) {
-    console.log(type);
     isInsideGrabArea.current = type;
     console.log("enter grab area");
   }
 
-  function handleLeaveGrabArea() {
+  function handleLeaveGrabArea(type) {
     isInsideGrabArea.current = null;
     console.log("leave grab area");
-    // window.removeEventListener("mousedown", handleGrabRef.current);
-    // gsap.to(".grab-hint-container", { duration: 0.1, opacity: 0 });
-  }
 
-  function handleLeaveInfoArea() {
-    if (grabbedWorkId !== null) return;
-
-    window.removeEventListener("mousedown", handleShowInfoRef.current);
-    gsap.to(".show-info-hint-container", { duration: 0.1, opacity: 0 });
+    if (type === "artwork") {
+      window.removeEventListener("mousedown", handleGrabRef.current);
+      gsap.to(".grab-hint-container", { duration: 0.1, opacity: 0 });
+    } else if (type === "paperStack") {
+      window.removeEventListener("mousedown", handleShowInfoRef.current);
+      gsap.to(".show-info-hint-container", { duration: 0.1, opacity: 0 });
+    }
   }
 
   return (
@@ -546,7 +548,7 @@ export default function TheRoom({
           position={[1 - roomWidth * 0.5, 0.601, roomDepth * 0.5 - 0.36]}
           rotation={[0, -0.1, 0]}
           onEnterGrabArea={() => handleEnterGrabArea("paperStack")}
-          onLeaveGrabArea={handleLeaveGrabArea}
+          onLeaveGrabArea={() => handleLeaveGrabArea("paperStack")}
         />
 
         {/* Window seat right side */}
