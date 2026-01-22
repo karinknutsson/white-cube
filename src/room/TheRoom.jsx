@@ -135,8 +135,8 @@ export function WallMesh({
                 artist={work.artist}
                 title={work.title}
                 year={work.year}
-                onEnterGrabArea={() => handleEnterGrabArea("artwork")}
-                onLeaveGrabArea={() => handleLeaveGrabArea("artwork")}
+                onEnterGrabArea={() => handleEnterGrabArea(work.id)}
+                onLeaveGrabArea={() => handleLeaveGrabArea(work.id)}
               ></Artwork>
             );
           })}
@@ -366,22 +366,6 @@ export default function TheRoom({
     gsap.to(".drop-hint-container", { duration: 0.1, opacity: 0 });
   }
 
-  // function handleLeaveGrabArea() {
-  //   if (grabbedWorkId !== null) return;
-
-  //   grabAreaId.current = null;
-  //   window.removeEventListener("mousedown", handleGrabRef.current);
-  //   gsap.to(".grab-hint-container", { duration: 0.1, opacity: 0 });
-  // }
-
-  // function handleEnterGrabArea(id) {
-  //   if (grabbedWorkId !== null || isInfoVisible.current) return;
-
-  //   grabAreaId.current = id;
-  //   window.addEventListener("mousedown", handleGrabRef.current);
-  //   gsap.to(".grab-hint-container", { duration: 0.1, opacity: 1 });
-  // }
-
   useFrame(() => {
     if (!isInsideGrabArea.current) return;
     if (grabbedWorkId !== null || isInfoVisible.current) return;
@@ -394,14 +378,16 @@ export default function TheRoom({
     hits.forEach((hit) => {
       if (!isInsideGrabArea.current) return;
 
-      if (hit.object.userData.type === isInsideGrabArea.current) {
+      console.log(hit.object);
+
+      if (hit.object.userData.type === "paperStack") {
         isInsideGrabArea.current = null;
 
         window.addEventListener("mousedown", handleShowInfoRef.current);
         gsap.to(".show-info-hint-container", { duration: 0.1, opacity: 1 });
       }
 
-      if (hit.object.userData.type === isInsideGrabArea.current) {
+      if (hit.object.name === isInsideGrabArea.current) {
         grabAreaId.current = hit.object.name;
         isInsideGrabArea.current = null;
 
@@ -411,21 +397,22 @@ export default function TheRoom({
     });
   });
 
-  function handleEnterGrabArea(type) {
-    isInsideGrabArea.current = type;
+  function handleEnterGrabArea(name) {
+    isInsideGrabArea.current = name;
     console.log("enter grab area");
+    console.log(isInsideGrabArea.current);
   }
 
-  function handleLeaveGrabArea(type) {
+  function handleLeaveGrabArea(name) {
     isInsideGrabArea.current = null;
     console.log("leave grab area");
 
-    if (type === "artwork") {
-      window.removeEventListener("mousedown", handleGrabRef.current);
-      gsap.to(".grab-hint-container", { duration: 0.1, opacity: 0 });
-    } else if (type === "paperStack") {
+    if (name === "paperStack") {
       window.removeEventListener("mousedown", handleShowInfoRef.current);
       gsap.to(".show-info-hint-container", { duration: 0.1, opacity: 0 });
+    } else {
+      window.removeEventListener("mousedown", handleGrabRef.current);
+      gsap.to(".grab-hint-container", { duration: 0.1, opacity: 0 });
     }
   }
 

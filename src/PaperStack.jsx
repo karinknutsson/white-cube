@@ -68,7 +68,7 @@ export default function PaperStack({
             infoTextContent[2]}
         </Text>
 
-        <mesh userData={{ type: "paper" }} name="paperStack">
+        <mesh userData={{ type: "paperStack" }} name="paperStack">
           <boxGeometry args={[1, 1, 1]} /> <meshBasicMaterial visible={false} />
         </mesh>
       </RigidBody>
