@@ -164,6 +164,7 @@ export default function TheRoom({
   const moveArtwork = useGallery((state) => state.moveArtwork);
 
   const wallRefs = useRef([]);
+  const paperStackRef = useRef(null);
 
   const handleDropRef = useRef(null);
   const handleGrabRef = useRef(null);
@@ -364,13 +365,13 @@ export default function TheRoom({
     gsap.to(".drop-hint-container", { duration: 0.1, opacity: 0 });
   }
 
-  function handleEnterGrabArea(id) {
-    if (grabbedWorkId !== null || isInfoVisible.current) return;
+  // function handleEnterGrabArea(id) {
+  //   if (grabbedWorkId !== null || isInfoVisible.current) return;
 
-    grabAreaId.current = id;
-    window.addEventListener("mousedown", handleGrabRef.current);
-    gsap.to(".grab-hint-container", { duration: 0.1, opacity: 1 });
-  }
+  //   grabAreaId.current = id;
+  //   window.addEventListener("mousedown", handleGrabRef.current);
+  //   gsap.to(".grab-hint-container", { duration: 0.1, opacity: 1 });
+  // }
 
   function handleLeaveGrabArea() {
     if (grabbedWorkId !== null) return;
@@ -380,8 +381,16 @@ export default function TheRoom({
     gsap.to(".grab-hint-container", { duration: 0.1, opacity: 0 });
   }
 
-  function handleEnterInfoArea() {
-    if (grabbedWorkId !== null || grabAreaId.current) return;
+  function handleEnterGrabArea() {
+    if (grabbedWorkId !== null || isInfoVisible.current) return;
+
+    raycaster.setFromCamera(new THREE.Vector2(0, 0), camera);
+    const hits = raycaster.intersectObjects(
+      [paperStackRef.current, ...wallRefs.current],
+      true,
+    );
+
+    console.log(hits);
 
     window.addEventListener("mousedown", handleShowInfoRef.current);
     gsap.to(".show-info-hint-container", { duration: 0.1, opacity: 1 });
@@ -506,8 +515,10 @@ export default function TheRoom({
           depth={0.6}
           position={[-(1.3 + roomWidth) * 0.25, 0.3, roomDepth * 0.5 - 0.3]}
         />
+
         {/* Info paper stack */}
         <PaperStack
+          ref={paperStackRef}
           position={[1 - roomWidth * 0.5, 0.601, roomDepth * 0.5 - 0.36]}
           rotation={[0, -0.1, 0]}
           onEnterGrabArea={handleEnterInfoArea}
