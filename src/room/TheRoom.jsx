@@ -375,26 +375,36 @@ export default function TheRoom({
 
     if (hits.length === 0) return;
 
+    let showInfoHint = false;
+    let showGrabHint = false;
+
     hits.forEach((hit) => {
       if (!isInsideGrabArea.current) return;
 
-      console.log(hit.object);
-
-      if (hit.object.userData.type === "paperStack") {
-        isInsideGrabArea.current = null;
-
-        window.addEventListener("mousedown", handleShowInfoRef.current);
-        gsap.to(".show-info-hint-container", { duration: 0.1, opacity: 1 });
-      }
+      if (hit.object.userData.type === "paperStack") showInfoHint = true;
 
       if (hit.object.name === isInsideGrabArea.current) {
         grabAreaId.current = hit.object.name;
-        isInsideGrabArea.current = null;
-
-        window.addEventListener("mousedown", handleGrabRef.current);
-        gsap.to(".grab-hint-container", { duration: 0.1, opacity: 1 });
+        showGrabHint = true;
+        showInfoHint = false;
       }
     });
+
+    if (showInfoHint) {
+      window.addEventListener("mousedown", handleShowInfoRef.current);
+      gsap.to(".show-info-hint-container", { duration: 0.1, opacity: 1 });
+    } else {
+      window.removeEventListener("mousedown", handleShowInfoRef.current);
+      gsap.to(".show-info-hint-container", { duration: 0.1, opacity: 0 });
+    }
+
+    if (showGrabHint) {
+      window.addEventListener("mousedown", handleGrabRef.current);
+      gsap.to(".grab-hint-container", { duration: 0.1, opacity: 1 });
+    } else {
+      window.removeEventListener("mousedown", handleGrabRef.current);
+      gsap.to(".grab-hint-container", { duration: 0.1, opacity: 0 });
+    }
   });
 
   function handleEnterGrabArea(name) {
