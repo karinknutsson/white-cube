@@ -67,6 +67,10 @@ export default function PaperStack({
             " " +
             infoTextContent[2]}
         </Text>
+
+        <mesh userData={{ type: "paper" }} name="paperStack">
+          <boxGeometry args={[1, 1, 1]} /> <meshBasicMaterial visible={false} />
+        </mesh>
       </RigidBody>
       <primitive rotation={rotation} position={position} object={scene} />
     </>
