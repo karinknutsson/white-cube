@@ -29,7 +29,7 @@ root.render(
     <MobileView>
       <div className="mobile-message-container">
         <div className="mobile-message">
-          <h1>white cube</h1>
+          <h1 className="mobile-message-title">white cube</h1>
           <p>
             white cube is an ongoing project created to visualize and plan art
             exhibitions. Mobile support will be available soon.
