@@ -1,6 +1,6 @@
 @font-face {
   font-family: "IBMPlexSans-Regular";
-  src: url("./fonts/IBMPlexSans-Regular.woff") format("woff");
+  src: url("/fonts/IBMPlexSans-Regular.woff") format("woff");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -8,7 +8,7 @@
 
 @font-face {
   font-family: "IBMPlexSans-Semibold";
-  src: url("./fonts/IBMPlexSans-SemiBold.woff") format("woff");
+  src: url("/fonts/IBMPlexSans-SemiBold.woff") format("woff");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -28,6 +28,10 @@ body,
   font-family: "IBMPlexSans-Regular", Arial, sans-serif;
 }
 
+#root > * {
+  height: 100%;
+}
+
 h1 {
   font-family: "IBMPlexSans-Semibold", Arial, sans-serif;
   margin: 0;
@@ -36,6 +40,10 @@ h1 {
 
 h1.mobile-message-title {
   font-size: 1.8rem;
+}
+
+p {
+  font-size: 0.9rem;
 }
 
 .grab-hint-container,
@@ -68,7 +76,7 @@ h1.mobile-message-title {
 
 .info-content {
   background: white;
-  max-width: 80vw;
+  max-width: 70vw;
   max-height: 60vh;
   padding: 40px;
   box-sizing: border-box;
