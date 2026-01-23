@@ -1,7 +1,7 @@
 import { RigidBody, CuboidCollider } from "@react-three/rapier";
 import * as THREE from "three";
 import useGallery from "../stores/useGallery";
-import { useThree } from "@react-three/fiber";
+import { useThree, useFrame } from "@react-three/fiber";
 import gsap from "gsap";
 import { useRef, useMemo, useState, useEffect } from "react";
 import Artwork from "../artwork/Artwork";
@@ -136,7 +136,7 @@ export function WallMesh({
                 title={work.title}
                 year={work.year}
                 onEnterGrabArea={() => handleEnterGrabArea(work.id)}
-                onLeaveGrabArea={() => handleLeaveGrabArea()}
+                onLeaveGrabArea={() => handleLeaveGrabArea(work.id)}
               ></Artwork>
             );
           })}
@@ -153,8 +153,12 @@ export default function TheRoom({
   wallThickness,
   position,
 }) {
-  const { camera } = useThree();
+  const { camera, scene } = useThree();
   const raycaster = useMemo(() => new THREE.Raycaster(), []);
+  const rayCasterPointer = useMemo(() => new THREE.Vector2(0, 0), []);
+  const lastCameraQuaternion = useRef(new THREE.Quaternion());
+  const isInsideGrabArea = useRef(null);
+  const shownHint = useRef(null);
 
   const grabAreaId = useRef(null);
   const [grabbedWorkId, setGrabbedWorkId] = useState(null);
@@ -164,6 +168,7 @@ export default function TheRoom({
   const moveArtwork = useGallery((state) => state.moveArtwork);
 
   const wallRefs = useRef([]);
+  const paperStackRef = useRef(null);
 
   const handleDropRef = useRef(null);
   const handleGrabRef = useRef(null);
@@ -189,7 +194,7 @@ export default function TheRoom({
         const artworkWidth = artwork[0].size[0];
         const artworkHeight = artwork[0].size[1];
 
-        raycaster.setFromCamera(new THREE.Vector2(0, 0), camera);
+        raycaster.setFromCamera(rayCasterPointer, camera);
         const hits = raycaster.intersectObjects(wallRefs.current, false);
 
         if (hits.length === 0) {
@@ -303,6 +308,8 @@ export default function TheRoom({
 
     handleGrabRef.current = (e) => {
       setGrabbedWorkId(grabAreaId.current);
+      shownHint.current = null;
+
       window.removeEventListener("mousedown", handleGrabRef.current);
       window.addEventListener("mousedown", handleDropRef.current);
 
@@ -364,34 +371,88 @@ export default function TheRoom({
     gsap.to(".drop-hint-container", { duration: 0.1, opacity: 0 });
   }
 
-  function handleEnterGrabArea(id) {
+  function raycastScene() {
+    if (!isInsideGrabArea.current) return;
     if (grabbedWorkId !== null || isInfoVisible.current) return;
 
-    grabAreaId.current = id;
-    window.addEventListener("mousedown", handleGrabRef.current);
-    gsap.to(".grab-hint-container", { duration: 0.1, opacity: 1 });
+    raycaster.setFromCamera(rayCasterPointer, camera);
+    const hits = raycaster.intersectObjects(scene.children, true);
+
+    if (hits.length === 0) return;
+
+    let hitCurrentFrame = null;
+
+    for (const hit of hits) {
+      if (hit.object.userData.type === "paperStack") {
+        hitCurrentFrame = "paperStack";
+
+        if (shownHint.current !== "paperStack") {
+          shownHint.current = "paperStack";
+          window.addEventListener("mousedown", handleShowInfoRef.current);
+          gsap.to(".show-info-hint-container", { duration: 0.1, opacity: 1 });
+        }
+      }
+
+      if (hit.object.userData.type === "artwork") {
+        hitCurrentFrame = "grabArtwork";
+
+        if (shownHint.current !== "grabArtwork") {
+          shownHint.current = "grabArtwork";
+          window.addEventListener("mousedown", handleGrabRef.current);
+          gsap.to(".grab-hint-container", { duration: 0.1, opacity: 1 });
+        }
+      }
+    }
+
+    if (
+      shownHint.current === "paperStack" &&
+      hitCurrentFrame !== "paperStack"
+    ) {
+      shownHint.current = null;
+      window.removeEventListener("mousedown", handleShowInfoRef.current);
+      gsap.to(".show-info-hint-container", { duration: 0.1, opacity: 0 });
+    }
+
+    if (
+      shownHint.current === "grabArtwork" &&
+      hitCurrentFrame !== "grabArtwork"
+    ) {
+      shownHint.current = null;
+      window.removeEventListener("mousedown", handleGrabRef.current);
+      gsap.to(".grab-hint-container", { duration: 0.1, opacity: 0 });
+    }
   }
 
-  function handleLeaveGrabArea() {
-    if (grabbedWorkId !== null) return;
+  useFrame(() => {
+    if (!isInsideGrabArea.current) return;
 
-    grabAreaId.current = null;
-    window.removeEventListener("mousedown", handleGrabRef.current);
-    gsap.to(".grab-hint-container", { duration: 0.1, opacity: 0 });
+    const dot = camera.quaternion.dot(lastCameraQuaternion.current);
+    const delta = 1 - Math.abs(dot);
+    if (delta < 0.0001) return;
+
+    lastCameraQuaternion.current.copy(camera.quaternion);
+
+    raycastScene();
+  });
+
+  function handleEnterGrabArea(name) {
+    isInsideGrabArea.current = name;
+    if (name !== "paperStack") grabAreaId.current = name;
+
+    raycastScene();
   }
 
-  function handleEnterInfoArea() {
-    if (grabbedWorkId !== null || grabAreaId.current) return;
+  function handleLeaveGrabArea(name) {
+    isInsideGrabArea.current = null;
+    shownHint.current = null;
 
-    window.addEventListener("mousedown", handleShowInfoRef.current);
-    gsap.to(".show-info-hint-container", { duration: 0.1, opacity: 1 });
-  }
-
-  function handleLeaveInfoArea() {
-    if (grabbedWorkId !== null) return;
-
-    window.removeEventListener("mousedown", handleShowInfoRef.current);
-    gsap.to(".show-info-hint-container", { duration: 0.1, opacity: 0 });
+    if (name === "paperStack") {
+      window.removeEventListener("mousedown", handleShowInfoRef.current);
+      gsap.to(".show-info-hint-container", { duration: 0.1, opacity: 0 });
+    } else {
+      window.removeEventListener("mousedown", handleGrabRef.current);
+      gsap.to(".grab-hint-container", { duration: 0.1, opacity: 0 });
+    }
   }
 
   return (
@@ -506,12 +567,14 @@ export default function TheRoom({
           depth={0.6}
           position={[-(1.3 + roomWidth) * 0.25, 0.3, roomDepth * 0.5 - 0.3]}
         />
+
         {/* Info paper stack */}
         <PaperStack
+          ref={paperStackRef}
           position={[1 - roomWidth * 0.5, 0.601, roomDepth * 0.5 - 0.36]}
           rotation={[0, -0.1, 0]}
-          onEnterGrabArea={handleEnterInfoArea}
-          onLeaveGrabArea={handleLeaveInfoArea}
+          onEnterGrabArea={() => handleEnterGrabArea("paperStack")}
+          onLeaveGrabArea={() => handleLeaveGrabArea("paperStack")}
         />
 
         {/* Window seat right side */}

@@ -9,6 +9,7 @@ export default function Artwork({
   type,
   path,
   size,
+  id,
   title,
   artist,
   year,
@@ -39,7 +40,7 @@ export default function Artwork({
           />
 
           {/* Meshes */}
-          {type === "canvas" && <CanvasMesh path={path} size={size} />}
+          {type === "canvas" && <CanvasMesh path={path} size={size} id={id} />}
           <WallLabel
             size={[
               wallLabelSizes.width,

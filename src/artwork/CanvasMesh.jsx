@@ -4,7 +4,7 @@ import { RoundedBoxGeometry, shaderMaterial } from "@react-three/drei";
 import canvasPaintingVertexShader from "../shaders/canvas-painting/vertex.glsl";
 import canvasPaintingFragmentShader from "../shaders/canvas-painting/fragment.glsl";
 
-export default function ArtworkMesh({ path, size }) {
+export default function CanvasMesh({ path, size, id }) {
   const texture = useLoader(THREE.TextureLoader, path);
 
   const verticesX = Math.round(size[0] * 100);
@@ -49,6 +49,12 @@ export default function ArtworkMesh({ path, size }) {
             uEdgeStartY={edgeStartY}
             transparent
           />
+        </mesh>
+
+        {/* Invisible mesh for raycasting */}
+        <mesh name={id} userData={{ type: "artwork" }}>
+          <boxGeometry args={[size[0], size[1], size[2] * 3]} />
+          <meshBasicMaterial visible={false} />
         </mesh>
 
         {/* Back part */}
