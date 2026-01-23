@@ -3,7 +3,7 @@ import * as THREE from "three";
 import useGallery from "../stores/useGallery";
 import { useThree, useFrame } from "@react-three/fiber";
 import gsap from "gsap";
-import { useRef, useMemo, useState, useEffect, use } from "react";
+import { useRef, useMemo, useState, useEffect } from "react";
 import Artwork from "../artwork/Artwork";
 import { wallLabelSizes } from "../data/wallLabelSizes";
 import PaperStack from "../PaperStack";
@@ -308,6 +308,8 @@ export default function TheRoom({
 
     handleGrabRef.current = (e) => {
       setGrabbedWorkId(grabAreaId.current);
+      shownHint.current = null;
+
       window.removeEventListener("mousedown", handleGrabRef.current);
       window.addEventListener("mousedown", handleDropRef.current);
 
@@ -369,7 +371,6 @@ export default function TheRoom({
     gsap.to(".drop-hint-container", { duration: 0.1, opacity: 0 });
   }
 
-  // useFrame(() => {
   function raycastScene() {
     if (!isInsideGrabArea.current) return;
     if (grabbedWorkId !== null || isInfoVisible.current) return;
@@ -423,6 +424,8 @@ export default function TheRoom({
   }
 
   useFrame(() => {
+    if (!isInsideGrabArea.current) return;
+
     const dot = camera.quaternion.dot(lastCameraQuaternion.current);
     const delta = 1 - Math.abs(dot);
     if (delta < 0.0001) return;
@@ -441,6 +444,7 @@ export default function TheRoom({
 
   function handleLeaveGrabArea(name) {
     isInsideGrabArea.current = null;
+    shownHint.current = null;
 
     if (name === "paperStack") {
       window.removeEventListener("mousedown", handleShowInfoRef.current);
