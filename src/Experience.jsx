@@ -8,7 +8,7 @@ import { useEffect } from "react";
 import { infoTextContent } from "./data/infoTextContent.js";
 
 export default function Experience() {
-  const perfVisible = true;
+  const perfVisible = false;
 
   useEffect(() => {
     const infoText = document.querySelector(".info-content");

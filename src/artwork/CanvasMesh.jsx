@@ -53,9 +53,8 @@ export default function CanvasMesh({ path, size, id }) {
 
         {/* Invisible mesh for raycasting */}
         <mesh name={id} userData={{ type: "artwork" }}>
-          {/* <boxGeometry args={size} /> */}
           <boxGeometry args={[size[0], size[1], size[2] * 3]} />
-          <meshBasicMaterial color="red" />
+          <meshBasicMaterial visible={false} />
         </mesh>
 
         {/* Back part */}
