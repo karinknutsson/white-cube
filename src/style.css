@@ -28,6 +28,10 @@ body,
   font-family: "IBMPlexSans-Regular", Arial, sans-serif;
 }
 
+#root > * {
+  height: 100%;
+}
+
 h1 {
   font-family: "IBMPlexSans-Semibold", Arial, sans-serif;
   margin: 0;
