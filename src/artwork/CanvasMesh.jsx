@@ -37,8 +37,6 @@ export default function CanvasMesh({ path, size, id }) {
       <group position={[0, 0, size[2] * 0.5 + 0.003]}>
         {/* Front face */}
         <mesh
-          name={id}
-          userData={{ type: "artwork" }}
           position={[0, 0, size[2] + 0.002]}
           geometry={geometry}
           castShadow
@@ -51,6 +49,13 @@ export default function CanvasMesh({ path, size, id }) {
             uEdgeStartY={edgeStartY}
             transparent
           />
+        </mesh>
+
+        {/* Invisible mesh for raycasting */}
+        <mesh name={id} userData={{ type: "artwork" }}>
+          {/* <boxGeometry args={size} /> */}
+          <boxGeometry args={[size[0], size[1], size[2] * 3]} />
+          <meshBasicMaterial color="red" />
         </mesh>
 
         {/* Back part */}

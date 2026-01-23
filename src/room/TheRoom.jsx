@@ -155,7 +155,10 @@ export default function TheRoom({
 }) {
   const { camera, scene } = useThree();
   const raycaster = useMemo(() => new THREE.Raycaster(), []);
+  const rayCasterPointer = useMemo(() => new THREE.Vector2(0, 0), []);
+  const lastCameraQuaternion = useRef(new THREE.Quaternion());
   const isInsideGrabArea = useRef(null);
+  const shownHint = useRef(null);
 
   const grabAreaId = useRef(null);
   const [grabbedWorkId, setGrabbedWorkId] = useState(null);
@@ -191,7 +194,7 @@ export default function TheRoom({
         const artworkWidth = artwork[0].size[0];
         const artworkHeight = artwork[0].size[1];
 
-        raycaster.setFromCamera(new THREE.Vector2(0, 0), camera);
+        raycaster.setFromCamera(rayCasterPointer, camera);
         const hits = raycaster.intersectObjects(wallRefs.current, false);
 
         if (hits.length === 0) {
@@ -366,56 +369,78 @@ export default function TheRoom({
     gsap.to(".drop-hint-container", { duration: 0.1, opacity: 0 });
   }
 
-  useFrame(() => {
+  // useFrame(() => {
+  function raycastScene() {
     if (!isInsideGrabArea.current) return;
     if (grabbedWorkId !== null || isInfoVisible.current) return;
 
-    raycaster.setFromCamera(new THREE.Vector2(0, 0), camera);
+    raycaster.setFromCamera(rayCasterPointer, camera);
     const hits = raycaster.intersectObjects(scene.children, true);
 
     if (hits.length === 0) return;
 
-    let showInfoHint = false;
-    let showGrabHint = false;
+    let hitCurrentFrame = null;
 
-    hits.forEach((hit) => {
-      if (!isInsideGrabArea.current) return;
+    for (const hit of hits) {
+      if (hit.object.userData.type === "paperStack") {
+        hitCurrentFrame = "paperStack";
 
-      if (hit.object.userData.type === "paperStack") showInfoHint = true;
-
-      if (hit.object.name === isInsideGrabArea.current) {
-        grabAreaId.current = hit.object.name;
-        showGrabHint = true;
-        showInfoHint = false;
+        if (shownHint.current !== "paperStack") {
+          shownHint.current = "paperStack";
+          window.addEventListener("mousedown", handleShowInfoRef.current);
+          gsap.to(".show-info-hint-container", { duration: 0.1, opacity: 1 });
+        }
       }
-    });
 
-    if (showInfoHint) {
-      window.addEventListener("mousedown", handleShowInfoRef.current);
-      gsap.to(".show-info-hint-container", { duration: 0.1, opacity: 1 });
-    } else {
+      if (hit.object.userData.type === "artwork") {
+        hitCurrentFrame = "grabArtwork";
+
+        if (shownHint.current !== "grabArtwork") {
+          shownHint.current = "grabArtwork";
+          window.addEventListener("mousedown", handleGrabRef.current);
+          gsap.to(".grab-hint-container", { duration: 0.1, opacity: 1 });
+        }
+      }
+    }
+
+    if (
+      shownHint.current === "paperStack" &&
+      hitCurrentFrame !== "paperStack"
+    ) {
+      shownHint.current = null;
       window.removeEventListener("mousedown", handleShowInfoRef.current);
       gsap.to(".show-info-hint-container", { duration: 0.1, opacity: 0 });
     }
 
-    if (showGrabHint) {
-      window.addEventListener("mousedown", handleGrabRef.current);
-      gsap.to(".grab-hint-container", { duration: 0.1, opacity: 1 });
-    } else {
+    if (
+      shownHint.current === "grabArtwork" &&
+      hitCurrentFrame !== "grabArtwork"
+    ) {
+      shownHint.current = null;
       window.removeEventListener("mousedown", handleGrabRef.current);
       gsap.to(".grab-hint-container", { duration: 0.1, opacity: 0 });
     }
+  }
+
+  useFrame(() => {
+    const dot = camera.quaternion.dot(lastCameraQuaternion.current);
+    const delta = 1 - Math.abs(dot);
+    if (delta < 0.0001) return;
+
+    lastCameraQuaternion.current.copy(camera.quaternion);
+
+    raycastScene();
   });
 
   function handleEnterGrabArea(name) {
     isInsideGrabArea.current = name;
-    console.log("enter grab area");
-    console.log(isInsideGrabArea.current);
+    if (name !== "paperStack") grabAreaId.current = name;
+
+    raycastScene();
   }
 
   function handleLeaveGrabArea(name) {
     isInsideGrabArea.current = null;
-    console.log("leave grab area");
 
     if (name === "paperStack") {
       window.removeEventListener("mousedown", handleShowInfoRef.current);
