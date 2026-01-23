@@ -70,6 +70,23 @@ h1 {
   box-sizing: border-box;
 }
 
+.mobile-message-container {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobile-message {
+  background: white;
+  max-width: 80vw;
+  max-height: 80vh;
+  padding: 40px;
+  box-sizing: border-box;
+}
+
 #grabbed-artwork-container {
   position: absolute;
   width: 100vw;
