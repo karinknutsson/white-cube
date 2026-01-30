@@ -22,7 +22,7 @@ const windowMaterial = new THREE.MeshPhysicalMaterial({
   roughness: 0,
   transmission: 1,
   transparent: true,
-  thickness: 0.02,
+  thickness: 0.006,
   ior: 1.5,
 });
 
@@ -658,12 +658,12 @@ export default function TheRoom({
         />
 
         {/* Window */}
-        {/* <WindowMesh
+        <WindowMesh
           width={roomWidth + wallThickness}
           height={roomHeight + wallThickness}
-          depth={0.02}
-          position={[0, roomHeight * 0.5, roomDepth * 0.5 + 0.01]}
-        /> */}
+          depth={0.006}
+          position={[0, roomHeight * 0.5, roomDepth * 0.5 - 0.03]}
+        />
 
         {/* Info paper stack */}
         <PaperStack
