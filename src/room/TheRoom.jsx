@@ -12,8 +12,9 @@ import { BakeShadows } from "@react-three/drei";
 const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
 
 const roomMaterial = new THREE.MeshStandardMaterial({
-  color: "#ffffff",
-  // wireframe: true,
+  // color: "#ffffff",
+  color: "#ff0000",
+  wireframe: true,
 });
 
 const windowMaterial = new THREE.MeshPhysicalMaterial({
@@ -78,7 +79,7 @@ export function WindowFrameMesh({ width, height, thickness, depth, position }) {
         geometry={boxGeometry}
         material={roomMaterial}
         scale={[width, thickness, depth]}
-        position={[0, height * 0.5 - thickness, 0]}
+        position={[0, height * 0.5 - thickness * 0.5, 0]}
         castShadow
         receiveShadow
       ></mesh>
@@ -98,7 +99,7 @@ export function WindowFrameMesh({ width, height, thickness, depth, position }) {
         geometry={boxGeometry}
         material={roomMaterial}
         scale={[thickness, height, depth]}
-        position={[width * 0.5 - thickness, 0, 0]}
+        position={[width * 0.5 - thickness * 0.5, 0, 0]}
         castShadow
         receiveShadow
       ></mesh>
@@ -611,15 +612,11 @@ export default function TheRoom({
           width={(roomWidth - 1.3) * 0.5}
           height={0.6}
           depth={0.6}
-          position={[-(1.3 + roomWidth) * 0.25, 0.3, roomDepth * 0.5 - 0.3]}
-        />
-
-        {/* Window seat right side */}
-        <WindowSeatMesh
-          width={(roomWidth - 1.3) * 0.5}
-          height={0.6}
-          depth={0.6}
-          position={[(1.3 + roomWidth) * 0.25, 0.3, roomDepth * 0.5 - 0.3]}
+          position={[
+            -(1.3 + roomWidth) * 0.25 + wallThickness * 0.5,
+            0.3,
+            roomDepth * 0.5 - 0.3,
+          ]}
         />
 
         {/* Window frame left side */}
@@ -629,19 +626,44 @@ export default function TheRoom({
           thickness={0.08}
           depth={0.05}
           position={[
-            (1.3 + roomWidth) * 0.25,
+            -(1.3 + roomWidth) * 0.25 + wallThickness * 0.5,
+            roomHeight * 0.5 + 0.3,
+            roomDepth * 0.5,
+          ]}
+        />
+
+        {/* Window seat right side */}
+        <WindowSeatMesh
+          width={(roomWidth - 1.3) * 0.5}
+          height={0.6}
+          depth={0.6}
+          position={[
+            (1.3 + roomWidth) * 0.25 - wallThickness * 0.5,
+            0.3,
+            roomDepth * 0.5 - 0.3,
+          ]}
+        />
+
+        {/* Window frame right side */}
+        <WindowFrameMesh
+          width={(roomWidth - 1.3) * 0.5}
+          height={roomHeight - 0.6}
+          thickness={0.08}
+          depth={0.05}
+          position={[
+            (1.3 + roomWidth) * 0.25 - wallThickness * 0.5,
             roomHeight * 0.5 + 0.3,
             roomDepth * 0.5,
           ]}
         />
 
         {/* Window */}
-        {/* <WindowMesh
+        <WindowMesh
           width={roomWidth + wallThickness}
           height={roomHeight + wallThickness}
           depth={0.02}
           position={[0, roomHeight * 0.5, roomDepth * 0.5 + 0.01]}
-        /> */}
+        />
 
         {/* Info paper stack */}
         <PaperStack
