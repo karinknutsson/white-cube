@@ -393,7 +393,7 @@ export default function TheRoom({
         }
       }
 
-      if (hit.object.userData.type === "artwork") {
+      if (hit.object.name.startsWith("artwork")) {
         hitCurrentFrame = "grabArtwork";
 
         if (shownHint.current !== "grabArtwork") {
