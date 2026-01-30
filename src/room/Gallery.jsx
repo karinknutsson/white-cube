@@ -18,6 +18,10 @@ export default function Gallery() {
         roomDepth={roomDepth}
         wallThickness={0.1}
         position={[0, 0, 0]}
+        doorWidth={1.2}
+        doorHeight={2.2}
+        windowSeatHeight={0.6}
+        windowSeatDepth={0.6}
       />
     </>
   );
