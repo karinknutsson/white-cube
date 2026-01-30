@@ -82,6 +82,16 @@ export function WindowFrameMesh({ width, height, thickness, depth, position }) {
         castShadow
         receiveShadow
       ></mesh>
+
+      {/* Bottom part */}
+      <mesh
+        geometry={boxGeometry}
+        material={roomMaterial}
+        scale={[width, thickness, depth]}
+        position={[0, -height * 0.5 + thickness * 0.5, 0]}
+        castShadow
+        receiveShadow
+      ></mesh>
     </RigidBody>
   );
 }
@@ -606,12 +616,12 @@ export default function TheRoom({
         />
 
         {/* Window */}
-        <WindowMesh
+        {/* <WindowMesh
           width={roomWidth + wallThickness}
           height={roomHeight + wallThickness}
           depth={0.02}
           position={[0, roomHeight * 0.5, roomDepth * 0.5 + 0.01]}
-        />
+        /> */}
 
         {/* Info paper stack */}
         <PaperStack
