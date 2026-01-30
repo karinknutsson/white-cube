@@ -70,6 +70,21 @@ export function WindowSeatMesh({ width, height, depth, position }) {
   );
 }
 
+export function WindowFrameMesh({ width, height, position }) {
+  return (
+    <RigidBody type="fixed" colliders="trimesh">
+      {/* <mesh
+        geometry={boxGeometry}
+        material={roomMaterial}
+        scale={[width, height, depth]}
+        position={position}
+        castShadow
+        receiveShadow
+      ></mesh> */}
+    </RigidBody>
+  );
+}
+
 export function WindowMesh({ width, height, depth, position }) {
   return (
     <RigidBody type="fixed" colliders="trimesh">
@@ -568,15 +583,6 @@ export default function TheRoom({
           position={[-(1.3 + roomWidth) * 0.25, 0.3, roomDepth * 0.5 - 0.3]}
         />
 
-        {/* Info paper stack */}
-        <PaperStack
-          ref={paperStackRef}
-          position={[1 - roomWidth * 0.5, 0.601, roomDepth * 0.5 - 0.36]}
-          rotation={[0, -0.1, 0]}
-          onEnterGrabArea={() => handleEnterGrabArea("paperStack")}
-          onLeaveGrabArea={() => handleLeaveGrabArea("paperStack")}
-        />
-
         {/* Window seat right side */}
         <WindowSeatMesh
           width={(roomWidth - 1.3) * 0.5}
@@ -585,12 +591,27 @@ export default function TheRoom({
           position={[(1.3 + roomWidth) * 0.25, 0.3, roomDepth * 0.5 - 0.3]}
         />
 
+        {/* Window frame left side */}
+        <WindowFrameMesh
+          width={(roomWidth - 1.3) * 0.5}
+          height={roomHeight - 0.6}
+        />
+
         {/* Window */}
         <WindowMesh
           width={roomWidth + wallThickness}
           height={roomHeight + wallThickness}
           depth={0.02}
           position={[0, roomHeight * 0.5, roomDepth * 0.5 + 0.01]}
+        />
+
+        {/* Info paper stack */}
+        <PaperStack
+          ref={paperStackRef}
+          position={[1 - roomWidth * 0.5, 0.601, roomDepth * 0.5 - 0.36]}
+          rotation={[0, -0.1, 0]}
+          onEnterGrabArea={() => handleEnterGrabArea("paperStack")}
+          onLeaveGrabArea={() => handleLeaveGrabArea("paperStack")}
         />
       </group>
     </>
