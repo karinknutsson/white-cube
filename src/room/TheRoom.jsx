@@ -383,7 +383,7 @@ export default function TheRoom({
     let hitCurrentFrame = null;
 
     for (const hit of hits) {
-      if (hit.object.userData.type === "paperStack") {
+      if (hit.object.name === "paperStack") {
         hitCurrentFrame = "paperStack";
 
         if (shownHint.current !== "paperStack") {
