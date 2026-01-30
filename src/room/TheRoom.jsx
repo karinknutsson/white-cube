@@ -92,6 +92,26 @@ export function WindowFrameMesh({ width, height, thickness, depth, position }) {
         castShadow
         receiveShadow
       ></mesh>
+
+      {/* Right part */}
+      <mesh
+        geometry={boxGeometry}
+        material={roomMaterial}
+        scale={[thickness, height, depth]}
+        position={[width * 0.5 - thickness, 0, 0]}
+        castShadow
+        receiveShadow
+      ></mesh>
+
+      {/* Left part */}
+      <mesh
+        geometry={boxGeometry}
+        material={roomMaterial}
+        scale={[thickness, height, depth]}
+        position={[-width * 0.5 + thickness * 0.5, 0, 0]}
+        castShadow
+        receiveShadow
+      ></mesh>
     </RigidBody>
   );
 }
