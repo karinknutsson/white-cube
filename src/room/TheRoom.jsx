@@ -70,17 +70,18 @@ export function WindowSeatMesh({ width, height, depth, position }) {
   );
 }
 
-export function WindowFrameMesh({ width, height, position }) {
+export function WindowFrameMesh({ width, height, thickness, depth, position }) {
   return (
-    <RigidBody type="fixed" colliders="trimesh">
-      {/* <mesh
+    <RigidBody type="fixed" colliders="trimesh" position={position}>
+      {/* Top part */}
+      <mesh
         geometry={boxGeometry}
         material={roomMaterial}
-        scale={[width, height, depth]}
-        position={position}
+        scale={[width, thickness, depth]}
+        position={[0, height * 0.5 - thickness, 0]}
         castShadow
         receiveShadow
-      ></mesh> */}
+      ></mesh>
     </RigidBody>
   );
 }
@@ -595,6 +596,13 @@ export default function TheRoom({
         <WindowFrameMesh
           width={(roomWidth - 1.3) * 0.5}
           height={roomHeight - 0.6}
+          thickness={0.08}
+          depth={0.05}
+          position={[
+            (1.3 + roomWidth) * 0.25,
+            roomHeight * 0.5 + 0.3,
+            roomDepth * 0.5,
+          ]}
         />
 
         {/* Window */}
