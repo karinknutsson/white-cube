@@ -12,9 +12,9 @@ import { BakeShadows } from "@react-three/drei";
 const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
 
 const roomMaterial = new THREE.MeshStandardMaterial({
-  // color: "#ffffff",
-  color: "#ff0000",
-  wireframe: true,
+  color: "#ffffff",
+  // color: "#ff0000",
+  // wireframe: true,
 });
 
 const windowMaterial = new THREE.MeshPhysicalMaterial({
@@ -622,13 +622,13 @@ export default function TheRoom({
         {/* Window frame left side */}
         <WindowFrameMesh
           width={(roomWidth - 1.3) * 0.5}
-          height={roomHeight - 0.6}
+          height={roomHeight - 0.6 - wallThickness * 0.5}
           thickness={0.08}
           depth={0.05}
           position={[
             -(1.3 + roomWidth) * 0.25 + wallThickness * 0.5,
-            roomHeight * 0.5 + 0.3,
-            roomDepth * 0.5,
+            roomHeight * 0.5 + 0.3 - wallThickness * 0.25,
+            roomDepth * 0.5 - 0.025,
           ]}
         />
 
@@ -647,23 +647,23 @@ export default function TheRoom({
         {/* Window frame right side */}
         <WindowFrameMesh
           width={(roomWidth - 1.3) * 0.5}
-          height={roomHeight - 0.6}
+          height={roomHeight - 0.6 - wallThickness * 0.5}
           thickness={0.08}
           depth={0.05}
           position={[
             (1.3 + roomWidth) * 0.25 - wallThickness * 0.5,
-            roomHeight * 0.5 + 0.3,
-            roomDepth * 0.5,
+            roomHeight * 0.5 + 0.3 - wallThickness * 0.25,
+            roomDepth * 0.5 - 0.025,
           ]}
         />
 
         {/* Window */}
-        <WindowMesh
+        {/* <WindowMesh
           width={roomWidth + wallThickness}
           height={roomHeight + wallThickness}
           depth={0.02}
           position={[0, roomHeight * 0.5, roomDepth * 0.5 + 0.01]}
-        />
+        /> */}
 
         {/* Info paper stack */}
         <PaperStack
