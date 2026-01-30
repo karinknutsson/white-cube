@@ -667,20 +667,24 @@ export default function TheRoom({
 
         {/* Window frame on top of door */}
         <WindowFrameMesh
-          width={doorWidth}
+          width={doorWidth - wallThickness}
           height={roomHeight - doorHeight - wallThickness * 0.5}
           thickness={0.08}
           depth={0.05}
-          position={[0, 0, roomDepth * 0.5 - 0.025]}
+          position={[
+            0,
+            doorHeight + (roomHeight - doorHeight - wallThickness * 0.5) * 0.5,
+            roomDepth * 0.5 - 0.025,
+          ]}
         />
 
         {/* Door frame */}
         <WindowFrameMesh
-          width={doorWidth}
+          width={doorWidth - wallThickness}
           height={doorHeight - wallThickness * 0.5}
           thickness={0.08}
           depth={0.05}
-          position={[0, doorHeight * 0.5, roomDepth * 0.5 - 0.025]}
+          position={[0, doorHeight * 0.5 + 0.04, roomDepth * 0.5 - 0.025]}
         />
 
         {/* Window */}

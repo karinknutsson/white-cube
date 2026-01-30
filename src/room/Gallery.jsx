@@ -19,7 +19,7 @@ export default function Gallery() {
         wallThickness={0.1}
         position={[0, 0, 0]}
         doorWidth={1.2}
-        doorHeight={2.2}
+        doorHeight={2.3}
         windowSeatHeight={0.6}
         windowSeatDepth={0.6}
       />
