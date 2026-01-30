@@ -17,6 +17,10 @@ const roomMaterial = new THREE.MeshStandardMaterial({
   // wireframe: true,
 });
 
+const windowFrameMaterial = new THREE.MeshStandardMaterial({
+  color: "#c2c2cc",
+});
+
 const windowMaterial = new THREE.MeshPhysicalMaterial({
   color: "#ffffff",
   roughness: 0,
@@ -77,7 +81,7 @@ export function WindowFrameMesh({ width, height, thickness, depth, position }) {
       {/* Top part */}
       <mesh
         geometry={boxGeometry}
-        material={roomMaterial}
+        material={windowFrameMaterial}
         scale={[width, thickness, depth]}
         position={[0, height * 0.5 - thickness * 0.5, 0]}
         castShadow
@@ -87,7 +91,7 @@ export function WindowFrameMesh({ width, height, thickness, depth, position }) {
       {/* Bottom part */}
       <mesh
         geometry={boxGeometry}
-        material={roomMaterial}
+        material={windowFrameMaterial}
         scale={[width, thickness, depth]}
         position={[0, -height * 0.5 + thickness * 0.5, 0]}
         castShadow
@@ -97,7 +101,7 @@ export function WindowFrameMesh({ width, height, thickness, depth, position }) {
       {/* Right part */}
       <mesh
         geometry={boxGeometry}
-        material={roomMaterial}
+        material={windowFrameMaterial}
         scale={[thickness, height, depth]}
         position={[width * 0.5 - thickness * 0.5, 0, 0]}
         castShadow
@@ -107,7 +111,7 @@ export function WindowFrameMesh({ width, height, thickness, depth, position }) {
       {/* Left part */}
       <mesh
         geometry={boxGeometry}
-        material={roomMaterial}
+        material={windowFrameMaterial}
         scale={[thickness, height, depth]}
         position={[-width * 0.5 + thickness * 0.5, 0, 0]}
         castShadow
