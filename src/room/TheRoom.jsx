@@ -646,12 +646,12 @@ export default function TheRoom({
         <WindowFrameMesh
           width={(roomWidth - doorWidth) * 0.5}
           height={roomHeight - windowSeatHeight - wallThickness * 0.5}
-          frameWidth={0.08}
-          depth={0.05}
+          frameWidth={windowFrameWidth}
+          depth={windowFrameDepth}
           position={[
             -(doorWidth + roomWidth) * 0.25 + wallThickness * 0.5,
             (roomHeight + windowSeatHeight) * 0.5 - wallThickness * 0.25,
-            roomDepth * 0.5 - 0.025,
+            (roomDepth - windowFrameDepth) * 0.5,
           ]}
         />
 
@@ -703,14 +703,14 @@ export default function TheRoom({
           height={
             roomHeight - doorHeight + (windowFrameWidth - wallThickness) * 0.5
           }
-          frameWidth={0.12}
-          depth={0.02}
+          frameWidth={windowFrameWidth * 1.5}
+          depth={windowFrameDepth * 0.4}
           position={[
             0,
             doorHeight +
               (roomHeight - doorHeight - wallThickness * 0.5) * 0.5 -
               0.02,
-            roomDepth * 0.5 - 0.025,
+            (roomDepth - windowFrameDepth) * 0.5,
           ]}
         />
 
@@ -718,18 +718,26 @@ export default function TheRoom({
         <WindowFrameMesh
           width={doorWidth - wallThickness}
           height={doorHeight - wallThickness * 0.5}
-          frameWidth={0.08}
-          depth={0.05}
-          position={[0, doorHeight * 0.5 + 0.04, roomDepth * 0.5 - 0.025]}
+          frameWidth={windowFrameWidth}
+          depth={windowFrameDepth}
+          position={[
+            0,
+            doorHeight * 0.5 + 0.04,
+            (roomDepth - windowFrameDepth) * 0.5,
+          ]}
         />
 
         {/* Door */}
         <WindowFrameMesh
           width={doorWidth - wallThickness}
           height={doorHeight - wallThickness * 0.5}
-          frameWidth={0.08}
+          frameWidth={windowFrameWidth * 1.5}
           depth={0.03}
-          position={[0, doorHeight * 0.5 + 0.04, roomDepth * 0.5 - 0.025]}
+          position={[
+            0,
+            doorHeight * 0.5 + 0.04,
+            (roomDepth - windowFrameDepth) * 0.5,
+          ]}
         />
 
         {/* Window */}
