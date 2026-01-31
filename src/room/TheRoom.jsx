@@ -368,6 +368,7 @@ export default function TheRoom({
       window.removeEventListener("mousedown", handleGrabRef.current);
       window.addEventListener("mousedown", handleDropRef.current);
 
+      console.log("grabbed", grabAreaId.current);
       gsap.to(".grab-hint-container", { duration: 0.1, opacity: 0 });
       gsap.to(".drop-hint-container", { duration: 0.1, opacity: 1 });
 
@@ -438,7 +439,10 @@ export default function TheRoom({
     let hitCurrentFrame = null;
 
     for (const hit of hits) {
-      if (hit.object.name === "paperStack") {
+      if (
+        hit.object.name === "paperStack" &&
+        isInsideGrabArea.current === "paperStack"
+      ) {
         hitCurrentFrame = "paperStack";
 
         if (shownHint.current !== "paperStack") {
@@ -448,7 +452,10 @@ export default function TheRoom({
         }
       }
 
-      if (hit.object.name.startsWith("artwork")) {
+      if (
+        hit.object.name === isInsideGrabArea.current &&
+        isInsideGrabArea.current !== "paperStack"
+      ) {
         hitCurrentFrame = "grabArtwork";
 
         if (shownHint.current !== "grabArtwork") {
@@ -668,12 +675,27 @@ export default function TheRoom({
         {/* Window frame on top of door */}
         <WindowFrameMesh
           width={doorWidth - wallThickness}
-          height={roomHeight - doorHeight - wallThickness * 0.5}
+          height={roomHeight - doorHeight - wallThickness * 0.5 + 0.04}
           thickness={0.08}
           depth={0.05}
           position={[
             0,
-            doorHeight + (roomHeight - doorHeight - wallThickness * 0.5) * 0.5,
+            doorHeight +
+              (roomHeight - doorHeight - wallThickness * 0.5) * 0.5 -
+              0.02,
+            roomDepth * 0.5 - 0.025,
+          ]}
+        />
+        <WindowFrameMesh
+          width={doorWidth - wallThickness}
+          height={roomHeight - doorHeight - wallThickness * 0.5 + 0.04}
+          thickness={0.12}
+          depth={0.02}
+          position={[
+            0,
+            doorHeight +
+              (roomHeight - doorHeight - wallThickness * 0.5) * 0.5 -
+              0.02,
             roomDepth * 0.5 - 0.025,
           ]}
         />
@@ -692,7 +714,7 @@ export default function TheRoom({
           width={roomWidth + wallThickness}
           height={roomHeight + wallThickness}
           depth={0.006}
-          position={[0, roomHeight * 0.5, roomDepth * 0.5 - 0.03]}
+          position={[0, roomHeight * 0.5, roomDepth * 0.5 - 0.02]}
         />
 
         {/* Info paper stack */}
