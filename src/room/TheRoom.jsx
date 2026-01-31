@@ -8,13 +8,12 @@ import Artwork from "../artwork/Artwork";
 import { wallLabelSizes } from "../data/wallLabelSizes";
 import PaperStack from "../PaperStack";
 import { BakeShadows } from "@react-three/drei";
+import GlassSphere from "../objects/GlassSphere";
 
 const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
 
 const roomMaterial = new THREE.MeshStandardMaterial({
   color: "#ffffff",
-  // color: "#ff0000",
-  // wireframe: true,
 });
 
 const windowFrameMaterial = new THREE.MeshStandardMaterial({
@@ -761,6 +760,9 @@ export default function TheRoom({
           onEnterGrabArea={() => handleEnterGrabArea("paperStack")}
           onLeaveGrabArea={() => handleLeaveGrabArea("paperStack")}
         />
+
+        {/* Glass sphere */}
+        <GlassSphere position={[0, 1, 1]} />
       </group>
     </>
   );
