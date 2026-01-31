@@ -100,7 +100,7 @@ export default function Player() {
     direction.normalize();
     direction.applyEuler(camera.rotation);
 
-    const speed = 5;
+    const speed = 1;
 
     bodyRef.current.setLinvel(
       {
