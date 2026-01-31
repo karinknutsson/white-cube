@@ -22,7 +22,7 @@ export default function Gallery() {
         doorHeight={2.3}
         windowSeatHeight={0.6}
         windowSeatDepth={0.6}
-        windowFrameThickness={0.08}
+        windowFrameWidth={0.08}
         windowFrameDepth={0.05}
       />
     </>

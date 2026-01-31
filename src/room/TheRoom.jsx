@@ -75,15 +75,21 @@ export function WindowSeatMesh({ width, height, depth, position }) {
   );
 }
 
-export function WindowFrameMesh({ width, height, thickness, depth, position }) {
+export function WindowFrameMesh({
+  width,
+  height,
+  frameWidth,
+  depth,
+  position,
+}) {
   return (
     <RigidBody type="fixed" colliders="trimesh" position={position}>
       {/* Top part */}
       <mesh
         geometry={boxGeometry}
         material={windowFrameMaterial}
-        scale={[width, thickness, depth]}
-        position={[0, height * 0.5 - thickness * 0.5, 0]}
+        scale={[width, frameWidth, depth]}
+        position={[0, height * 0.5 - frameWidth * 0.5, 0]}
         castShadow
         receiveShadow
       ></mesh>
@@ -92,8 +98,8 @@ export function WindowFrameMesh({ width, height, thickness, depth, position }) {
       <mesh
         geometry={boxGeometry}
         material={windowFrameMaterial}
-        scale={[width, thickness, depth]}
-        position={[0, -height * 0.5 + thickness * 0.5, 0]}
+        scale={[width, frameWidth, depth]}
+        position={[0, -height * 0.5 + frameWidth * 0.5, 0]}
         castShadow
         receiveShadow
       ></mesh>
@@ -102,8 +108,8 @@ export function WindowFrameMesh({ width, height, thickness, depth, position }) {
       <mesh
         geometry={boxGeometry}
         material={windowFrameMaterial}
-        scale={[thickness, height, depth]}
-        position={[width * 0.5 - thickness * 0.5, 0, 0]}
+        scale={[frameWidth, height, depth]}
+        position={[width * 0.5 - frameWidth * 0.5, 0, 0]}
         castShadow
         receiveShadow
       ></mesh>
@@ -112,8 +118,8 @@ export function WindowFrameMesh({ width, height, thickness, depth, position }) {
       <mesh
         geometry={boxGeometry}
         material={windowFrameMaterial}
-        scale={[thickness, height, depth]}
-        position={[-width * 0.5 + thickness * 0.5, 0, 0]}
+        scale={[frameWidth, height, depth]}
+        position={[-width * 0.5 + frameWidth * 0.5, 0, 0]}
         castShadow
         receiveShadow
       ></mesh>
@@ -207,7 +213,7 @@ export default function TheRoom({
   doorHeight,
   windowSeatHeight,
   windowSeatDepth,
-  windowFrameThickness,
+  windowFrameWidth,
   windowFrameDepth,
 }) {
   const { camera, scene } = useThree();
@@ -640,7 +646,7 @@ export default function TheRoom({
         <WindowFrameMesh
           width={(roomWidth - doorWidth) * 0.5}
           height={roomHeight - windowSeatHeight - wallThickness * 0.5}
-          thickness={0.08}
+          frameWidth={0.08}
           depth={0.05}
           position={[
             -(doorWidth + roomWidth) * 0.25 + wallThickness * 0.5,
@@ -665,7 +671,7 @@ export default function TheRoom({
         <WindowFrameMesh
           width={(roomWidth - doorWidth) * 0.5}
           height={roomHeight - windowSeatHeight - wallThickness * 0.5}
-          thickness={windowFrameThickness}
+          frameWidth={windowFrameWidth}
           depth={windowFrameDepth}
           position={[
             (doorWidth + roomWidth) * 0.25 - wallThickness * 0.5,
@@ -678,26 +684,26 @@ export default function TheRoom({
         <WindowFrameMesh
           width={doorWidth - wallThickness}
           height={
-            roomHeight -
-            doorHeight +
-            (windowFrameThickness - wallThickness) * 0.5
+            roomHeight - doorHeight + (windowFrameWidth - wallThickness) * 0.5
           }
-          thickness={windowFrameThickness}
-          depth={0.05}
+          frameWidth={windowFrameWidth}
+          depth={windowFrameDepth}
           position={[
             0,
             doorHeight +
               (roomHeight - doorHeight - wallThickness * 0.5) * 0.5 -
               0.02,
-            roomDepth * 0.5 - 0.025,
+            (roomDepth - windowFrameDepth) * 0.5,
           ]}
         />
 
         {/* Inner window frame on top of door */}
         <WindowFrameMesh
           width={doorWidth - wallThickness}
-          height={roomHeight - doorHeight - wallThickness * 0.5 + 0.04}
-          thickness={0.12}
+          height={
+            roomHeight - doorHeight + (windowFrameWidth - wallThickness) * 0.5
+          }
+          frameWidth={0.12}
           depth={0.02}
           position={[
             0,
@@ -712,7 +718,7 @@ export default function TheRoom({
         <WindowFrameMesh
           width={doorWidth - wallThickness}
           height={doorHeight - wallThickness * 0.5}
-          thickness={0.08}
+          frameWidth={0.08}
           depth={0.05}
           position={[0, doorHeight * 0.5 + 0.04, roomDepth * 0.5 - 0.025]}
         />
@@ -721,7 +727,7 @@ export default function TheRoom({
         <WindowFrameMesh
           width={doorWidth - wallThickness}
           height={doorHeight - wallThickness * 0.5}
-          thickness={0.08}
+          frameWidth={0.08}
           depth={0.03}
           position={[0, doorHeight * 0.5 + 0.04, roomDepth * 0.5 - 0.025]}
         />
