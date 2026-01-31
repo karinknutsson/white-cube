@@ -215,6 +215,7 @@ export default function TheRoom({
   windowSeatDepth,
   windowFrameWidth,
   windowFrameDepth,
+  doorDepth,
 }) {
   const { camera, scene } = useThree();
   const raycaster = useMemo(() => new THREE.Raycaster(), []);
@@ -733,14 +734,14 @@ export default function TheRoom({
 
         {/* Door */}
         <WindowFrameMesh
-          width={doorWidth - wallThickness}
-          height={doorHeight - wallThickness * 0.5}
+          width={doorWidth - wallThickness - 0.04}
+          height={doorHeight - wallThickness * 0.5 - 0.04}
           frameWidth={windowFrameWidth * 1.5}
-          depth={0.03}
+          depth={doorDepth}
           position={[
             0,
-            doorHeight * 0.5 + 0.04,
-            (roomDepth - windowFrameDepth) * 0.5,
+            (doorHeight + windowFrameWidth) * 0.5 - 0.02,
+            (roomDepth - windowFrameDepth) * 0.5 - doorDepth * 2,
           ]}
         />
 

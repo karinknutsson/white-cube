@@ -24,6 +24,7 @@ export default function Gallery() {
         windowSeatDepth={0.6}
         windowFrameWidth={0.08}
         windowFrameDepth={0.05}
+        doorDepth={0.02}
       />
     </>
   );
