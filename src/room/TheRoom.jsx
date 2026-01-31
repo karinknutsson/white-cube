@@ -755,14 +755,25 @@ export default function TheRoom({
         {/* Info paper stack */}
         <PaperStack
           ref={paperStackRef}
-          position={[1 - roomWidth * 0.5, 0.601, roomDepth * 0.5 - 0.36]}
+          position={[
+            1 - roomWidth * 0.5,
+            windowSeatHeight + 0.01,
+            roomDepth * 0.5 - (windowSeatDepth * 0.5 + 0.06),
+          ]}
           rotation={[0, -0.1, 0]}
           onEnterGrabArea={() => handleEnterGrabArea("paperStack")}
           onLeaveGrabArea={() => handleLeaveGrabArea("paperStack")}
         />
 
         {/* Glass sphere */}
-        <GlassSphere position={[0, 1, 1]} />
+        <GlassSphere
+          size={0.1}
+          position={[
+            roomWidth * 0.5 - 1,
+            windowSeatHeight + 0.1,
+            roomDepth * 0.5 - (windowSeatDepth * 0.5 + 0.06),
+          ]}
+        />
       </group>
     </>
   );
