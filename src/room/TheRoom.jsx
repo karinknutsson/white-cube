@@ -13,7 +13,12 @@ const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
 
 const roomMaterial = new THREE.MeshStandardMaterial({
   color: "#ffffff",
+  // color: "#ff0000",
   // wireframe: true,
+});
+
+const windowFrameMaterial = new THREE.MeshStandardMaterial({
+  color: "#c2c2cc",
 });
 
 const windowMaterial = new THREE.MeshPhysicalMaterial({
@@ -21,7 +26,7 @@ const windowMaterial = new THREE.MeshPhysicalMaterial({
   roughness: 0,
   transmission: 1,
   transparent: true,
-  thickness: 0.02,
+  thickness: 0.006,
   ior: 1.5,
 });
 
@@ -63,6 +68,58 @@ export function WindowSeatMesh({ width, height, depth, position }) {
         material={roomMaterial}
         scale={[width, height, depth]}
         position={position}
+        castShadow
+        receiveShadow
+      ></mesh>
+    </RigidBody>
+  );
+}
+
+export function WindowFrameMesh({
+  width,
+  height,
+  frameWidth,
+  depth,
+  position,
+}) {
+  return (
+    <RigidBody type="fixed" colliders="trimesh" position={position}>
+      {/* Top part */}
+      <mesh
+        geometry={boxGeometry}
+        material={windowFrameMaterial}
+        scale={[width, frameWidth, depth]}
+        position={[0, height * 0.5 - frameWidth * 0.5, 0]}
+        castShadow
+        receiveShadow
+      ></mesh>
+
+      {/* Bottom part */}
+      <mesh
+        geometry={boxGeometry}
+        material={windowFrameMaterial}
+        scale={[width, frameWidth, depth]}
+        position={[0, -height * 0.5 + frameWidth * 0.5, 0]}
+        castShadow
+        receiveShadow
+      ></mesh>
+
+      {/* Right part */}
+      <mesh
+        geometry={boxGeometry}
+        material={windowFrameMaterial}
+        scale={[frameWidth, height, depth]}
+        position={[width * 0.5 - frameWidth * 0.5, 0, 0]}
+        castShadow
+        receiveShadow
+      ></mesh>
+
+      {/* Left part */}
+      <mesh
+        geometry={boxGeometry}
+        material={windowFrameMaterial}
+        scale={[frameWidth, height, depth]}
+        position={[-width * 0.5 + frameWidth * 0.5, 0, 0]}
         castShadow
         receiveShadow
       ></mesh>
@@ -152,6 +209,13 @@ export default function TheRoom({
   roomDepth,
   wallThickness,
   position,
+  doorWidth,
+  doorHeight,
+  windowSeatHeight,
+  windowSeatDepth,
+  windowFrameWidth,
+  windowFrameDepth,
+  doorDepth,
 }) {
   const { camera, scene } = useThree();
   const raycaster = useMemo(() => new THREE.Raycaster(), []);
@@ -313,6 +377,7 @@ export default function TheRoom({
       window.removeEventListener("mousedown", handleGrabRef.current);
       window.addEventListener("mousedown", handleDropRef.current);
 
+      console.log("grabbed", grabAreaId.current);
       gsap.to(".grab-hint-container", { duration: 0.1, opacity: 0 });
       gsap.to(".drop-hint-container", { duration: 0.1, opacity: 1 });
 
@@ -383,7 +448,10 @@ export default function TheRoom({
     let hitCurrentFrame = null;
 
     for (const hit of hits) {
-      if (hit.object.name === "paperStack") {
+      if (
+        hit.object.name === "paperStack" &&
+        isInsideGrabArea.current === "paperStack"
+      ) {
         hitCurrentFrame = "paperStack";
 
         if (shownHint.current !== "paperStack") {
@@ -393,7 +461,10 @@ export default function TheRoom({
         }
       }
 
-      if (hit.object.name.startsWith("artwork")) {
+      if (
+        hit.object.name === isInsideGrabArea.current &&
+        isInsideGrabArea.current !== "paperStack"
+      ) {
         hitCurrentFrame = "grabArtwork";
 
         if (shownHint.current !== "grabArtwork") {
@@ -562,10 +633,124 @@ export default function TheRoom({
 
         {/* Window seat left side */}
         <WindowSeatMesh
-          width={(roomWidth - 1.3) * 0.5}
-          height={0.6}
-          depth={0.6}
-          position={[-(1.3 + roomWidth) * 0.25, 0.3, roomDepth * 0.5 - 0.3]}
+          width={(roomWidth - doorWidth) * 0.5}
+          height={windowSeatHeight}
+          depth={windowSeatDepth}
+          position={[
+            -(doorWidth + roomWidth) * 0.25 + wallThickness * 0.5,
+            windowSeatHeight * 0.5,
+            (roomDepth - windowSeatDepth) * 0.5,
+          ]}
+        />
+
+        {/* Window frame left side */}
+        <WindowFrameMesh
+          width={(roomWidth - doorWidth) * 0.5}
+          height={roomHeight - windowSeatHeight - wallThickness * 0.5}
+          frameWidth={windowFrameWidth}
+          depth={windowFrameDepth}
+          position={[
+            -(doorWidth + roomWidth) * 0.25 + wallThickness * 0.5,
+            (roomHeight + windowSeatHeight) * 0.5 - wallThickness * 0.25,
+            (roomDepth - windowFrameDepth) * 0.5,
+          ]}
+        />
+
+        {/* Window seat right side */}
+        <WindowSeatMesh
+          width={(roomWidth - doorWidth) * 0.5}
+          height={windowSeatHeight}
+          depth={windowSeatDepth}
+          position={[
+            (doorWidth + roomWidth) * 0.25 - wallThickness * 0.5,
+            windowSeatHeight * 0.5,
+            (roomDepth - windowSeatDepth) * 0.5,
+          ]}
+        />
+
+        {/* Window frame right side */}
+        <WindowFrameMesh
+          width={(roomWidth - doorWidth) * 0.5}
+          height={roomHeight - windowSeatHeight - wallThickness * 0.5}
+          frameWidth={windowFrameWidth}
+          depth={windowFrameDepth}
+          position={[
+            (doorWidth + roomWidth) * 0.25 - wallThickness * 0.5,
+            (roomHeight + windowSeatHeight) * 0.5 - wallThickness * 0.25,
+            (roomDepth - windowFrameDepth) * 0.5,
+          ]}
+        />
+
+        {/* Window frame on top of door */}
+        <WindowFrameMesh
+          width={doorWidth - wallThickness}
+          height={
+            roomHeight - doorHeight + (windowFrameWidth - wallThickness) * 0.5
+          }
+          frameWidth={windowFrameWidth}
+          depth={windowFrameDepth}
+          position={[
+            0,
+            doorHeight +
+              (roomHeight -
+                doorHeight -
+                (wallThickness + windowFrameWidth) * 0.5) *
+                0.5,
+            (roomDepth - windowFrameDepth) * 0.5,
+          ]}
+        />
+
+        {/* Inner window frame on top of door */}
+        <WindowFrameMesh
+          width={doorWidth - wallThickness}
+          height={
+            roomHeight - doorHeight + (windowFrameWidth - wallThickness) * 0.5
+          }
+          frameWidth={windowFrameWidth * 1.5}
+          depth={windowFrameDepth * 0.4}
+          position={[
+            0,
+            doorHeight +
+              (roomHeight -
+                doorHeight -
+                (wallThickness + windowFrameWidth) * 0.5) *
+                0.5,
+            (roomDepth - windowFrameDepth) * 0.5,
+          ]}
+        />
+
+        {/* Door frame */}
+        <WindowFrameMesh
+          width={doorWidth - wallThickness}
+          height={doorHeight - wallThickness * 0.5}
+          frameWidth={windowFrameWidth}
+          depth={windowFrameDepth}
+          position={[
+            0,
+            (doorHeight + windowFrameWidth) * 0.5,
+            (roomDepth - windowFrameDepth) * 0.5,
+          ]}
+        />
+
+        {/* Door */}
+        <WindowFrameMesh
+          width={doorWidth - wallThickness - 0.04}
+          height={doorHeight - wallThickness * 0.5 - 0.04}
+          frameWidth={windowFrameWidth * 1.5}
+          depth={doorDepth}
+          position={[
+            0,
+            (doorHeight + windowFrameWidth) * 0.5 - 0.02,
+            (roomDepth - windowFrameDepth) * 0.5 - doorDepth * 2,
+          ]}
+        />
+
+        {/* Window */}
+        <WindowMesh
+          width={roomWidth + wallThickness}
+          height={roomHeight + wallThickness}
+          depth={0.006}
+          position={[0, roomHeight * 0.5, roomDepth * 0.5 - 0.02]}
         />
 
         {/* Info paper stack */}
@@ -575,22 +760,6 @@ export default function TheRoom({
           rotation={[0, -0.1, 0]}
           onEnterGrabArea={() => handleEnterGrabArea("paperStack")}
           onLeaveGrabArea={() => handleLeaveGrabArea("paperStack")}
-        />
-
-        {/* Window seat right side */}
-        <WindowSeatMesh
-          width={(roomWidth - 1.3) * 0.5}
-          height={0.6}
-          depth={0.6}
-          position={[(1.3 + roomWidth) * 0.25, 0.3, roomDepth * 0.5 - 0.3]}
-        />
-
-        {/* Window */}
-        <WindowMesh
-          width={roomWidth + wallThickness}
-          height={roomHeight + wallThickness}
-          depth={0.02}
-          position={[0, roomHeight * 0.5, roomDepth * 0.5 + 0.01]}
         />
       </group>
     </>
