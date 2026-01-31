@@ -207,6 +207,8 @@ export default function TheRoom({
   doorHeight,
   windowSeatHeight,
   windowSeatDepth,
+  windowFrameThickness,
+  windowFrameDepth,
 }) {
   const { camera, scene } = useThree();
   const raycaster = useMemo(() => new THREE.Raycaster(), []);
@@ -663,20 +665,24 @@ export default function TheRoom({
         <WindowFrameMesh
           width={(roomWidth - doorWidth) * 0.5}
           height={roomHeight - windowSeatHeight - wallThickness * 0.5}
-          thickness={0.08}
-          depth={0.05}
+          thickness={windowFrameThickness}
+          depth={windowFrameDepth}
           position={[
             (doorWidth + roomWidth) * 0.25 - wallThickness * 0.5,
             (roomHeight + windowSeatHeight) * 0.5 - wallThickness * 0.25,
-            roomDepth * 0.5 - 0.025,
+            (roomDepth - windowFrameDepth) * 0.5,
           ]}
         />
 
         {/* Window frame on top of door */}
         <WindowFrameMesh
           width={doorWidth - wallThickness}
-          height={roomHeight - doorHeight - wallThickness * 0.5 + 0.04}
-          thickness={0.08}
+          height={
+            roomHeight -
+            doorHeight +
+            (windowFrameThickness - wallThickness) * 0.5
+          }
+          thickness={windowFrameThickness}
           depth={0.05}
           position={[
             0,
@@ -686,6 +692,8 @@ export default function TheRoom({
             roomDepth * 0.5 - 0.025,
           ]}
         />
+
+        {/* Inner window frame on top of door */}
         <WindowFrameMesh
           width={doorWidth - wallThickness}
           height={roomHeight - doorHeight - wallThickness * 0.5 + 0.04}
@@ -706,6 +714,15 @@ export default function TheRoom({
           height={doorHeight - wallThickness * 0.5}
           thickness={0.08}
           depth={0.05}
+          position={[0, doorHeight * 0.5 + 0.04, roomDepth * 0.5 - 0.025]}
+        />
+
+        {/* Door */}
+        <WindowFrameMesh
+          width={doorWidth - wallThickness}
+          height={doorHeight - wallThickness * 0.5}
+          thickness={0.08}
+          depth={0.03}
           position={[0, doorHeight * 0.5 + 0.04, roomDepth * 0.5 - 0.025]}
         />
 
