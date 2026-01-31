@@ -691,8 +691,10 @@ export default function TheRoom({
           position={[
             0,
             doorHeight +
-              (roomHeight - doorHeight - wallThickness * 0.5) * 0.5 -
-              0.02,
+              (roomHeight -
+                doorHeight -
+                (wallThickness + windowFrameWidth) * 0.5) *
+                0.5,
             (roomDepth - windowFrameDepth) * 0.5,
           ]}
         />
@@ -708,8 +710,10 @@ export default function TheRoom({
           position={[
             0,
             doorHeight +
-              (roomHeight - doorHeight - wallThickness * 0.5) * 0.5 -
-              0.02,
+              (roomHeight -
+                doorHeight -
+                (wallThickness + windowFrameWidth) * 0.5) *
+                0.5,
             (roomDepth - windowFrameDepth) * 0.5,
           ]}
         />
@@ -722,7 +726,7 @@ export default function TheRoom({
           depth={windowFrameDepth}
           position={[
             0,
-            doorHeight * 0.5 + 0.04,
+            (doorHeight + windowFrameWidth) * 0.5,
             (roomDepth - windowFrameDepth) * 0.5,
           ]}
         />
