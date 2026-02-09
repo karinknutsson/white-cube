@@ -23,12 +23,12 @@ export default function Experience() {
 
   return (
     <>
-      {perfVisible && <Perf position="top-left" />}
+      {/* {perfVisible && <Perf position="top-left" />} */}
 
       <Lights />
 
-      <Physics debug>
-        {/* <Physics> */}
+      {/* <Physics debug> */}
+      <Physics>
         <Environment files="./hdr/qwantani_dusk_2_puresky_1k.hdr" background />
 
         <Gallery />

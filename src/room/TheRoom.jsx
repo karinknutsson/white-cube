@@ -377,7 +377,6 @@ export default function TheRoom({
       window.removeEventListener("mousedown", handleGrabRef.current);
       window.addEventListener("mousedown", handleDropRef.current);
 
-      console.log("grabbed", grabAreaId.current);
       gsap.to(".grab-hint-container", { duration: 0.1, opacity: 0 });
       gsap.to(".drop-hint-container", { duration: 0.1, opacity: 1 });
 
@@ -414,9 +413,11 @@ export default function TheRoom({
       gsap.to(".show-sphere-hint-container", { duration: 0.1, opacity: 0 });
 
       setIsFloating(true);
+      console.log("start floating");
 
       setTimeout(() => {
         setIsFloating(false);
+        console.log("stop floating");
       }, 10000);
     };
   }, []);
@@ -487,7 +488,8 @@ export default function TheRoom({
 
       if (
         hit.object.name === isInsideGrabArea.current &&
-        isInsideGrabArea.current !== "paperStack"
+        isInsideGrabArea.current !== "paperStack" &&
+        isInsideGrabArea.current !== "glassSphere"
       ) {
         hitCurrentFrame = "grabArtwork";
 
@@ -540,7 +542,6 @@ export default function TheRoom({
   });
 
   function handleEnterGrabArea(name) {
-    console.log("enter grab area", name);
     isInsideGrabArea.current = name;
     if (name !== "paperStack" && name !== "glassSphere")
       grabAreaId.current = name;
