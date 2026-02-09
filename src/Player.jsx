@@ -3,11 +3,13 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { PointerLockControls } from "@react-three/drei";
+import useGallery from "./stores/useGallery";
 
 export default function Player() {
   const { camera } = useThree();
   const bodyRef = useRef();
   const controlsRef = useRef();
+  const { isFloating } = useGallery();
 
   const move = useRef({
     forward: false,
@@ -133,6 +135,7 @@ export default function Player() {
         colliders={false}
         mass={1}
         enabledRotations={[false, false, false]}
+        gravityScale={isFloating ? 0 : 1}
       >
         <CapsuleCollider args={[0.5, 0.3]} />
         <CapsuleCollider args={[0.5, 0.4]} sensor />

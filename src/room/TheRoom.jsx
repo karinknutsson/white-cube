@@ -412,6 +412,12 @@ export default function TheRoom({
     handleClickSphereRef.current = (e) => {
       window.removeEventListener("mousedown", handleClickSphereRef.current);
       gsap.to(".show-sphere-hint-container", { duration: 0.1, opacity: 0 });
+
+      setIsFloating(true);
+
+      setTimeout(() => {
+        setIsFloating(false);
+      }, 10000);
     };
   }, []);
 
