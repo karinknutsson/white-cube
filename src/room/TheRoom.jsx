@@ -550,6 +550,9 @@ export default function TheRoom({
     if (name === "paperStack") {
       window.removeEventListener("mousedown", handleShowInfoRef.current);
       gsap.to(".show-info-hint-container", { duration: 0.1, opacity: 0 });
+    } else if (name === "glassSphere") {
+      window.removeEventListener("mousedown", handleClickSphereRef.current);
+      gsap.to(".show-sphere-hint-container", { duration: 0.1, opacity: 0 });
     } else {
       window.removeEventListener("mousedown", handleGrabRef.current);
       gsap.to(".grab-hint-container", { duration: 0.1, opacity: 0 });
