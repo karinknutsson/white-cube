@@ -504,6 +504,15 @@ export default function TheRoom({
     }
 
     if (
+      shownHint.current === "glassSphere" &&
+      hitCurrentFrame !== "glassSphere"
+    ) {
+      shownHint.current = null;
+      window.removeEventListener("mousedown", handleClickSphereRef.current);
+      gsap.to(".show-sphere-hint-container", { duration: 0.1, opacity: 0 });
+    }
+
+    if (
       shownHint.current === "grabArtwork" &&
       hitCurrentFrame !== "grabArtwork"
     ) {
@@ -526,6 +535,7 @@ export default function TheRoom({
   });
 
   function handleEnterGrabArea(name) {
+    console.log("enter grab area", name);
     isInsideGrabArea.current = name;
     if (name !== "paperStack" && name !== "glassSphere")
       grabAreaId.current = name;

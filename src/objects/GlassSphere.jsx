@@ -7,16 +7,15 @@ export default function GlassSphere({
   onLeaveGrabArea,
 }) {
   return (
-    <RigidBody
-      type="dynamic"
-      colliders={false}
-      position={position}
-      onIntersectionEnter={onEnterGrabArea}
-      onIntersectionExit={onLeaveGrabArea}
-    >
+    <RigidBody type="dynamic" colliders={false} position={position}>
       {/* Colliders */}
       <BallCollider args={[size]} />
-      <BallCollider args={[0.5]} sensor />
+      <BallCollider
+        args={[0.5]}
+        sensor
+        onIntersectionEnter={onEnterGrabArea}
+        onIntersectionExit={onLeaveGrabArea}
+      />
 
       {/* Sphere mesh */}
       <mesh name="glassSphere">
