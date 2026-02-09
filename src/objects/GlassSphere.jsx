@@ -1,8 +1,19 @@
 import { RigidBody, BallCollider } from "@react-three/rapier";
 
-export default function GlassSphere({ size, position }) {
+export default function GlassSphere({
+  size,
+  position,
+  onEnterGrabArea,
+  onLeaveGrabArea,
+}) {
   return (
-    <RigidBody type="dynamic" colliders={false} position={position}>
+    <RigidBody
+      type="dynamic"
+      colliders={false}
+      position={position}
+      onIntersectionEnter={onEnterGrabArea}
+      onIntersectionExit={onLeaveGrabArea}
+    >
       <BallCollider args={[size]} />
       <BallCollider args={[0.5]} sensor />
       <mesh>
