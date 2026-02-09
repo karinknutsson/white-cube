@@ -418,7 +418,7 @@ export default function TheRoom({
       setTimeout(() => {
         setIsFloating(false);
         console.log("stop floating");
-      }, 10000);
+      }, 60000);
     };
   }, []);
 
