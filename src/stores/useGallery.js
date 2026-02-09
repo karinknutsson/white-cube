@@ -16,6 +16,16 @@ export default create(
             a.id === id ? { ...a, ...updates } : a,
           ),
         })),
+
+      /**
+       * No gravity state
+       */
+      isFloating: false,
+
+      setIsFloating: (value) =>
+        set((_) => ({
+          isFloating: value,
+        })),
     };
   }),
 );

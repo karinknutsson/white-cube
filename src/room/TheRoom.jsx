@@ -227,8 +227,7 @@ export default function TheRoom({
   const [grabbedWorkId, setGrabbedWorkId] = useState(null);
   const [bakeKey, setBakeKey] = useState(0);
 
-  const artworks = useGallery((state) => state.artworks);
-  const moveArtwork = useGallery((state) => state.moveArtwork);
+  const { artworks, moveArtwork, isFloating, setIsFloating } = useGallery();
 
   const wallRefs = useRef([]);
   const paperStackRef = useRef(null);
