@@ -239,6 +239,8 @@ export default function TheRoom({
   const handleHideInfoRef = useRef(null);
   const handleShowInfoRef = useRef(null);
 
+  const handleClickSphereRef = useRef(null);
+
   const isInfoVisible = useRef(false);
 
   const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
@@ -407,6 +409,11 @@ export default function TheRoom({
       gsap.to("#info-container", { duration: 0.1, opacity: 0 });
       gsap.to(".hide-info-hint-container", { duration: 0.1, opacity: 0 });
     };
+
+    handleClickSphereRef.current = (e) => {
+      window.removeEventListener("mousedown", handleClickSphereRef.current);
+      gsap.to(".show-sphere-hint-container", { duration: 0.1, opacity: 0 });
+    };
   }, []);
 
   useEffect(() => {
@@ -461,6 +468,19 @@ export default function TheRoom({
       }
 
       if (
+        hit.object.name === "glassSphere" &&
+        isInsideGrabArea.current === "glassSphere"
+      ) {
+        hitCurrentFrame = "glassSphere";
+
+        if (shownHint.current !== "glassSphere") {
+          shownHint.current = "glassSphere";
+          window.addEventListener("mousedown", handleClickSphereRef.current);
+          gsap.to(".show-sphere-hint-container", { duration: 0.1, opacity: 1 });
+        }
+      }
+
+      if (
         hit.object.name === isInsideGrabArea.current &&
         isInsideGrabArea.current !== "paperStack"
       ) {
@@ -507,7 +527,8 @@ export default function TheRoom({
 
   function handleEnterGrabArea(name) {
     isInsideGrabArea.current = name;
-    if (name !== "paperStack") grabAreaId.current = name;
+    if (name !== "paperStack" && name !== "glassSphere")
+      grabAreaId.current = name;
 
     raycastScene();
   }
@@ -773,6 +794,8 @@ export default function TheRoom({
             windowSeatHeight + 0.16,
             roomDepth * 0.5 - (windowSeatDepth * 0.5 + 0.06),
           ]}
+          onEnterGrabArea={() => handleEnterGrabArea("glassSphere")}
+          onLeaveGrabArea={() => handleLeaveGrabArea("glassSphere")}
         />
       </group>
     </>

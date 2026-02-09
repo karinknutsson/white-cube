@@ -14,11 +14,13 @@ export default function GlassSphere({
       onIntersectionEnter={onEnterGrabArea}
       onIntersectionExit={onLeaveGrabArea}
     >
+      {/* Colliders */}
       <BallCollider args={[size]} />
       <BallCollider args={[0.5]} sensor />
-      <mesh>
+
+      {/* Sphere mesh */}
+      <mesh name="glassSphere">
         <octahedronGeometry args={[size, 64]} />
-        {/* <meshStandardMaterial color="white" roughness={0} metalness={0} /> */}
         <meshPhysicalMaterial
           color="#796cd9"
           roughness={0}
