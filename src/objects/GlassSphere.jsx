@@ -1,8 +1,10 @@
-import { RigidBody } from "@react-three/rapier";
+import { RigidBody, BallCollider } from "@react-three/rapier";
 
 export default function GlassSphere({ size, position }) {
   return (
-    <RigidBody type="fixed" colliders="ball" position={position}>
+    <RigidBody type="dynamic" colliders={false} position={position}>
+      <BallCollider args={[size]} />
+      <BallCollider args={[0.5]} sensor />
       <mesh>
         <octahedronGeometry args={[size, 64]} />
         {/* <meshStandardMaterial color="white" roughness={0} metalness={0} /> */}

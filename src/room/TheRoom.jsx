@@ -767,10 +767,10 @@ export default function TheRoom({
 
         {/* Glass sphere */}
         <GlassSphere
-          size={0.1}
+          size={0.16}
           position={[
             roomWidth * 0.5 - 1,
-            windowSeatHeight + 0.1,
+            windowSeatHeight + 0.16,
             roomDepth * 0.5 - (windowSeatDepth * 0.5 + 0.06),
           ]}
         />
