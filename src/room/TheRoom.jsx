@@ -413,12 +413,10 @@ export default function TheRoom({
       gsap.to(".show-sphere-hint-container", { duration: 0.1, opacity: 0 });
 
       setIsFloating(true);
-      console.log("start floating");
 
       setTimeout(() => {
         setIsFloating(false);
-        console.log("stop floating");
-      }, 60000);
+      }, 30000);
     };
   }, []);
 
