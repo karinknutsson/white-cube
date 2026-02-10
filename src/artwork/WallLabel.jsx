@@ -11,6 +11,8 @@ export default function ArtworkInfoMesh({
     <mesh receiveShadow position={position}>
       <boxGeometry args={[size[0], size[1], size[2]]} />
       <meshStandardMaterial color="#f5f4f2" />
+
+      {/* Artist text /*/}
       <Text
         font="./fonts/IBMPlexSans-SemiBold.woff"
         position={[
@@ -25,6 +27,8 @@ export default function ArtworkInfoMesh({
       >
         {artist}
       </Text>
+
+      {/* Title text /*/}
       <Text
         font="./fonts/IBMPlexSans-Italic.woff"
         position={[
@@ -40,6 +44,7 @@ export default function ArtworkInfoMesh({
         {title}
       </Text>
 
+      {/* Year text /*/}
       <Text
         font="./fonts/IBMPlexSans-Regular.woff"
         position={[

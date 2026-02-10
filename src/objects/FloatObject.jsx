@@ -6,6 +6,7 @@ export default function FloatObject({
   onEnterGrabArea,
   onLeaveGrabArea,
 }) {
+  // Handle intersection enter event to check if player is in grab area
   function handleIntersectionEnter(e) {
     if (e.colliderObject.parent.name === "player") {
       onEnterGrabArea();

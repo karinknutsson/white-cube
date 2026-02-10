@@ -5,12 +5,14 @@ export default function Lights() {
   const sunLight = useRef();
   const sunLightTarget = useRef();
 
+  // Set light intensities and shadow parameters
   const ambientIntensity = 1;
   const sunIntensity = 0.6;
   const spotIntensity = 100;
   const shadowBias = 0.0005;
   const shadowNormalBias = 0.005;
 
+  // Set sun light target on mount
   useEffect(() => {
     if (sunLight.current && sunLightTarget.current)
       sunLight.current.target = sunLightTarget.current;
@@ -18,8 +20,10 @@ export default function Lights() {
 
   return (
     <>
+      {/* Ambient light */}
       <ambientLight intensity={ambientIntensity} />
 
+      {/* Sun light */}
       <directionalLight
         ref={sunLight}
         castShadow

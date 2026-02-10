@@ -36,7 +36,7 @@ export default function Experience() {
 
       <Lights />
 
-      {/* Debug mode physics /*}
+      {/* Uncomment for debug mode physics /*}
       {/* <Physics debug> */}
 
       <Physics>
