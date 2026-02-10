@@ -1,11 +1,12 @@
 import { CubeCamera } from "@react-three/drei";
 import TheRoom from "./TheRoom";
 
-export default function Gallery() {
-  const roomWidth = 7;
-  const roomHeight = 3.2;
-  const roomDepth = 9;
-
+export default function Gallery({
+  roomWidth,
+  roomHeight,
+  roomDepth,
+  wallThickness,
+}) {
   return (
     <>
       {/* Environment map */}
@@ -16,7 +17,7 @@ export default function Gallery() {
         roomWidth={roomWidth}
         roomHeight={roomHeight}
         roomDepth={roomDepth}
-        wallThickness={0.1}
+        wallThickness={wallThickness}
         position={[0, 0, 0]}
         doorWidth={1.2}
         doorHeight={2.3}

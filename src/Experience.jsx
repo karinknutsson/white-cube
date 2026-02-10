@@ -10,6 +10,12 @@ import { infoTextContent } from "./data/infoTextContent.js";
 export default function Experience() {
   const perfVisible = true;
 
+  // Set room dimensions
+  const roomWidth = 7;
+  const roomHeight = 3.2;
+  const roomDepth = 9;
+  const wallThickness = 0.1;
+
   useEffect(() => {
     const infoText = document.querySelector(".info-content");
     if (infoText) {
@@ -23,7 +29,7 @@ export default function Experience() {
 
   return (
     <>
-      {perfVisible && <Perf position="top-left" />}
+      {/* {perfVisible && <Perf position="top-left" />} */}
 
       <Lights />
 
@@ -31,9 +37,14 @@ export default function Experience() {
       <Physics>
         <Environment files="./hdr/qwantani_dusk_2_puresky_1k.hdr" background />
 
-        <Gallery />
+        <Gallery
+          roomWidth={roomWidth}
+          roomHeight={roomHeight}
+          roomDepth={roomDepth}
+          wallThickness={wallThickness}
+        />
 
-        <Player />
+        <Player roomHeight={roomHeight} wallThickness={wallThickness} />
       </Physics>
     </>
   );

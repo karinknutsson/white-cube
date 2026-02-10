@@ -806,7 +806,7 @@ export default function TheRoom({
 
         {/* Object for triggering no gravity mode */}
         <FloatObject
-          size={0.05}
+          size={0.04}
           position={[
             roomWidth * 0.5 - 0.6,
             windowSeatHeight + 0.16,

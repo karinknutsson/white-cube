@@ -5,7 +5,7 @@ import * as THREE from "three";
 import { PointerLockControls } from "@react-three/drei";
 import useGallery from "./stores/useGallery";
 
-export default function Player() {
+export default function Player({ roomHeight, wallThickness }) {
   const { camera } = useThree();
   const { isFloating } = useGallery();
   const bodyRef = useRef();
@@ -152,8 +152,8 @@ export default function Player() {
       const cameraDirection = new THREE.Vector3();
       const cameraRight = new THREE.Vector3();
 
+      // Get camera forward and right directions
       camera.getWorldDirection(cameraDirection);
-
       cameraRight.crossVectors(camera.up, cameraDirection).normalize();
 
       // Calculate total impulse
@@ -174,15 +174,6 @@ export default function Player() {
         bodyRef.current.applyImpulse(impulse, true);
       }
 
-      // bodyRef.current.applyImpulse(
-      //   {
-      //     x: direction.x * 0.5,
-      //     y: direction.y * 0.5,
-      //     z: direction.z * 0.5,
-      //   },
-      //   true,
-      // );
-
       const position = bodyRef.current.translation();
 
       // Target offset:center of body when floating, eye height when not
@@ -191,8 +182,11 @@ export default function Player() {
       // Smooth the offset
       cameraYOffset.current += (targetOffset - cameraYOffset.current) * 0.001;
 
-      // Set camera position based on body position and smoothed offset
-      camera.position.y = position.y + cameraYOffset.current;
+      // Set camera position based on body position and smoothed offset, restricted to room height
+      camera.position.y = Math.min(
+        roomHeight - wallThickness * 2,
+        position.y + cameraYOffset.current,
+      );
       camera.position.x = position.x;
       camera.position.z = position.z;
     }
