@@ -5,11 +5,14 @@ import canvasPaintingVertexShader from "../shaders/canvas-painting/vertex.glsl";
 import canvasPaintingFragmentShader from "../shaders/canvas-painting/fragment.glsl";
 
 export default function CanvasMesh({ path, size, id }) {
+  // Load texture
   const texture = useLoader(THREE.TextureLoader, path);
 
+  // Calculate vertices count based on size, for smooth edge fading
   const verticesX = Math.round(size[0] * 100);
   const verticesY = Math.round(size[1] * 100);
 
+  // Create plane geometry for the canvas
   const geometry = new THREE.PlaneGeometry(
     size[0],
     size[1],
@@ -17,9 +20,11 @@ export default function CanvasMesh({ path, size, id }) {
     verticesY,
   );
 
-  const edgeStartX = 1 - 0.02 / size[0];
-  const edgeStartY = 1 - 0.02 / size[1];
+  // Set edge start thresholds for the shader (in uv space)
+  const edgeStartX = 1 - 0.01 / size[0];
+  const edgeStartY = 1 - 0.01 / size[1];
 
+  // Create custom shader material for the canvas
   const CanvasPaintingMaterial = shaderMaterial(
     {
       uEdgeStartX: null,

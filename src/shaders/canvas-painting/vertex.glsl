@@ -5,30 +5,21 @@ varying vec2 vUv;
 varying float vAlpha;
 
 void main() {
+    // Calculate uvs to [-1, 1] range centered around the middle of the canvas
+    vec2 centeredUv = uv * 2.0 - 1.0;
+    
+    // Edge calculations
+    float elevation = smoothstep(uEdgeStartX, 1.0, abs(centeredUv.x));
+    elevation += smoothstep(uEdgeStartY, 1.0, abs(centeredUv.y));
+    
+    // Vertex displacement - slightly bending backward on the canvas
     vec3 localPosition = position;
-
-    float adjustedX = (uv.x  - 0.5) * 2.0;
-    float adjustedY = (uv.y - 0.5) * 2.0;
-
-    float distanceX = length(adjustedX);
-    float distanceY = length(adjustedY);
-
-    float edgeEnd = 1.0;
-
-    float elevation = smoothstep(uEdgeStartX, edgeEnd, distanceX);
-    elevation += smoothstep(uEdgeStartY, edgeEnd, distanceY);
-
-    elevation = min(0.5, elevation);
-    localPosition.z += elevation * -0.01;
-
-    vec4 modelPosition = modelMatrix * vec4(localPosition, 1.0);
-    vec4 viewPosition = viewMatrix * modelPosition;
-    vec4 projectionPosition = projectionMatrix * viewPosition;
-
-    gl_Position = projectionPosition;
-
-    float alpha = 1.0 - smoothstep(0.0, 0.5, elevation);
-
+    localPosition.z -= min(0.5, elevation) * 0.01;
+    
+    // Set position
+    gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(localPosition, 1.0);
+    
+    // Varying
     vUv = uv;
-    vAlpha = alpha;
+    vAlpha = 1.0 - smoothstep(0.0, 1.0, elevation);
 }

@@ -23,7 +23,7 @@ export default function Experience() {
 
   return (
     <>
-      {/* {perfVisible && <Perf position="top-left" />} */}
+      {perfVisible && <Perf position="top-left" />}
 
       <Lights />
 
