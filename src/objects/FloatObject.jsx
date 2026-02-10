@@ -21,7 +21,7 @@ export default function FloatObject({
       mass={1}
     >
       {/* Colliders */}
-      <BallCollider args={[size]} />
+      <BallCollider args={[size * 2]} />
       <BallCollider
         args={[0.5]}
         sensor
@@ -31,7 +31,7 @@ export default function FloatObject({
 
       {/* Torus knot mesh */}
       <mesh>
-        <torusKnotGeometry args={[size, size * 0.5, 64, 16]} />
+        <torusKnotGeometry args={[size, size * 0.8, 80, 16]} />
         <meshPhysicalMaterial
           color="#796cd9"
           roughness={0}
@@ -41,6 +41,9 @@ export default function FloatObject({
           thickness={0.5}
           ior={2.5}
           iridescence={1}
+          dithering={true}
+          precision="mediump"
+          envMapIntensity={1}
         />
       </mesh>
 

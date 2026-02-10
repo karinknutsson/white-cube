@@ -238,7 +238,7 @@ export default function TheRoom({
   const handleHideInfoRef = useRef(null);
   const handleShowInfoRef = useRef(null);
 
-  const handleClickSphereRef = useRef(null);
+  const handleClickFloatRef = useRef(null);
 
   const isInfoVisible = useRef(false);
 
@@ -408,8 +408,8 @@ export default function TheRoom({
       gsap.to(".hide-info-hint-container", { duration: 0.1, opacity: 0 });
     };
 
-    handleClickSphereRef.current = (e) => {
-      window.removeEventListener("mousedown", handleClickSphereRef.current);
+    handleClickFloatRef.current = (e) => {
+      window.removeEventListener("mousedown", handleClickFloatRef.current);
       gsap.to(".show-sphere-hint-container", { duration: 0.1, opacity: 0 });
 
       setIsFloating(true);
@@ -479,7 +479,7 @@ export default function TheRoom({
 
         if (shownHint.current !== "floatObject") {
           shownHint.current = "floatObject";
-          window.addEventListener("mousedown", handleClickSphereRef.current);
+          window.addEventListener("mousedown", handleClickFloatRef.current);
           gsap.to(".show-sphere-hint-container", { duration: 0.1, opacity: 1 });
         }
       }
@@ -513,7 +513,7 @@ export default function TheRoom({
       hitCurrentFrame !== "floatObject"
     ) {
       shownHint.current = null;
-      window.removeEventListener("mousedown", handleClickSphereRef.current);
+      window.removeEventListener("mousedown", handleClickFloatRef.current);
       gsap.to(".show-sphere-hint-container", { duration: 0.1, opacity: 0 });
     }
 
@@ -556,7 +556,7 @@ export default function TheRoom({
       window.removeEventListener("mousedown", handleShowInfoRef.current);
       gsap.to(".show-info-hint-container", { duration: 0.1, opacity: 0 });
     } else if (name === "floatObject") {
-      window.removeEventListener("mousedown", handleClickSphereRef.current);
+      window.removeEventListener("mousedown", handleClickFloatRef.current);
       gsap.to(".show-sphere-hint-container", { duration: 0.1, opacity: 0 });
     } else {
       window.removeEventListener("mousedown", handleGrabRef.current);
@@ -806,7 +806,7 @@ export default function TheRoom({
 
         {/* Object for triggering no gravity mode */}
         <FloatObject
-          size={0.05}
+          size={0.04}
           position={[
             roomWidth * 0.5 - 0.6,
             windowSeatHeight + 0.16,
