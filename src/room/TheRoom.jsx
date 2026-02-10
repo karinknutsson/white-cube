@@ -541,7 +541,7 @@ export default function TheRoom({
 
   function handleEnterGrabArea(name) {
     isInsideGrabArea.current = name;
-    console.log("Enter grab area" + name);
+
     if (name !== "paperStack" && name !== "floatObject")
       grabAreaId.current = name;
 

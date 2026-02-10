@@ -7,14 +7,19 @@ export default function FloatObject({
   onLeaveGrabArea,
 }) {
   function handleIntersectionEnter(e) {
-    console.log(e);
     if (e.colliderObject.parent.name === "player") {
       onEnterGrabArea();
     }
   }
 
   return (
-    <RigidBody type="dynamic" colliders={false} position={position}>
+    <RigidBody
+      type="dynamic"
+      colliders={false}
+      position={position}
+      rotation={[Math.PI * 0.5, 0.3, 0]}
+      mass={1}
+    >
       {/* Colliders */}
       <BallCollider args={[size]} />
       <BallCollider
@@ -24,9 +29,8 @@ export default function FloatObject({
         onIntersectionExit={onLeaveGrabArea}
       />
 
-      {/* Sphere mesh */}
+      {/* Torus knot mesh */}
       <mesh>
-        {/* <octahedronGeometry args={[size, 64]} /> */}
         <torusKnotGeometry args={[size, size * 0.5, 64, 16]} />
         <meshPhysicalMaterial
           color="#796cd9"
