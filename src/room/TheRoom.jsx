@@ -10,16 +10,20 @@ import PaperStack from "../objects/PaperStack";
 import { BakeShadows } from "@react-three/drei";
 import FloatObject from "../objects/FloatObject";
 
+/**
+ * Geometry
+ */
 const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
 
+/**
+ * Material
+ */
 const roomMaterial = new THREE.MeshStandardMaterial({
   color: "#ffffff",
 });
-
 const windowFrameMaterial = new THREE.MeshStandardMaterial({
   color: "#c2c2cc",
 });
-
 const windowMaterial = new THREE.MeshPhysicalMaterial({
   color: "#ffffff",
   roughness: 0,
@@ -29,6 +33,9 @@ const windowMaterial = new THREE.MeshPhysicalMaterial({
   ior: 1.5,
 });
 
+/**
+ * Floor mesh
+ */
 export function FloorMesh({ width, depth, wallThickness }) {
   return (
     <RigidBody type="fixed" colliders="trimesh">
@@ -43,6 +50,9 @@ export function FloorMesh({ width, depth, wallThickness }) {
   );
 }
 
+/**
+ * Ceiling mesh
+ */
 export function CeilingMesh({ width, depth, wallThickness, position }) {
   return (
     <RigidBody type="fixed" colliders="trimesh">
@@ -59,6 +69,9 @@ export function CeilingMesh({ width, depth, wallThickness, position }) {
   );
 }
 
+/**
+ * Window seat mesh
+ */
 export function WindowSeatMesh({ width, height, depth, position }) {
   return (
     <RigidBody type="fixed" colliders="trimesh">
@@ -74,6 +87,9 @@ export function WindowSeatMesh({ width, height, depth, position }) {
   );
 }
 
+/**
+ * Window frame mesh
+ */
 export function WindowFrameMesh({
   width,
   height,
@@ -126,6 +142,9 @@ export function WindowFrameMesh({
   );
 }
 
+/**
+ * Window mesh
+ */
 export function WindowMesh({ width, height, depth, position }) {
   return (
     <RigidBody type="fixed" colliders="trimesh">
@@ -139,6 +158,9 @@ export function WindowMesh({ width, height, depth, position }) {
   );
 }
 
+/**
+ * Wall mesh
+ */
 export function WallMesh({
   ref,
   name,
@@ -160,9 +182,12 @@ export function WallMesh({
         position={position}
         rotation={rotation}
       >
+        {/* Collider */}
         <CuboidCollider
           args={[width * 0.5, height * 0.5, wallThickness * 0.5]}
         />
+
+        {/* Meshes */}
         <mesh
           ref={ref}
           name={name}
