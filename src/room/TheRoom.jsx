@@ -10,16 +10,20 @@ import PaperStack from "../objects/PaperStack";
 import { BakeShadows } from "@react-three/drei";
 import FloatObject from "../objects/FloatObject";
 
+/**
+ * Geometry
+ */
 const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
 
+/**
+ * Material
+ */
 const roomMaterial = new THREE.MeshStandardMaterial({
   color: "#ffffff",
 });
-
 const windowFrameMaterial = new THREE.MeshStandardMaterial({
   color: "#c2c2cc",
 });
-
 const windowMaterial = new THREE.MeshPhysicalMaterial({
   color: "#ffffff",
   roughness: 0,
@@ -29,6 +33,9 @@ const windowMaterial = new THREE.MeshPhysicalMaterial({
   ior: 1.5,
 });
 
+/**
+ * Floor mesh
+ */
 export function FloorMesh({ width, depth, wallThickness }) {
   return (
     <RigidBody type="fixed" colliders="trimesh">
@@ -43,6 +50,9 @@ export function FloorMesh({ width, depth, wallThickness }) {
   );
 }
 
+/**
+ * Ceiling mesh
+ */
 export function CeilingMesh({ width, depth, wallThickness, position }) {
   return (
     <RigidBody type="fixed" colliders="trimesh">
@@ -59,6 +69,9 @@ export function CeilingMesh({ width, depth, wallThickness, position }) {
   );
 }
 
+/**
+ * Window seat mesh
+ */
 export function WindowSeatMesh({ width, height, depth, position }) {
   return (
     <RigidBody type="fixed" colliders="trimesh">
@@ -74,6 +87,9 @@ export function WindowSeatMesh({ width, height, depth, position }) {
   );
 }
 
+/**
+ * Window frame mesh
+ */
 export function WindowFrameMesh({
   width,
   height,
@@ -126,6 +142,9 @@ export function WindowFrameMesh({
   );
 }
 
+/**
+ * Window mesh
+ */
 export function WindowMesh({ width, height, depth, position }) {
   return (
     <RigidBody type="fixed" colliders="trimesh">
@@ -139,6 +158,9 @@ export function WindowMesh({ width, height, depth, position }) {
   );
 }
 
+/**
+ * Wall mesh
+ */
 export function WallMesh({
   ref,
   name,
@@ -160,9 +182,12 @@ export function WallMesh({
         position={position}
         rotation={rotation}
       >
+        {/* Collider */}
         <CuboidCollider
           args={[width * 0.5, height * 0.5, wallThickness * 0.5]}
         />
+
+        {/* Meshes */}
         <mesh
           ref={ref}
           name={name}
@@ -227,7 +252,7 @@ export default function TheRoom({
   const [grabbedWorkId, setGrabbedWorkId] = useState(null);
   const [bakeKey, setBakeKey] = useState(0);
 
-  const { artworks, moveArtwork, isFloating, setIsFloating } = useGallery();
+  const { artworks, moveArtwork, setIsFloating } = useGallery();
 
   const wallRefs = useRef([]);
   const paperStackRef = useRef(null);
@@ -237,35 +262,44 @@ export default function TheRoom({
 
   const handleHideInfoRef = useRef(null);
   const handleShowInfoRef = useRef(null);
+  const isInfoVisible = useRef(false);
 
   const handleClickFloatRef = useRef(null);
 
-  const isInfoVisible = useRef(false);
-
+  // Clamp helper
   const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 
   useEffect(() => {
+    /**
+     * Dropping artwork logic
+     */
     handleDropRef.current = (e) => {
       {
+        // Hide hints and grabbed artwork preview
         gsap.to("#grabbed-artwork-container", { duration: 0.5, opacity: 0 });
         gsap.to(".drop-hint-container", { duration: 0.1, opacity: 0 });
 
         if (!wallRefs.current.length) return;
 
+        // Find the artwork being dropped
         const artwork = artworks.filter((w) => w.id === grabAreaId.current);
         if (artwork.length === 0) return;
 
+        // Get artwork dimensions
         const artworkWidth = artwork[0].size[0];
         const artworkHeight = artwork[0].size[1];
 
+        // Raycast to find where the artwork is being dropped
         raycaster.setFromCamera(rayCasterPointer, camera);
         const hits = raycaster.intersectObjects(wallRefs.current, false);
 
+        // Cancel drop if not dropped on a wall
         if (hits.length === 0) {
           cancelDrop();
           return;
         }
 
+        // Drop artwork on the wall, calculating position based on where it was dropped and clamping it within the wall bounds
         if (hits[0].object.name === "backWall") {
           moveArtwork(grabAreaId.current, {
             wall: "backWall",
@@ -363,13 +397,19 @@ export default function TheRoom({
           });
         }
 
+        // Reset grab state
         window.removeEventListener("mousedown", handleDropRef.current);
         setGrabbedWorkId(() => null);
         grabAreaId.current = null;
+
+        // Update shadows after dropping artwork
         setBakeKey((key) => key + 1);
       }
     };
 
+    /**
+     * Grabbing artwork logic
+     */
     handleGrabRef.current = (e) => {
       setGrabbedWorkId(grabAreaId.current);
       shownHint.current = null;
@@ -377,17 +417,23 @@ export default function TheRoom({
       window.removeEventListener("mousedown", handleGrabRef.current);
       window.addEventListener("mousedown", handleDropRef.current);
 
+      // Show grabbed artwork preview and drop hint
       gsap.to(".grab-hint-container", { duration: 0.1, opacity: 0 });
       gsap.to(".drop-hint-container", { duration: 0.1, opacity: 1 });
 
-      const work = artworks.find((w) => w.id === grabAreaId.current);
-      if (!work) return;
+      // Find the artwork being grabbed
+      const artwork = artworks.find((w) => w.id === grabAreaId.current);
+      if (!artwork) return;
 
+      // Set the source of the grabbed artwork preview to the artwork being grabbed
       const image = document.getElementById("grabbed-image");
       image.src = work.path ?? "";
       gsap.to("#grabbed-artwork-container", { duration: 0.5, opacity: 0.6 });
     };
 
+    /**
+     * Showing info logic
+     */
     handleShowInfoRef.current = (e) => {
       isInfoVisible.current = true;
 
@@ -399,6 +445,9 @@ export default function TheRoom({
       gsap.to(".hide-info-hint-container", { duration: 0.1, opacity: 1 });
     };
 
+    /**
+     * Hiding info logic
+     */
     handleHideInfoRef.current = (e) => {
       isInfoVisible.current = false;
 
@@ -408,6 +457,9 @@ export default function TheRoom({
       gsap.to(".hide-info-hint-container", { duration: 0.1, opacity: 0 });
     };
 
+    /**
+     * Activate no gravity mode
+     */
     handleClickFloatRef.current = (e) => {
       window.removeEventListener("mousedown", handleClickFloatRef.current);
       gsap.to(".show-sphere-hint-container", { duration: 0.1, opacity: 0 });
@@ -420,6 +472,7 @@ export default function TheRoom({
     };
   }, []);
 
+  // When artwork is grabbed, listen for x key to cancel grab
   useEffect(() => {
     if (grabbedWorkId === null) return;
 
@@ -436,6 +489,7 @@ export default function TheRoom({
     };
   }, [grabbedWorkId]);
 
+  // Cancel drop when x key has been pressed or when artwork has been dropped on a non-wall surface
   function cancelDrop() {
     window.removeEventListener("mousedown", handleDropRef.current);
     setGrabbedWorkId(() => null);
@@ -446,17 +500,23 @@ export default function TheRoom({
     gsap.to(".drop-hint-container", { duration: 0.1, opacity: 0 });
   }
 
+  /**
+   * Raycast the scene to check if the player is looking at an interactable object and show hints
+   */
   function raycastScene() {
     if (!isInsideGrabArea.current) return;
     if (grabbedWorkId !== null || isInfoVisible.current) return;
 
+    // Raycast from the center of the screen
     raycaster.setFromCamera(rayCasterPointer, camera);
     const hits = raycaster.intersectObjects(scene.children, true);
 
     if (hits.length === 0) return;
 
+    // Keep track of hit in current frame
     let hitCurrentFrame = null;
 
+    // Check if any of the hits are interactable objects and show hints accordingly
     for (const hit of hits) {
       if (
         hit.object.name === "paperStack" &&
@@ -499,6 +559,7 @@ export default function TheRoom({
       }
     }
 
+    // Hide hints if the player is no longer looking at the interactable object
     if (
       shownHint.current === "paperStack" &&
       hitCurrentFrame !== "paperStack"
@@ -527,6 +588,7 @@ export default function TheRoom({
     }
   }
 
+  // Raycast the scene when the camera has rotated to check if the player is looking at an interactable object and show hints
   useFrame(() => {
     if (!isInsideGrabArea.current) return;
 
@@ -539,6 +601,7 @@ export default function TheRoom({
     raycastScene();
   });
 
+  // Keep track of the artwork id if grab area of artwork has been entered
   function handleEnterGrabArea(name) {
     isInsideGrabArea.current = name;
 
@@ -548,6 +611,7 @@ export default function TheRoom({
     raycastScene();
   }
 
+  // Remove event listeners and hide hints when leaving grab area
   function handleLeaveGrabArea(name) {
     isInsideGrabArea.current = null;
     shownHint.current = null;
@@ -566,6 +630,7 @@ export default function TheRoom({
 
   return (
     <>
+      {/* Bake shadows for better performance */}
       <BakeShadows key={bakeKey} />
 
       <group position={position}>
@@ -804,7 +869,7 @@ export default function TheRoom({
           onLeaveGrabArea={() => handleLeaveGrabArea("paperStack")}
         />
 
-        {/* Object for triggering no gravity mode */}
+        {/* Float object for triggering no gravity mode */}
         <FloatObject
           size={0.04}
           position={[

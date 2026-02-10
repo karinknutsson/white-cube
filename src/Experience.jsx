@@ -8,7 +8,8 @@ import { useEffect } from "react";
 import { infoTextContent } from "./data/infoTextContent.js";
 
 export default function Experience() {
-  const perfVisible = true;
+  // Uncomment to keep track of performance
+  // const perfVisible = true;
 
   // Set room dimensions
   const roomWidth = 7;
@@ -16,6 +17,7 @@ export default function Experience() {
   const roomDepth = 9;
   const wallThickness = 0.1;
 
+  // Add info text to the page on mount
   useEffect(() => {
     const infoText = document.querySelector(".info-content");
     if (infoText) {
@@ -29,14 +31,19 @@ export default function Experience() {
 
   return (
     <>
+      {/* Uncomment to keep track of performance */}
       {/* {perfVisible && <Perf position="top-left" />} */}
 
       <Lights />
 
+      {/* Uncomment for debug mode physics /*}
       {/* <Physics debug> */}
+
       <Physics>
+        {/* Environment map */}
         <Environment files="./hdr/qwantani_dusk_2_puresky_1k.hdr" background />
 
+        {/* Gallery */}
         <Gallery
           roomWidth={roomWidth}
           roomHeight={roomHeight}
@@ -44,6 +51,7 @@ export default function Experience() {
           wallThickness={wallThickness}
         />
 
+        {/* Player*/}
         <Player roomHeight={roomHeight} wallThickness={wallThickness} />
       </Physics>
     </>

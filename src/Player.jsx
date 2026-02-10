@@ -12,6 +12,7 @@ export default function Player({ roomHeight, wallThickness }) {
   const controlsRef = useRef();
   const cameraYOffset = useRef(0.7);
 
+  // Set up movement states
   const move = useRef({
     forward: false,
     backward: false,
@@ -25,8 +26,10 @@ export default function Player({ roomHeight, wallThickness }) {
    * Player movement and controls logic
    */
   useEffect(() => {
+    // Set pointer lock controls speed
     if (controlsRef.current) controlsRef.current.pointerSpeed = 0.3;
 
+    // Handle key down events to set movement states
     const handleKeyDown = (e) => {
       switch (e.code) {
         case "ArrowUp":
@@ -55,6 +58,7 @@ export default function Player({ roomHeight, wallThickness }) {
       }
     };
 
+    // Handle key up events to unset movement states
     const handleKeyUp = (e) => {
       switch (e.code) {
         case "ArrowUp":
@@ -83,10 +87,12 @@ export default function Player({ roomHeight, wallThickness }) {
       }
     };
 
+    // Add event listeners for key down and key up
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keyup", handleKeyUp);
 
     return () => {
+      // Remove event listeners on cleanup
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
     };
@@ -160,6 +166,7 @@ export default function Player({ roomHeight, wallThickness }) {
       const impulse = new THREE.Vector3();
       const impulseStrength = 0.05;
 
+      // Apply impulse in the direction of input, relative to camera orientation
       if (move.current.forward)
         impulse.addScaledVector(cameraDirection, impulseStrength);
       if (move.current.backward)
