@@ -9,15 +9,17 @@ export default function CanvasMesh({ path, size, id }) {
   const texture = useLoader(THREE.TextureLoader, path);
 
   // Calculate vertices count based on size, for smooth edge fading
-  const verticesX = Math.round(size[0] * 100);
-  const verticesY = Math.round(size[1] * 100);
+  // const verticesX = Math.round(size[0] * 100);
+  // const verticesY = Math.round(size[1] * 100);
 
   // Create plane geometry for the canvas
   const geometry = new THREE.PlaneGeometry(
     size[0],
     size[1],
-    verticesX,
-    verticesY,
+    1,
+    1,
+    // verticesX,
+    // verticesY,
   );
 
   // Set edge start thresholds for the shader (in uv space)
@@ -44,14 +46,13 @@ export default function CanvasMesh({ path, size, id }) {
         <mesh
           position={[0, 0, size[2] + 0.002]}
           geometry={geometry}
-          castShadow
           receiveShadow
         >
           <canvasPaintingMaterial
             key={texture.uuid}
             uTexture={texture}
-            uEdgeStartX={edgeStartX}
-            uEdgeStartY={edgeStartY}
+            // uEdgeStartX={edgeStartX}
+            // uEdgeStartY={edgeStartY}
             transparent
           />
         </mesh>
