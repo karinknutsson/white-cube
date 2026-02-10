@@ -6,9 +6,9 @@ import gsap from "gsap";
 import { useRef, useMemo, useState, useEffect } from "react";
 import Artwork from "../artwork/Artwork";
 import { wallLabelSizes } from "../data/wallLabelSizes";
-import PaperStack from "../PaperStack";
+import PaperStack from "../objects/PaperStack";
 import { BakeShadows } from "@react-three/drei";
-import GlassSphere from "../objects/GlassSphere";
+import FloatObject from "../objects/FloatObject";
 
 const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
 
@@ -472,13 +472,13 @@ export default function TheRoom({
       }
 
       if (
-        hit.object.name === "glassSphere" &&
-        isInsideGrabArea.current === "glassSphere"
+        hit.object.name === "floatObject" &&
+        isInsideGrabArea.current === "floatObject"
       ) {
-        hitCurrentFrame = "glassSphere";
+        hitCurrentFrame = "floatObject";
 
-        if (shownHint.current !== "glassSphere") {
-          shownHint.current = "glassSphere";
+        if (shownHint.current !== "floatObject") {
+          shownHint.current = "floatObject";
           window.addEventListener("mousedown", handleClickSphereRef.current);
           gsap.to(".show-sphere-hint-container", { duration: 0.1, opacity: 1 });
         }
@@ -487,7 +487,7 @@ export default function TheRoom({
       if (
         hit.object.name === isInsideGrabArea.current &&
         isInsideGrabArea.current !== "paperStack" &&
-        isInsideGrabArea.current !== "glassSphere"
+        isInsideGrabArea.current !== "floatObject"
       ) {
         hitCurrentFrame = "grabArtwork";
 
@@ -509,8 +509,8 @@ export default function TheRoom({
     }
 
     if (
-      shownHint.current === "glassSphere" &&
-      hitCurrentFrame !== "glassSphere"
+      shownHint.current === "floatObject" &&
+      hitCurrentFrame !== "floatObject"
     ) {
       shownHint.current = null;
       window.removeEventListener("mousedown", handleClickSphereRef.current);
@@ -541,7 +541,8 @@ export default function TheRoom({
 
   function handleEnterGrabArea(name) {
     isInsideGrabArea.current = name;
-    if (name !== "paperStack" && name !== "glassSphere")
+    console.log("Enter grab area" + name);
+    if (name !== "paperStack" && name !== "floatObject")
       grabAreaId.current = name;
 
     raycastScene();
@@ -554,7 +555,7 @@ export default function TheRoom({
     if (name === "paperStack") {
       window.removeEventListener("mousedown", handleShowInfoRef.current);
       gsap.to(".show-info-hint-container", { duration: 0.1, opacity: 0 });
-    } else if (name === "glassSphere") {
+    } else if (name === "floatObject") {
       window.removeEventListener("mousedown", handleClickSphereRef.current);
       gsap.to(".show-sphere-hint-container", { duration: 0.1, opacity: 0 });
     } else {
@@ -803,16 +804,16 @@ export default function TheRoom({
           onLeaveGrabArea={() => handleLeaveGrabArea("paperStack")}
         />
 
-        {/* Glass sphere */}
-        <GlassSphere
-          size={0.16}
+        {/* Object for triggering no gravity mode */}
+        <FloatObject
+          size={0.05}
           position={[
-            roomWidth * 0.5 - 1,
+            roomWidth * 0.5 - 0.6,
             windowSeatHeight + 0.16,
-            roomDepth * 0.5 - (windowSeatDepth * 0.5 + 0.06),
+            roomDepth * 0.5 - (windowSeatDepth * 0.5 + 0.08),
           ]}
-          onEnterGrabArea={() => handleEnterGrabArea("glassSphere")}
-          onLeaveGrabArea={() => handleLeaveGrabArea("glassSphere")}
+          onEnterGrabArea={() => handleEnterGrabArea("floatObject")}
+          onLeaveGrabArea={() => handleLeaveGrabArea("floatObject")}
         />
       </group>
     </>

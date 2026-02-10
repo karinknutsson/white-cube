@@ -217,6 +217,7 @@ export default function Player() {
 
   return (
     <>
+      {/* Look around with mouse */}
       <PointerLockControls ref={controlsRef} />
 
       <RigidBody
@@ -227,7 +228,9 @@ export default function Player() {
         mass={1}
         enabledRotations={[false, false, false]}
         gravityScale={isFloating ? 0 : 1}
+        name="player"
       >
+        {/* Colliders */}
         <CapsuleCollider args={[0.5, 0.3]} />
         <CapsuleCollider args={[0.5, 0.4]} sensor />
       </RigidBody>
