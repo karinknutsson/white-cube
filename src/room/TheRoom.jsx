@@ -6,15 +6,14 @@ import gsap from "gsap";
 import { useRef, useMemo, useState, useEffect } from "react";
 import Artwork from "../artwork/Artwork";
 import { wallLabelSizes } from "../data/wallLabelSizes";
-import PaperStack from "../PaperStack";
+import PaperStack from "../objects/PaperStack";
 import { BakeShadows } from "@react-three/drei";
+import FloatObject from "../objects/FloatObject";
 
 const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
 
 const roomMaterial = new THREE.MeshStandardMaterial({
   color: "#ffffff",
-  // color: "#ff0000",
-  // wireframe: true,
 });
 
 const windowFrameMaterial = new THREE.MeshStandardMaterial({
@@ -228,8 +227,7 @@ export default function TheRoom({
   const [grabbedWorkId, setGrabbedWorkId] = useState(null);
   const [bakeKey, setBakeKey] = useState(0);
 
-  const artworks = useGallery((state) => state.artworks);
-  const moveArtwork = useGallery((state) => state.moveArtwork);
+  const { artworks, moveArtwork, isFloating, setIsFloating } = useGallery();
 
   const wallRefs = useRef([]);
   const paperStackRef = useRef(null);
@@ -239,6 +237,8 @@ export default function TheRoom({
 
   const handleHideInfoRef = useRef(null);
   const handleShowInfoRef = useRef(null);
+
+  const handleClickSphereRef = useRef(null);
 
   const isInfoVisible = useRef(false);
 
@@ -377,7 +377,6 @@ export default function TheRoom({
       window.removeEventListener("mousedown", handleGrabRef.current);
       window.addEventListener("mousedown", handleDropRef.current);
 
-      console.log("grabbed", grabAreaId.current);
       gsap.to(".grab-hint-container", { duration: 0.1, opacity: 0 });
       gsap.to(".drop-hint-container", { duration: 0.1, opacity: 1 });
 
@@ -407,6 +406,17 @@ export default function TheRoom({
 
       gsap.to("#info-container", { duration: 0.1, opacity: 0 });
       gsap.to(".hide-info-hint-container", { duration: 0.1, opacity: 0 });
+    };
+
+    handleClickSphereRef.current = (e) => {
+      window.removeEventListener("mousedown", handleClickSphereRef.current);
+      gsap.to(".show-sphere-hint-container", { duration: 0.1, opacity: 0 });
+
+      setIsFloating(true);
+
+      setTimeout(() => {
+        setIsFloating(false);
+      }, 30000);
     };
   }, []);
 
@@ -462,8 +472,22 @@ export default function TheRoom({
       }
 
       if (
+        hit.object.name === "floatObject" &&
+        isInsideGrabArea.current === "floatObject"
+      ) {
+        hitCurrentFrame = "floatObject";
+
+        if (shownHint.current !== "floatObject") {
+          shownHint.current = "floatObject";
+          window.addEventListener("mousedown", handleClickSphereRef.current);
+          gsap.to(".show-sphere-hint-container", { duration: 0.1, opacity: 1 });
+        }
+      }
+
+      if (
         hit.object.name === isInsideGrabArea.current &&
-        isInsideGrabArea.current !== "paperStack"
+        isInsideGrabArea.current !== "paperStack" &&
+        isInsideGrabArea.current !== "floatObject"
       ) {
         hitCurrentFrame = "grabArtwork";
 
@@ -482,6 +506,15 @@ export default function TheRoom({
       shownHint.current = null;
       window.removeEventListener("mousedown", handleShowInfoRef.current);
       gsap.to(".show-info-hint-container", { duration: 0.1, opacity: 0 });
+    }
+
+    if (
+      shownHint.current === "floatObject" &&
+      hitCurrentFrame !== "floatObject"
+    ) {
+      shownHint.current = null;
+      window.removeEventListener("mousedown", handleClickSphereRef.current);
+      gsap.to(".show-sphere-hint-container", { duration: 0.1, opacity: 0 });
     }
 
     if (
@@ -508,7 +541,9 @@ export default function TheRoom({
 
   function handleEnterGrabArea(name) {
     isInsideGrabArea.current = name;
-    if (name !== "paperStack") grabAreaId.current = name;
+
+    if (name !== "paperStack" && name !== "floatObject")
+      grabAreaId.current = name;
 
     raycastScene();
   }
@@ -520,6 +555,9 @@ export default function TheRoom({
     if (name === "paperStack") {
       window.removeEventListener("mousedown", handleShowInfoRef.current);
       gsap.to(".show-info-hint-container", { duration: 0.1, opacity: 0 });
+    } else if (name === "floatObject") {
+      window.removeEventListener("mousedown", handleClickSphereRef.current);
+      gsap.to(".show-sphere-hint-container", { duration: 0.1, opacity: 0 });
     } else {
       window.removeEventListener("mousedown", handleGrabRef.current);
       gsap.to(".grab-hint-container", { duration: 0.1, opacity: 0 });
@@ -756,10 +794,26 @@ export default function TheRoom({
         {/* Info paper stack */}
         <PaperStack
           ref={paperStackRef}
-          position={[1 - roomWidth * 0.5, 0.601, roomDepth * 0.5 - 0.36]}
+          position={[
+            1 - roomWidth * 0.5,
+            windowSeatHeight + 0.01,
+            roomDepth * 0.5 - (windowSeatDepth * 0.5 + 0.06),
+          ]}
           rotation={[0, -0.1, 0]}
           onEnterGrabArea={() => handleEnterGrabArea("paperStack")}
           onLeaveGrabArea={() => handleLeaveGrabArea("paperStack")}
+        />
+
+        {/* Object for triggering no gravity mode */}
+        <FloatObject
+          size={0.05}
+          position={[
+            roomWidth * 0.5 - 0.6,
+            windowSeatHeight + 0.16,
+            roomDepth * 0.5 - (windowSeatDepth * 0.5 + 0.08),
+          ]}
+          onEnterGrabArea={() => handleEnterGrabArea("floatObject")}
+          onLeaveGrabArea={() => handleLeaveGrabArea("floatObject")}
         />
       </group>
     </>

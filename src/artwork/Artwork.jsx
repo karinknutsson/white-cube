@@ -25,8 +25,6 @@ export default function Artwork({
         ref={artworkRef}
         type="kinematicPosition"
         colliders={false}
-        onIntersectionEnter={onEnterGrabArea}
-        onIntersectionExit={onLeaveGrabArea}
       >
         <>
           {/* Colliders */}
@@ -37,6 +35,8 @@ export default function Artwork({
             args={[size[0] * 0.5, size[1] * 0.5, 0.2]}
             position={[0, 0, 0.6]}
             sensor
+            onIntersectionEnter={onEnterGrabArea}
+            onIntersectionExit={onLeaveGrabArea}
           />
 
           {/* Meshes */}

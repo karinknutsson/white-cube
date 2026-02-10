@@ -35,7 +35,7 @@ export default function CanvasMesh({ path, size, id }) {
   return (
     <>
       <group position={[0, 0, size[2] * 0.5 + 0.003]}>
-        {/* Front face */}
+        {/* Front face mesh */}
         <mesh
           position={[0, 0, size[2] + 0.002]}
           geometry={geometry}
