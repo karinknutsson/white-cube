@@ -8,7 +8,7 @@ import { useEffect } from "react";
 import { infoTextContent } from "./data/infoTextContent.js";
 
 export default function Experience() {
-  const perfVisible = true;
+  // const perfVisible = true;
 
   // Set room dimensions
   const roomWidth = 7;
@@ -16,6 +16,7 @@ export default function Experience() {
   const roomDepth = 9;
   const wallThickness = 0.1;
 
+  // Add info text to the page on mount
   useEffect(() => {
     const infoText = document.querySelector(".info-content");
     if (infoText) {

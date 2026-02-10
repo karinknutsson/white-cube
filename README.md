@@ -6,7 +6,7 @@ Planned features: creating an account, uploading files to display, customizing t
 
 Instructions: look around with mouse, move around with arrow keys, or 'W', 'A', 'S' and 'D' keys. Jump with space, crouch with shift. Walk up to artworks and click to grab them, then click again to place them on the point of the wall that is in the middle of your screen. When an artwork is grabbed, you can press the 'X' key or release it on a surface that is not a wall to cancel the move. To exit the space and get your cursor back, press escape.
 
-Find the easter egg to enter no gravity mode!
+Find the easter egg to enter no gravity mode and float around in the gallery!
 
 ## Tech Stack
 
