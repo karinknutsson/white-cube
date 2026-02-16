@@ -27,7 +27,7 @@ export default function CanvasMesh({ path, size, id }) {
         </mesh>
 
         {/* Invisible mesh for raycasting */}
-        <mesh name={id}>
+        <mesh name={`artwork${id}`}>
           <boxGeometry args={[size[0], size[1], size[2] * 3]} />
           <meshBasicMaterial visible={false} />
         </mesh>

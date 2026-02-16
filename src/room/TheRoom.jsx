@@ -546,8 +546,7 @@ export default function TheRoom({
 
       if (
         hit.object.name === isInsideGrabArea.current &&
-        isInsideGrabArea.current !== "paperStack" &&
-        isInsideGrabArea.current !== "floatObject"
+        isInsideGrabArea.current.startsWith("artwork")
       ) {
         hitCurrentFrame = "grabArtwork";
 
