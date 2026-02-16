@@ -420,7 +420,9 @@ export default function TheRoom({
       gsap.to(".drop-hint-container", { duration: 0.1, opacity: 1 });
 
       // Find the artwork being grabbed
-      const artwork = artworks.find((w) => w.id === grabAreaName.current);
+      const artwork = artworks.find(
+        (w) => w.id === grabAreaName.current.replace("artwork", ""),
+      );
       if (!artwork) return;
 
       // Set the source of the grabbed artwork preview to the artwork being grabbed
