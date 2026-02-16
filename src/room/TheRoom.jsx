@@ -247,8 +247,6 @@ export default function TheRoom({
   const lastCameraQuaternion = useRef(new THREE.Quaternion());
   const isInsideGrabArea = useRef(null);
   const shownHint = useRef(null);
-
-  const grabAreaId = useRef(null);
   const [grabbedWorkId, setGrabbedWorkId] = useState(null);
   const [bakeKey, setBakeKey] = useState(0);
 
@@ -282,7 +280,9 @@ export default function TheRoom({
         if (!wallRefs.current.length) return;
 
         // Find the artwork being dropped
-        const artwork = artworks.filter((w) => w.id === grabAreaId.current);
+        const artwork = artworks.filter(
+          (w) => w.id === isInsideGrabArea.current,
+        );
         if (artwork.length === 0) return;
 
         // Get artwork dimensions
@@ -301,7 +301,7 @@ export default function TheRoom({
 
         // Drop artwork on the wall, calculating position based on where it was dropped and clamping it within the wall bounds
         if (hits[0].object.name === "backWall") {
-          moveArtwork(grabAreaId.current, {
+          moveArtwork(isInsideGrabArea.current, {
             wall: "backWall",
             position: {
               x: clamp(
@@ -320,7 +320,7 @@ export default function TheRoom({
             },
           });
         } else if (hits[0].object.name === "leftWall") {
-          moveArtwork(grabAreaId.current, {
+          moveArtwork(isInsideGrabArea.current, {
             wall: "leftWall",
             position: {
               x: clamp(
@@ -339,7 +339,7 @@ export default function TheRoom({
             },
           });
         } else if (hits[0].object.name === "rightWall") {
-          moveArtwork(grabAreaId.current, {
+          moveArtwork(isInsideGrabArea.current, {
             wall: "rightWall",
             position: {
               x: clamp(
@@ -358,7 +358,7 @@ export default function TheRoom({
             },
           });
         } else if (hits[0].object.name === "partitionBack") {
-          moveArtwork(grabAreaId.current, {
+          moveArtwork(isInsideGrabArea.current, {
             wall: "partitionBack",
             position: {
               x: clamp(
@@ -377,7 +377,7 @@ export default function TheRoom({
             },
           });
         } else if (hits[0].object.name === "partitionFront") {
-          moveArtwork(grabAreaId.current, {
+          moveArtwork(isInsideGrabArea.current, {
             wall: "partitionFront",
             position: {
               x: clamp(
@@ -400,7 +400,7 @@ export default function TheRoom({
         // Reset grab state
         window.removeEventListener("mousedown", handleDropRef.current);
         setGrabbedWorkId(() => null);
-        grabAreaId.current = null;
+        isInsideGrabArea.current = null;
 
         // Update shadows after dropping artwork
         setBakeKey((key) => key + 1);
@@ -411,7 +411,7 @@ export default function TheRoom({
      * Grabbing artwork logic
      */
     handleGrabRef.current = (e) => {
-      setGrabbedWorkId(grabAreaId.current);
+      setGrabbedWorkId(isInsideGrabArea.current);
       shownHint.current = null;
 
       window.removeEventListener("mousedown", handleGrabRef.current);
@@ -422,7 +422,7 @@ export default function TheRoom({
       gsap.to(".drop-hint-container", { duration: 0.1, opacity: 1 });
 
       // Find the artwork being grabbed
-      const artwork = artworks.find((w) => w.id === grabAreaId.current);
+      const artwork = artworks.find((w) => w.id === isInsideGrabArea.current);
       if (!artwork) return;
 
       // Set the source of the grabbed artwork preview to the artwork being grabbed
@@ -493,7 +493,7 @@ export default function TheRoom({
   function cancelDrop() {
     window.removeEventListener("mousedown", handleDropRef.current);
     setGrabbedWorkId(() => null);
-    grabAreaId.current = null;
+    isInsideGrabArea.current = null;
 
     gsap.to("#grabbed-artwork-container", { duration: 0.5, opacity: 0 });
     gsap.to(".grab-hint-container", { duration: 0.1, opacity: 0 });
@@ -606,10 +606,6 @@ export default function TheRoom({
     if (grabbedWorkId !== null) return;
 
     isInsideGrabArea.current = name;
-
-    if (name !== "paperStack" && name !== "floatObject")
-      grabAreaId.current = name;
-
     raycastScene();
   }
 

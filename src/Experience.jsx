@@ -36,9 +36,8 @@ export default function Experience() {
 
       <Lights />
 
-      {/* Uncomment for debug mode physics /*}
+      {/* Uncomment for debug mode physics */}
       {/* <Physics debug> */}
-
       <Physics>
         {/* Environment map */}
         <Environment files="./hdr/qwantani_dusk_2_puresky_1k.hdr" background />
