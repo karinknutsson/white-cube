@@ -594,7 +594,6 @@ export default function TheRoom({
     if (grabbedWorkId !== null) return;
 
     grabAreaId.current = name;
-    console.log("Entered grab area of ", name);
     raycastScene();
   }
 
