@@ -603,6 +603,8 @@ export default function TheRoom({
 
   // Keep track of the artwork id if grab area of artwork has been entered
   function handleEnterGrabArea(name) {
+    if (grabbedWorkId !== null) return;
+
     isInsideGrabArea.current = name;
 
     if (name !== "paperStack" && name !== "floatObject")
