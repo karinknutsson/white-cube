@@ -247,8 +247,6 @@ export default function TheRoom({
   const lastCameraQuaternion = useRef(new THREE.Quaternion());
   const isInsideGrabArea = useRef(null);
   const shownHint = useRef(null);
-
-  // const grabAreaId = useRef(null);
   const [grabbedWorkId, setGrabbedWorkId] = useState(null);
   const [bakeKey, setBakeKey] = useState(0);
 
@@ -526,8 +524,6 @@ export default function TheRoom({
       ) {
         hitCurrentFrame = "paperStack";
 
-        console.log(hit.object.name, isInsideGrabArea.current);
-
         if (shownHint.current !== "paperStack") {
           shownHint.current = "paperStack";
           window.addEventListener("mousedown", handleShowInfoRef.current);
@@ -540,8 +536,6 @@ export default function TheRoom({
         isInsideGrabArea.current === "floatObject"
       ) {
         hitCurrentFrame = "floatObject";
-
-        console.log(hit.object.name, isInsideGrabArea.current);
 
         if (shownHint.current !== "floatObject") {
           shownHint.current = "floatObject";
@@ -556,8 +550,6 @@ export default function TheRoom({
         isInsideGrabArea.current !== "floatObject"
       ) {
         hitCurrentFrame = "grabArtwork";
-
-        console.log(hit.object.name, isInsideGrabArea.current);
 
         if (shownHint.current !== "grabArtwork") {
           shownHint.current = "grabArtwork";
@@ -614,10 +606,6 @@ export default function TheRoom({
     if (grabbedWorkId !== null) return;
 
     isInsideGrabArea.current = name;
-
-    // if (name !== "paperStack" && name !== "floatObject")
-    //   grabAreaId.current = name;
-
     raycastScene();
   }
 
