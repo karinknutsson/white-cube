@@ -504,8 +504,12 @@ export default function TheRoom({
    * Raycast the scene to check if the player is looking at an interactable object and show hints
    */
   function raycastScene() {
-    if (!grabAreaName.current) return;
-    if (grabbedWorkId !== null || isInfoVisible.current) return;
+    if (
+      !grabAreaName.current ||
+      grabbedWorkId !== null ||
+      isInfoVisible.current
+    )
+      return;
 
     // Raycast from the center of the screen
     raycaster.setFromCamera(rayCasterPointer, camera);
@@ -528,9 +532,7 @@ export default function TheRoom({
           window.addEventListener("mousedown", handleShowInfoRef.current);
           gsap.to(".show-info-hint-container", { duration: 0.1, opacity: 1 });
         }
-      }
-
-      if (hit.object.name === "floatObject") {
+      } else if (hit.object.name === "floatObject") {
         hitCurrentFrame = "floatObject";
 
         if (shownHint.current !== "floatObject") {
@@ -538,9 +540,7 @@ export default function TheRoom({
           window.addEventListener("mousedown", handleClickFloatRef.current);
           gsap.to(".show-sphere-hint-container", { duration: 0.1, opacity: 1 });
         }
-      }
-
-      if (hit.object.name.startsWith("artwork")) {
+      } else {
         hitCurrentFrame = "grabArtwork";
 
         if (shownHint.current !== "grabArtwork") {
@@ -598,6 +598,7 @@ export default function TheRoom({
     if (grabbedWorkId !== null) return;
 
     grabAreaName.current = name;
+    console.log("Entered grab area of ", name);
     raycastScene();
   }
 
