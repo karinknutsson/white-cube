@@ -245,7 +245,7 @@ export default function TheRoom({
   const raycaster = useMemo(() => new THREE.Raycaster(), []);
   const rayCasterPointer = useMemo(() => new THREE.Vector2(0, 0), []);
   const lastCameraQuaternion = useRef(new THREE.Quaternion());
-  const grabAreaName = useRef(null);
+  const grabAreaId = useRef(null);
   const shownHint = useRef(null);
   const [grabbedWorkId, setGrabbedWorkId] = useState(null);
   const [bakeKey, setBakeKey] = useState(0);
@@ -280,7 +280,7 @@ export default function TheRoom({
         if (!wallRefs.current.length) return;
 
         // Find the artwork being dropped
-        const artwork = artworks.filter((w) => w.id === grabAreaName.current);
+        const artwork = artworks.filter((w) => w.id === grabAreaId.current);
         if (artwork.length === 0) return;
 
         // Get artwork dimensions
@@ -299,7 +299,7 @@ export default function TheRoom({
 
         // Drop artwork on the wall, calculating position based on where it was dropped and clamping it within the wall bounds
         if (hits[0].object.name === "backWall") {
-          moveArtwork(grabAreaName.current, {
+          moveArtwork(grabAreaId.current, {
             wall: "backWall",
             position: {
               x: clamp(
@@ -318,7 +318,7 @@ export default function TheRoom({
             },
           });
         } else if (hits[0].object.name === "leftWall") {
-          moveArtwork(grabAreaName.current, {
+          moveArtwork(grabAreaId.current, {
             wall: "leftWall",
             position: {
               x: clamp(
@@ -337,7 +337,7 @@ export default function TheRoom({
             },
           });
         } else if (hits[0].object.name === "rightWall") {
-          moveArtwork(grabAreaName.current, {
+          moveArtwork(grabAreaId.current, {
             wall: "rightWall",
             position: {
               x: clamp(
@@ -356,7 +356,7 @@ export default function TheRoom({
             },
           });
         } else if (hits[0].object.name === "partitionBack") {
-          moveArtwork(grabAreaName.current, {
+          moveArtwork(grabAreaId.current, {
             wall: "partitionBack",
             position: {
               x: clamp(
@@ -375,7 +375,7 @@ export default function TheRoom({
             },
           });
         } else if (hits[0].object.name === "partitionFront") {
-          moveArtwork(grabAreaName.current, {
+          moveArtwork(grabAreaId.current, {
             wall: "partitionFront",
             position: {
               x: clamp(
@@ -398,7 +398,7 @@ export default function TheRoom({
         // Reset grab state
         window.removeEventListener("mousedown", handleDropRef.current);
         setGrabbedWorkId(() => null);
-        grabAreaName.current = null;
+        grabAreaId.current = null;
 
         // Update shadows after dropping artwork
         setBakeKey((key) => key + 1);
@@ -409,7 +409,7 @@ export default function TheRoom({
      * Grabbing artwork logic
      */
     handleGrabRef.current = (e) => {
-      setGrabbedWorkId(grabAreaName.current);
+      setGrabbedWorkId(grabAreaId.current);
       shownHint.current = null;
 
       window.removeEventListener("mousedown", handleGrabRef.current);
@@ -421,7 +421,7 @@ export default function TheRoom({
 
       // Find the artwork being grabbed
       const artwork = artworks.find(
-        (w) => w.id === grabAreaName.current.replace("artwork", ""),
+        (w) => w.id === grabAreaId.current.replace("artwork", ""),
       );
       if (!artwork) return;
 
@@ -493,7 +493,7 @@ export default function TheRoom({
   function cancelDrop() {
     window.removeEventListener("mousedown", handleDropRef.current);
     setGrabbedWorkId(() => null);
-    grabAreaName.current = null;
+    grabAreaId.current = null;
 
     gsap.to("#grabbed-artwork-container", { duration: 0.5, opacity: 0 });
     gsap.to(".grab-hint-container", { duration: 0.1, opacity: 0 });
@@ -504,11 +504,7 @@ export default function TheRoom({
    * Raycast the scene to check if the player is looking at an interactable object and show hints
    */
   function raycastScene() {
-    if (
-      !grabAreaName.current ||
-      grabbedWorkId !== null ||
-      isInfoVisible.current
-    )
+    if (!grabAreaId.current || grabbedWorkId !== null || isInfoVisible.current)
       return;
 
     // Raycast from the center of the screen
@@ -522,7 +518,7 @@ export default function TheRoom({
 
     // Check if any of the hits are interactable objects and show hints accordingly
     for (const hit of hits) {
-      if (hit.object.name !== grabAreaName.current) continue;
+      if (hit.object.name !== grabAreaId.current) continue;
 
       if (hit.object.name === "paperStack") {
         hitCurrentFrame = "paperStack";
@@ -582,7 +578,7 @@ export default function TheRoom({
 
   // Raycast the scene when the camera has rotated to check if the player is looking at an interactable object and show hints
   useFrame(() => {
-    if (!grabAreaName.current) return;
+    if (!grabAreaId.current) return;
 
     const dot = camera.quaternion.dot(lastCameraQuaternion.current);
     const delta = 1 - Math.abs(dot);
@@ -597,14 +593,14 @@ export default function TheRoom({
   function handleEnterGrabArea(name) {
     if (grabbedWorkId !== null) return;
 
-    grabAreaName.current = name;
+    grabAreaId.current = name;
     console.log("Entered grab area of ", name);
     raycastScene();
   }
 
   // Remove event listeners and hide hints when leaving grab area
   function handleLeaveGrabArea(name) {
-    grabAreaName.current = null;
+    grabAreaId.current = null;
     shownHint.current = null;
 
     if (name === "paperStack") {
