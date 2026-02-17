@@ -428,7 +428,11 @@ export default function TheRoom({
       // Set the source of the grabbed artwork preview to the artwork being grabbed
       const image = document.getElementById("grabbed-image");
       image.src = artwork.path ?? "";
-      gsap.to("#grabbed-artwork-container", { duration: 0.5, opacity: 0.6 });
+      gsap.to("#grabbed-artwork-container", {
+        duration: 0.5,
+        opacity: 0.6,
+        delay: 0.2,
+      });
     };
 
     /**
