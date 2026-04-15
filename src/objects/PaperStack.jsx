@@ -1,5 +1,5 @@
 import { useGLTF, Text } from "@react-three/drei";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { RigidBody, CuboidCollider } from "@react-three/rapier";
 import { infoTextContent } from "../data/infoTextContent.js";
@@ -13,8 +13,11 @@ export default function PaperStack({
   rotation,
   onEnterGrabArea,
   onLeaveGrabArea,
+  addRaycastTarget,
+  removeRaycastTarget,
 }) {
   const { scene } = useGLTF("./models/paper-stack.glb");
+  const meshRef = useRef();
 
   // Apply material and shadow properties to all meshes in the model
   useEffect(() => {
@@ -25,7 +28,20 @@ export default function PaperStack({
         child.receiveShadow = true;
       }
     });
-  });
+  }, [scene]);
+
+  // Add raycast target on mount and remove on unmount
+  useEffect(() => {
+    if (meshRef.current) {
+      addRaycastTarget(meshRef.current);
+    }
+
+    return () => {
+      if (meshRef.current) {
+        removeRaycastTarget(meshRef.current);
+      }
+    };
+  }, [addRaycastTarget, removeRaycastTarget]);
 
   return (
     <>
@@ -72,7 +88,7 @@ export default function PaperStack({
         </Text>
 
         {/* Invisible mesh for raycaster */}
-        <mesh name="paperStack">
+        <mesh ref={meshRef} name="paperStack">
           <boxGeometry args={[1, 1, 1]} /> <meshBasicMaterial visible={false} />
         </mesh>
       </RigidBody>

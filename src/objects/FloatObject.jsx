@@ -1,17 +1,35 @@
 import { RigidBody, BallCollider } from "@react-three/rapier";
+import { useEffect, useRef } from "react";
 
 export default function FloatObject({
   size,
   position,
   onEnterGrabArea,
   onLeaveGrabArea,
+  addRaycastTarget,
+  removeRaycastTarget,
 }) {
+  const meshRef = useRef();
+
   // Handle intersection enter event to check if player is in grab area
   function handleIntersectionEnter(e) {
     if (e.colliderObject.parent.name === "player") {
       onEnterGrabArea();
     }
   }
+
+  // Add raycast target on mount and remove on unmount
+  useEffect(() => {
+    if (meshRef.current) {
+      addRaycastTarget(meshRef.current);
+    }
+
+    return () => {
+      if (meshRef.current) {
+        removeRaycastTarget(meshRef.current);
+      }
+    };
+  }, [addRaycastTarget, removeRaycastTarget]);
 
   return (
     <RigidBody
@@ -32,7 +50,7 @@ export default function FloatObject({
 
       {/* Torus knot mesh */}
       <mesh>
-        <torusKnotGeometry args={[size, size * 0.8, 80, 16]} />
+        <torusKnotGeometry args={[size, size * 0.8, 64, 12]} />
         <meshPhysicalMaterial
           color="#796cd9"
           roughness={0}
@@ -49,7 +67,7 @@ export default function FloatObject({
       </mesh>
 
       {/* Invisible mesh for raycaster */}
-      <mesh name="floatObject">
+      <mesh ref={meshRef} name="floatObject">
         <sphereGeometry args={[0.5]} /> <meshBasicMaterial visible={false} />
       </mesh>
     </RigidBody>

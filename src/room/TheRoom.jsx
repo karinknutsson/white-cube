@@ -173,6 +173,8 @@ export function WallMesh({
   works,
   handleEnterGrabArea,
   handleLeaveGrabArea,
+  addRaycastTarget,
+  removeRaycastTarget,
 }) {
   return (
     <>
@@ -218,6 +220,8 @@ export function WallMesh({
                 year={work.year}
                 onEnterGrabArea={() => handleEnterGrabArea(work.id)}
                 onLeaveGrabArea={() => handleLeaveGrabArea(work.id)}
+                addRaycastTarget={addRaycastTarget}
+                removeRaycastTarget={removeRaycastTarget}
               ></Artwork>
             );
           })}
@@ -241,7 +245,7 @@ export default function TheRoom({
   windowFrameDepth,
   doorDepth,
 }) {
-  const { camera, scene } = useThree();
+  const { camera } = useThree();
   const raycaster = useMemo(() => new THREE.Raycaster(), []);
   const rayCasterPointer = useMemo(() => new THREE.Vector2(0, 0), []);
   const lastCameraQuaternion = useRef(new THREE.Quaternion());
@@ -252,6 +256,7 @@ export default function TheRoom({
 
   const { artworks, moveArtwork, setIsFloating } = useGallery();
 
+  const raycastTargets = useRef([]);
   const wallRefs = useRef([]);
   const paperStackRef = useRef(null);
 
@@ -263,6 +268,18 @@ export default function TheRoom({
   const isInfoVisible = useRef(false);
 
   const handleClickFloatRef = useRef(null);
+
+  // Add raycast target to the list of raycast targets
+  const addRaycastTarget = (obj) => {
+    if (obj && !raycastTargets.current.includes(obj)) {
+      raycastTargets.current.push(obj);
+    }
+  };
+
+  // Remove raycast target from the list of raycast targets
+  const removeRaycastTarget = (obj) => {
+    raycastTargets.current = raycastTargets.current.filter((o) => o !== obj);
+  };
 
   // Clamp helper
   const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
@@ -513,7 +530,7 @@ export default function TheRoom({
 
     // Raycast from the center of the screen
     raycaster.setFromCamera(rayCasterPointer, camera);
-    const hits = raycaster.intersectObjects(scene.children, true);
+    const hits = raycaster.intersectObjects(raycastTargets.current, false);
 
     if (hits.length === 0) return;
 
@@ -639,6 +656,8 @@ export default function TheRoom({
           )}
           handleEnterGrabArea={handleEnterGrabArea}
           handleLeaveGrabArea={handleLeaveGrabArea}
+          addRaycastTarget={addRaycastTarget}
+          removeRaycastTarget={removeRaycastTarget}
         />
 
         {/* Left wall */}
@@ -656,6 +675,8 @@ export default function TheRoom({
           )}
           handleEnterGrabArea={handleEnterGrabArea}
           handleLeaveGrabArea={handleLeaveGrabArea}
+          addRaycastTarget={addRaycastTarget}
+          removeRaycastTarget={removeRaycastTarget}
         />
 
         {/* Right wall */}
@@ -673,6 +694,8 @@ export default function TheRoom({
           )}
           handleEnterGrabArea={handleEnterGrabArea}
           handleLeaveGrabArea={handleLeaveGrabArea}
+          addRaycastTarget={addRaycastTarget}
+          removeRaycastTarget={removeRaycastTarget}
         />
 
         {/* Partition back part */}
@@ -690,6 +713,8 @@ export default function TheRoom({
           )}
           handleEnterGrabArea={handleEnterGrabArea}
           handleLeaveGrabArea={handleLeaveGrabArea}
+          addRaycastTarget={addRaycastTarget}
+          removeRaycastTarget={removeRaycastTarget}
         />
 
         {/* Partition front part */}
@@ -707,6 +732,8 @@ export default function TheRoom({
           )}
           handleEnterGrabArea={handleEnterGrabArea}
           handleLeaveGrabArea={handleLeaveGrabArea}
+          addRaycastTarget={addRaycastTarget}
+          removeRaycastTarget={removeRaycastTarget}
         />
 
         {/* Floor */}
@@ -857,6 +884,8 @@ export default function TheRoom({
           rotation={[0, -0.1, 0]}
           onEnterGrabArea={() => handleEnterGrabArea("paperStack")}
           onLeaveGrabArea={() => handleLeaveGrabArea("paperStack")}
+          addRaycastTarget={addRaycastTarget}
+          removeRaycastTarget={removeRaycastTarget}
         />
 
         {/* Float object for triggering no gravity mode */}
@@ -869,6 +898,8 @@ export default function TheRoom({
           ]}
           onEnterGrabArea={() => handleEnterGrabArea("floatObject")}
           onLeaveGrabArea={() => handleLeaveGrabArea("floatObject")}
+          addRaycastTarget={addRaycastTarget}
+          removeRaycastTarget={removeRaycastTarget}
         />
       </group>
     </>

@@ -1,7 +1,7 @@
 import CanvasMesh from "./CanvasMesh";
 import WallLabel from "./WallLabel";
 import { RigidBody, CuboidCollider } from "@react-three/rapier";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { wallLabelSizes } from "../data/wallLabelSizes";
 
 export default function Artwork({
@@ -15,14 +15,28 @@ export default function Artwork({
   year,
   onEnterGrabArea,
   onLeaveGrabArea,
+  addRaycastTarget,
+  removeRaycastTarget,
 }) {
   const artworkRef = useRef();
+
+  useEffect(() => {
+    if (artworkRef.current) {
+      addRaycastTarget(artworkRef.current);
+    }
+
+    return () => {
+      if (artworkRef.current) {
+        removeRaycastTarget(artworkRef.current);
+      }
+    };
+  }, [addRaycastTarget, removeRaycastTarget]);
 
   return (
     <>
       <RigidBody
         position={position}
-        ref={artworkRef}
+        // ref={artworkRef}
         type="kinematicPosition"
         colliders={false}
       >
@@ -40,7 +54,9 @@ export default function Artwork({
           />
 
           {/* Meshes */}
-          {type === "canvas" && <CanvasMesh path={path} size={size} id={id} />}
+          {type === "canvas" && (
+            <CanvasMesh ref={artworkRef} path={path} size={size} id={id} />
+          )}
           <WallLabel
             size={[
               wallLabelSizes.width,
