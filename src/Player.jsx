@@ -101,7 +101,7 @@ export default function Player({ roomHeight, wallThickness }) {
   /**
    * Update player movement and camera position on each frame
    */
-  useFrame(() => {
+  useFrame((_, delta) => {
     if (!bodyRef.current) return;
 
     if (!isFloating) {
@@ -141,7 +141,8 @@ export default function Player({ roomHeight, wallThickness }) {
       const targetY = move.current.crouch ? position.y : position.y + 0.7;
 
       // Set camera position based on body position and whether the player is crouching
-      camera.position.y += (targetY - camera.position.y) * 0.1;
+      const factor = 1 - Math.pow(0.1, delta * 60);
+      camera.position.y += (targetY - camera.position.y) * factor;
       camera.position.x = position.x;
       camera.position.z = position.z;
     } else {
