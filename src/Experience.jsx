@@ -1,6 +1,6 @@
 import Lights from "./Lights.jsx";
 import Gallery from "./room/Gallery.jsx";
-import { Perf } from "r3f-perf";
+// import { Perf } from "r3f-perf";
 import { Physics } from "@react-three/rapier";
 import Player from "./Player.jsx";
 import { Environment } from "@react-three/drei";
@@ -9,7 +9,7 @@ import { infoTextContent } from "./data/infoTextContent.js";
 
 export default function Experience() {
   // Uncomment to keep track of performance
-  const perfVisible = false;
+  // const perfVisible = false;
 
   // Set room dimensions
   const roomWidth = 7;
@@ -32,7 +32,7 @@ export default function Experience() {
   return (
     <>
       {/* Uncomment to keep track of performance */}
-      {perfVisible && <Perf position="top-left" />}
+      {/* {perfVisible && <Perf position="top-left" />} */}
 
       <Lights />
 
