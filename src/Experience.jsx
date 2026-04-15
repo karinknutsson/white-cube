@@ -9,7 +9,7 @@ import { infoTextContent } from "./data/infoTextContent.js";
 
 export default function Experience() {
   // Uncomment to keep track of performance
-  const perfVisible = true;
+  const perfVisible = false;
 
   // Set room dimensions
   const roomWidth = 7;
