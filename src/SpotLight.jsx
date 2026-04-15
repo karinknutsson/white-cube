@@ -29,6 +29,9 @@ export default function SpotLight({
   const lampRef = useRef();
   const lightDiscRef = useRef();
 
+  const shadowBias = 0.0005;
+  const shadowNormalBias = 0.005;
+
   // Load spotlight model parts
   const { scene: sceneBase } = useGLTF(
     "./models/spotlight-model-flexi-base.glb",
@@ -112,9 +115,19 @@ export default function SpotLight({
           intensity={intensity}
           castShadow
           color="#ffffee"
-          decay={2}
-          shadow-mapSize-width={4096}
-          shadow-mapSize-height={4096}
+          decay={2.6}
+          shadow-camera-near={1}
+          shadow-camera-far={10}
+          shadow-camera-top={5}
+          shadow-camera-right={5}
+          shadow-camera-bottom={-5}
+          shadow-camera-left={-5}
+          shadow-mapSize-width={2048}
+          shadow-mapSize-height={2048}
+          shadow-radius={40}
+          shadow-blurSamples={25}
+          shadow-bias={shadowBias}
+          shadow-normalBias={shadowNormalBias}
         />
 
         {/* Lamp meshes */}

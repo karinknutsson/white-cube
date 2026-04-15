@@ -11,7 +11,7 @@ root.render(
     <BrowserView>
       <Canvas
         dpr={1}
-        shadows
+        shadows="soft"
         camera={{
           fov: 100,
           near: 0.1,
