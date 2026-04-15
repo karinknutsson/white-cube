@@ -884,6 +884,8 @@ export default function TheRoom({
           rotation={[0, -0.1, 0]}
           onEnterGrabArea={() => handleEnterGrabArea("paperStack")}
           onLeaveGrabArea={() => handleLeaveGrabArea("paperStack")}
+          addRaycastTarget={addRaycastTarget}
+          removeRaycastTarget={removeRaycastTarget}
         />
 
         {/* Float object for triggering no gravity mode */}
@@ -896,6 +898,8 @@ export default function TheRoom({
           ]}
           onEnterGrabArea={() => handleEnterGrabArea("floatObject")}
           onLeaveGrabArea={() => handleLeaveGrabArea("floatObject")}
+          addRaycastTarget={addRaycastTarget}
+          removeRaycastTarget={removeRaycastTarget}
         />
       </group>
     </>
