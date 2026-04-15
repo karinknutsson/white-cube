@@ -6,6 +6,11 @@ export default function CanvasMesh({ path, size, id, ref }) {
   // Load texture
   const texture = useLoader(THREE.TextureLoader, path);
 
+  // Configure texture for better quality & performance
+  texture.generateMipMaps = true;
+  texture.minFilter = THREE.LinearMipmapLinearFilter;
+  texture.encoding = THREE.sRGBEncoding;
+
   // Create plane geometry for the canvas
   const geometry = new THREE.PlaneGeometry(
     size[0] - 0.01,
