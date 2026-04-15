@@ -25,7 +25,7 @@ export default function PaperStack({
         child.receiveShadow = true;
       }
     });
-  });
+  }, [scene]);
 
   return (
     <>
