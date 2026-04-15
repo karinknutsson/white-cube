@@ -50,7 +50,7 @@ export default function FloatObject({
 
       {/* Torus knot mesh */}
       <mesh>
-        <torusKnotGeometry args={[size, size * 0.8, 80, 16]} />
+        <torusKnotGeometry args={[size, size * 0.8, 64, 12]} />
         <meshPhysicalMaterial
           color="#796cd9"
           roughness={0}
