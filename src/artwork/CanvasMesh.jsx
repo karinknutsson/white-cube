@@ -2,7 +2,7 @@ import { useLoader } from "@react-three/fiber";
 import * as THREE from "three";
 import { RoundedBoxGeometry } from "@react-three/drei";
 
-export default function CanvasMesh({ path, size, id }) {
+export default function CanvasMesh({ path, size, id, ref }) {
   // Load texture
   const texture = useLoader(THREE.TextureLoader, path);
 
@@ -27,7 +27,7 @@ export default function CanvasMesh({ path, size, id }) {
         </mesh>
 
         {/* Invisible mesh for raycasting */}
-        <mesh name={id}>
+        <mesh ref={ref} name={id}>
           <boxGeometry args={[size[0], size[1], size[2] * 3]} />
           <meshBasicMaterial visible={false} />
         </mesh>
