@@ -112,9 +112,15 @@ export default function SpotLight({
           intensity={intensity}
           castShadow
           color="#ffffee"
-          decay={2}
-          shadow-mapSize-width={4096}
-          shadow-mapSize-height={4096}
+          decay={2.6}
+          shadow-camera-near={1}
+          shadow-camera-far={10}
+          shadow-camera-top={5}
+          shadow-camera-right={5}
+          shadow-camera-bottom={-5}
+          shadow-camera-left={-5}
+          shadow-mapSize-width={2048}
+          shadow-mapSize-height={2048}
         />
 
         {/* Lamp meshes */}
