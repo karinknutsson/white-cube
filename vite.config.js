@@ -10,6 +10,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default {
   root: "src/",
+  envDir: "../",
   publicDir: "../public/",
   plugins: [
     // Restart server on static/public file change

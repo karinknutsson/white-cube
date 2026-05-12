@@ -6,15 +6,16 @@ import Player from "./Player.jsx";
 import { Environment } from "@react-three/drei";
 import { useEffect } from "react";
 import { infoTextContent } from "./data/infoTextContent.js";
+import useGallery from "./stores/useGallery.js";
 
 export default function Experience() {
   // Uncomment to keep track of performance
   // const perfVisible = false;
 
-  // Set room dimensions
-  const roomWidth = 7;
-  const roomHeight = 3.2;
-  const roomDepth = 9;
+  const showGallery = useGallery((state) => state.showGallery);
+  const roomWidth = useGallery((state) => state.roomWidth);
+  const roomHeight = useGallery((state) => state.roomHeight);
+  const roomDepth = useGallery((state) => state.roomDepth);
   const wallThickness = 0.1;
 
   // Add info text to the page on mount
@@ -27,6 +28,12 @@ export default function Experience() {
         infoText.appendChild(paragraph);
       });
     }
+  }, []);
+
+  // Fetch gallery on mount
+  useEffect(() => {
+    const galleryId = "10e359de-280e-4afe-8033-d84d04f0cd5b";
+    useGallery.getState().fetchGallery(galleryId);
   }, []);
 
   return (
@@ -43,15 +50,19 @@ export default function Experience() {
         <Environment files="./hdr/qwantani_dusk_2_puresky_1k.hdr" background />
 
         {/* Gallery */}
-        <Gallery
-          roomWidth={roomWidth}
-          roomHeight={roomHeight}
-          roomDepth={roomDepth}
-          wallThickness={wallThickness}
-        />
+        {showGallery && (
+          <Gallery
+            roomWidth={roomWidth}
+            roomHeight={roomHeight}
+            roomDepth={roomDepth}
+            wallThickness={wallThickness}
+          />
+        )}
 
         {/* Player*/}
-        <Player roomHeight={roomHeight} wallThickness={wallThickness} />
+        {showGallery && (
+          <Player roomHeight={roomHeight} wallThickness={wallThickness} />
+        )}
       </Physics>
     </>
   );
