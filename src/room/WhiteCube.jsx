@@ -3,15 +3,14 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { RigidBody } from "@react-three/rapier";
 import * as THREE from "three";
 
-const CUBE_POSITION = [2, 1, 6];
-
-const SLOW_SPEED = 0.005;
-const X_TILT = -0.4;
+const CUBE_POSITION = [8, 0.6, 3.6];
+const SLOW_SPEED = 0.003;
+const CUBE_Z_TILT = -0.4;
 
 export default function WhiteCube() {
   const meshRef = useRef();
-  const spotLightRef = useRef();
-  const spotLightTargetRef = useRef();
+  const directionalLightRef = useRef();
+  const directionalLightTargetRef = useRef();
   const [hovered, setHovered] = useState(false);
   const hoverSpeeds = useRef({ x: 0, y: SLOW_SPEED, z: 0 });
   const { raycaster, camera } = useThree();
@@ -26,8 +25,8 @@ export default function WhiteCube() {
       mesh.rotation.y += hoverSpeeds.current.y;
       mesh.rotation.z += hoverSpeeds.current.z;
     } else {
-      mesh.rotation.x += (X_TILT - mesh.rotation.x) * 0.05;
-      mesh.rotation.z *= 0.95;
+      mesh.rotation.x *= 0.95;
+      mesh.rotation.z += (CUBE_Z_TILT - mesh.rotation.z) * 0.05;
       mesh.rotation.y += SLOW_SPEED;
     }
   });
@@ -53,8 +52,8 @@ export default function WhiteCube() {
   }, []);
 
   useEffect(() => {
-    if (spotLightRef.current && spotLightTargetRef.current) {
-      spotLightRef.current.target = spotLightTargetRef.current;
+    if (directionalLightRef.current && directionalLightTargetRef.current) {
+      directionalLightRef.current.target = directionalLightTargetRef.current;
     }
   }, []);
 
@@ -67,35 +66,18 @@ export default function WhiteCube() {
 
   return (
     <>
-      {/* Spotlight */}
-      <spotLight
-        ref={spotLightRef}
-        position={[
-          CUBE_POSITION[0] - 2,
-          CUBE_POSITION[1] + 2,
-          CUBE_POSITION[2] - 2,
-        ]}
-        angle={4.6}
-        penumbra={1}
-        intensity={100}
-        castShadow
-        color="#ffffff"
-        decay={2.6}
-        shadow-camera-near={1}
-        shadow-camera-far={10}
-        shadow-camera-top={5}
-        shadow-camera-right={5}
-        shadow-camera-bottom={-5}
-        shadow-camera-left={-5}
-        shadow-mapSize-width={2048}
-        shadow-mapSize-height={2048}
+      {/* Directional light */}
+      <directionalLight
+        ref={directionalLightRef}
+        position={[0, 1, 1.6]}
+        intensity={6}
       />
-      <object3D ref={spotLightTargetRef} position={CUBE_POSITION} />
+      <object3D ref={directionalLightTargetRef} position={CUBE_POSITION} />
 
       {/* white cube body */}
       <RigidBody type="fixed">
         <mesh ref={meshRef} position={CUBE_POSITION} receiveShadow>
-          <boxGeometry args={[2, 2, 2]} />
+          <boxGeometry args={[3, 3, 3]} />
           <meshStandardMaterial />
         </mesh>
       </RigidBody>

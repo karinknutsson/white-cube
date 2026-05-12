@@ -51,7 +51,7 @@ export default function Experience() {
         <Environment files="./hdr/qwantani_dusk_2_puresky_1k.hdr" background />
 
         {/* white cube */}
-        <WhiteCube />
+        {!showGallery && <WhiteCube />}
 
         {/* Gallery */}
         {showGallery && (

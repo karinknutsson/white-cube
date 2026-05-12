@@ -35,6 +35,11 @@ body,
   font-family: "IBMPlexSans-Regular", Arial, sans-serif;
 }
 
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 #root > * {
   height: 100%;
 }
@@ -62,11 +67,11 @@ p {
   height: 100vh;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: flex-start;
 }
 
 .landing-content {
-  width: 40vw;
+  width: 320px;
 }
 
 .grab-hint-container,

@@ -224,7 +224,7 @@ export default function Player({ roomHeight, wallThickness }) {
 
       <RigidBody
         ref={bodyRef}
-        position={[0, 1, 3.6]}
+        position={[0, 1, 1.6]}
         type="dynamic"
         colliders={false}
         mass={1}

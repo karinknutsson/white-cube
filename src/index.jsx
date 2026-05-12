@@ -16,9 +16,9 @@ root.render(
         camera={{
           fov: 75,
           near: 0.1,
-          far: 10,
-          position: [0, 2, -2],
-          rotation: [0, Math.PI, 0],
+          far: 40,
+          position: [0, 1, 1.6],
+          rotation: [0, Math.PI * 1.5, 0],
         }}
         onCreated={({ gl }) => {
           gl.toneMappingExposure = 0.4;
