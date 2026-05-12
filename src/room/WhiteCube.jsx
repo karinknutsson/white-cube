@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { RigidBody } from "@react-three/rapier";
 import * as THREE from "three";
+import useWhiteCube from "../stores/useWhiteCube";
 
 const CUBE_POSITION = [8, 0.6, 3.6];
 const SLOW_SPEED = 0.003;
@@ -13,6 +14,8 @@ export default function WhiteCube() {
   const directionalLightTargetRef = useRef();
   const [hovered, setHovered] = useState(false);
   const hoverSpeeds = useRef({ x: 0, y: SLOW_SPEED, z: 0 });
+  const transformTriggered = useWhiteCube((state) => state.transformTriggered);
+  const resetTransform = useWhiteCube((state) => state.resetTransform);
   const { raycaster, camera } = useThree();
   const mouse = new THREE.Vector2();
 
@@ -56,6 +59,18 @@ export default function WhiteCube() {
       directionalLightRef.current.target = directionalLightTargetRef.current;
     }
   }, []);
+
+  useEffect(() => {
+    if (transformTriggered) {
+      transformCube();
+      resetTransform();
+    }
+  }, [transformTriggered]);
+
+  const transformCube = () => {
+    // TODO: implement transform behaviour
+    console.log("transformCube triggered");
+  };
 
   const handlePointerEnter = () => {
     const sign = () => (Math.random() > 0.5 ? 1 : -1);
