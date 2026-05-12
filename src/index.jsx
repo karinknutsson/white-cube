@@ -2,6 +2,7 @@ import "./style.css";
 import ReactDOM from "react-dom/client";
 import { Canvas } from "@react-three/fiber";
 import Experience from "./Experience.jsx";
+import LandingContent from "./components/LandingContent.jsx";
 import { BrowserView, MobileView } from "react-device-detect";
 
 const root = ReactDOM.createRoot(document.querySelector("#root"));
@@ -25,6 +26,8 @@ root.render(
       >
         <Experience />
       </Canvas>
+
+      <LandingContent />
     </BrowserView>
 
     <MobileView>

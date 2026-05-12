@@ -47,7 +47,7 @@ export default function Lights() {
         position={[-2, 3.06, 2]}
         targetPosition={[1, 1, 0.2]}
         intensity={spotIntensity}
-        angle={0.6}
+        dispersionAngle={0.6}
         rotation={[0, -0.6, 0]}
       />
 
