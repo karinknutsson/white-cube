@@ -13,10 +13,11 @@ root.render(
         dpr={1}
         shadows
         camera={{
-          fov: 100,
+          fov: 75,
           near: 0.1,
           far: 10,
-          position: [0, 2, 10],
+          position: [0, 2, -2],
+          rotation: [0, Math.PI, 0],
         }}
         onCreated={({ gl }) => {
           gl.toneMappingExposure = 0.4;
