@@ -39,7 +39,7 @@ export default create(
           roomWidth: data.size_x,
           roomHeight: data.size_y,
           roomDepth: data.size_z,
-          showGallery: true,
+          // showGallery: true,
         });
       },
 

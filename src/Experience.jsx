@@ -7,6 +7,7 @@ import { Environment } from "@react-three/drei";
 import { useEffect } from "react";
 import { infoTextContent } from "./data/infoTextContent.js";
 import useGallery from "./stores/useGallery.js";
+import WhiteCube from "./room/WhiteCube.jsx";
 
 export default function Experience() {
   // Uncomment to keep track of performance
@@ -41,13 +42,16 @@ export default function Experience() {
       {/* Uncomment to keep track of performance */}
       {/* {perfVisible && <Perf position="top-left" />} */}
 
-      <Lights />
+      {showGallery && <Lights />}
 
       {/* Uncomment for debug mode physics */}
       {/* <Physics debug> */}
       <Physics>
         {/* Environment map */}
         <Environment files="./hdr/qwantani_dusk_2_puresky_1k.hdr" background />
+
+        {/* white cube */}
+        <WhiteCube />
 
         {/* Gallery */}
         {showGallery && (
