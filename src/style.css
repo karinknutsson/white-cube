@@ -44,12 +44,27 @@ body {
   height: 100%;
 }
 
-h1.logo {
+h1.logo-large {
   font-family: "Intel One Mono", monospace;
   margin: 0;
   font-size: 42px;
   font-weight: 700;
   line-height: 1;
+}
+
+h1.logo-small {
+  font-family: "Intel One Mono", monospace;
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+header {
+  width: 100%;
+  padding: 24px 40px;
+  box-sizing: border-box;
+  height: 64px;
 }
 
 h1.mobile-message-title {
