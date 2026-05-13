@@ -47,8 +47,9 @@ body {
 h1.logo {
   font-family: "Intel One Mono", monospace;
   margin: 0;
-  font-size: 2.8rem;
+  font-size: 42px;
   font-weight: 700;
+  line-height: 1;
 }
 
 h1.mobile-message-title {
@@ -73,11 +74,26 @@ p {
 
 .landing-content {
   width: 360px;
+  height: 360px;
   background: rgba(112, 99, 147, 0.3);
   padding: 40px;
   backdrop-filter: blur(10px);
   border-radius: 3px;
   pointer-events: auto;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0px 1000px transparent inset;
+  box-shadow: 0 0 0px 1000px transparent inset;
+  -webkit-text-fill-color: rgba(255, 255, 255, 0.9);
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+p.landing-text {
+  font-weight: 600;
+  line-height: 1.8;
 }
 
 .grab-hint-container,
