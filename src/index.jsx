@@ -6,10 +6,11 @@ import Experience from "./Experience.jsx";
 import LandingContent from "./components/LandingContent.jsx";
 import { BrowserView, MobileView } from "react-device-detect";
 import useGallery from "./stores/useGallery.js";
+import { Preload } from "@react-three/drei";
 
 const FADE_DURATION = 600;
 
-function ConditionalLanding() {
+function LandingPage() {
   const showGallery = useGallery((state) => state.showGallery);
   const [rendered, setRendered] = useState(true);
 
@@ -55,9 +56,11 @@ root.render(
         }}
       >
         <Experience />
+
+        <Preload all />
       </Canvas>
 
-      <ConditionalLanding />
+      <LandingPage />
     </BrowserView>
 
     <MobileView>
